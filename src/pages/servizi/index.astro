@@ -1,0 +1,178 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import NodeDecoration from '../../components/NodeDecoration.astro';
+
+const serviceIcons = {
+  audit: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h32M8 24h20M8 36h12"/><circle cx="38" cy="30" r="8"/><path d="m44 36-3-3"/></svg>`,
+  webapp: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="36" height="28" rx="2"/><path d="M6 18h36M16 10v4M32 10v4"/></svg>`,
+  ecom: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8h4l6 20h20"/><circle cx="22" cy="40" r="2"/><circle cx="38" cy="40" r="2"/><path d="M12 16h26l-4 14H16L12 16z"/></svg>`,
+  crm: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="16" r="8"/><path d="M6 40c0-9.94 8.06-18 18-18s18 8.06 18 18"/></svg>`,
+  ai: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="24" r="4"/><circle cx="36" cy="12" r="4"/><circle cx="36" cy="36" r="4"/><circle cx="24" cy="24" r="6"/><path d="M16 24h2M30 24h2M24 18v-2M24 30v2"/></svg>`,
+  software: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="32" height="32" rx="4"/><path d="M16 20l6 6-6 6M26 32h6"/></svg>`,
+  hardware: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="14" width="36" height="24" rx="2"/><path d="M16 38v4M32 38v4M12 42h24"/></svg>`,
+};
+
+const services = [
+  { title: 'Audit e Process Architecture', description: 'Il fondamento di tutto. Prima di ogni soluzione, capiamo dove sei e dove vuoi arrivare.', href: '/servizi/audit', icon: serviceIcons.audit },
+  { title: 'Web & App Custom', description: 'Soluzioni web e app progettate per risolvere problemi specifici della tua architettura.', href: '/servizi/web-app', icon: serviceIcons.webapp },
+  { title: 'Piattaforme di Vendita Servizi', description: 'Prenotazioni, abbonamenti, pagamenti ricorrenti — piattaforme native per vendere online.', href: '/servizi/ecommerce', icon: serviceIcons.ecom },
+  { title: 'CRM Custom', description: 'Un CRM che il tuo team usa davvero, disegnato attorno ai processi reali della tua azienda.', href: '/servizi/crm', icon: serviceIcons.crm },
+  { title: 'AI & Automazione', description: 'AI dove crea valore reale. Automazione di workflow, analisi predittiva, sistemi intelligenti.', href: '/servizi/ai-automazione', icon: serviceIcons.ai },
+  { title: 'Software Gestionali', description: 'Selezione rigorosa e implementazione organizzativa del software gestionale giusto.', href: '/servizi/software-gestionali', icon: serviceIcons.software },
+  { title: 'Hardware & Soluzioni Immersive', description: 'Totem, POS, digital signage — touchpoint fisici integrati nel tuo ecosistema digitale.', href: '/servizi/hardware', icon: serviceIcons.hardware },
+];
+---
+
+<BaseLayout
+  title="Servizi"
+  description="Soluzioni che nascono dai processi. Dall'audit alla implementazione: web app, CRM custom, AI, software gestionali, piattaforme di vendita servizi."
+>
+
+  <!-- HERO -->
+  <section class="page-hero" style="background: var(--color-dark);">
+    <div class="hero__bg-decoration" aria-hidden="true">
+      <NodeDecoration color="rgba(255,96,0,0.06)" />
+    </div>
+    <div class="container page-hero__content">
+      <span class="eyebrow">Le nostre soluzioni</span>
+      <h1 class="page-hero__title">Soluzioni che nascono<br>dai processi</h1>
+      <p class="page-hero__sub">
+        La maggior parte dei progetti digitali fallisce perché si parte dallo strumento sbagliato.
+        Noi facciamo il contrario. Partiamo sempre dall'audit.
+      </p>
+    </div>
+  </section>
+
+  <!-- INTRO PARAGRAFO -->
+  <section class="section intro-section">
+    <div class="container intro-section__inner reveal">
+      <div class="intro-section__text">
+        <p>
+          Un CRM implementato male rimane vuoto. Un e-commerce costruito senza ripensare
+          i processi diventa un collo di bottiglia. Un software gestionale scelto senza
+          audit non comunica con niente.
+        </p>
+        <p>
+          Noi partiamo sempre dall'audit dei tuoi processi, dall'analisi del tuo patrimonio
+          tecnologico, dalla definizione dell'architettura target. Solo allora scegliamo
+          gli strumenti — e li implementiamo in modo che funzionino davvero.
+        </p>
+      </div>
+      <div class="intro-section__cta">
+        <a href="/servizi/audit" class="btn btn-primary">Inizia dall'Audit →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVIZI GRID -->
+  <section class="section servizi-grid-section" style="background: var(--color-light);">
+    <div class="container">
+      <div class="services-grid">
+        {services.map(s => (
+          <ServiceCard {...s} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-block" style="background: var(--color-dark);">
+    <div class="container cta-block__inner reveal">
+      <h2 class="section-title" style="color: var(--color-white);">Non sai da dove iniziare?</h2>
+      <p style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
+        Il nostro punto di partenza è sempre l'audit. È il modo più veloce per capire
+        qual è la soluzione giusta per te.
+      </p>
+      <a href="/contatti" class="btn btn-primary">Prenota un Audit Gratuito</a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .page-hero {
+    position: relative;
+    padding-block: clamp(var(--space-16), 10vw, var(--space-24));
+    overflow: hidden;
+    color: var(--color-white);
+  }
+
+  .hero__bg-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .page-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+  }
+
+  .page-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(var(--text-4xl), 7vw, var(--text-6xl));
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--color-white);
+    margin-top: var(--space-4);
+  }
+
+  .page-hero__sub {
+    margin-top: var(--space-6);
+    font-size: var(--text-xl);
+    color: rgba(255,255,255,0.7);
+    max-width: 560px;
+    line-height: 1.65;
+  }
+
+  /* INTRO */
+  .intro-section__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-12);
+    align-items: center;
+    max-width: 900px;
+  }
+
+  .intro-section__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .intro-section__text p {
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.75;
+  }
+
+  /* GRID */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  /* CTA */
+  .cta-block__inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 1024px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .services-grid { grid-template-columns: 1fr; }
+    .intro-section__inner { grid-template-columns: 1fr; }
+  }
+</style>

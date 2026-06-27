@@ -1,0 +1,136 @@
+---
+import ServiceLayout from '../../layouts/ServiceLayout.astro';
+
+const capacita = [
+  'Siti web istituzionali e landing page',
+  'Web app custom e portali clienti',
+  'App mobile (iOS/Android)',
+  'Integrazione con sistemi esistenti (CRM, gestionali, pagamenti)',
+  'PWA (Progressive Web App)',
+  'Sistemi di prenotazione e gestione eventi',
+];
+---
+
+<ServiceLayout
+  title="Web & App Custom"
+  description="Non facciamo siti standard. Disegniamo esperienze digitali che risolvono problemi specifici della tua architettura operativa."
+  eyebrow="Soluzioni digitali su misura"
+  headline="Soluzioni web che risolvono<br>problemi reali"
+  intro="Non facciamo siti standard. Disegniamo esperienze digitali che risolvono problemi specifici della tua architettura operativa."
+>
+
+  <section class="section body-section">
+    <div class="container">
+      <div class="two-col reveal">
+        <div class="two-col__text">
+          <p class="body-lead">
+            Un portale clienti che integra i dati del CRM. Un'app interna che accelera i flussi
+            del team. Un sistema che parla con gli altri sistemi.
+          </p>
+          <p>
+            Ogni progetto web o app che sviluppiamo nasce da un audit, ed è progettato per
+            integrarsi perfettamente nel tuo stack tecnologico esistente. Non aggiungiamo
+            complessità: la riduciamo.
+          </p>
+        </div>
+        <div class="two-col__list-box">
+          <h2 class="section-title" style="font-size: var(--text-2xl); margin-bottom: var(--space-8);">
+            Le nostre capacità
+          </h2>
+          <ul class="feature-list">
+            {capacita.map(item => (
+              <li>
+                <span class="feature-list__icon">→</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section approach-section" style="background: var(--color-light);">
+    <div class="container">
+      <div class="approach-inner reveal">
+        <span class="eyebrow">Il nostro approccio</span>
+        <h2 class="section-title">Prima il problema,<br>poi la soluzione</h2>
+        <div class="divider"></div>
+        <p class="approach-text">
+          Non partiamo mai dal design o dalla tecnologia. Partiamo dal problema che dobbiamo risolvere
+          e dall'architettura del tuo sistema. Solo dopo definiamo la soluzione tecnica più efficace.
+          Questo ci permette di costruire soluzioni che durano — non prodotti da rifare dopo 18 mesi.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</ServiceLayout>
+
+<style>
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+
+  .two-col__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .body-lead {
+    font-size: var(--text-xl);
+    color: var(--color-charcoal);
+    line-height: 1.75;
+  }
+
+  .two-col__text p {
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.75;
+  }
+
+  .two-col__list-box {
+    background: var(--color-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-10);
+  }
+
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .feature-list li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-size: var(--text-base);
+    color: var(--color-charcoal);
+    line-height: 1.5;
+  }
+
+  .feature-list__icon {
+    color: var(--color-orange);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .approach-inner {
+    max-width: 640px;
+  }
+
+  .approach-text {
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.75;
+  }
+
+  @media (max-width: 768px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>

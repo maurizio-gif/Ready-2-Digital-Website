@@ -1,0 +1,95 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import NodeDecoration from '../components/NodeDecoration.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow: string;
+  headline: string;
+  intro: string;
+}
+
+const { title, description, eyebrow, headline, intro } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+
+  <section class="service-hero" style="background: var(--color-dark);">
+    <div class="hero__bg-decoration" aria-hidden="true">
+      <NodeDecoration color="rgba(255,96,0,0.06)" />
+    </div>
+    <div class="container service-hero__content">
+      <span class="eyebrow">{eyebrow}</span>
+      <h1 class="service-hero__title" set:html={headline}></h1>
+      <p class="service-hero__intro">{intro}</p>
+      <a href="/contatti" class="btn btn-primary" style="margin-top: var(--space-8);">
+        Prenota un Audit →
+      </a>
+    </div>
+  </section>
+
+  <slot />
+
+  <section class="section cta-block" style="background: var(--color-dark);">
+    <div class="container cta-block__inner reveal">
+      <h2 class="section-title" style="color: var(--color-white);">
+        Vuoi sapere se questa soluzione è giusta per te?
+      </h2>
+      <p style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
+        Partiamo dall'audit. È gratuito e senza impegno.
+      </p>
+      <a href="/contatti" class="btn btn-primary">Prenota un Audit</a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .service-hero {
+    position: relative;
+    padding-block: clamp(var(--space-16), 10vw, var(--space-24));
+    overflow: hidden;
+    color: var(--color-white);
+  }
+
+  .hero__bg-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .service-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+  }
+
+  .service-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(var(--text-4xl), 7vw, var(--text-6xl));
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--color-white);
+    margin-top: var(--space-4);
+  }
+
+  .service-hero__intro {
+    margin-top: var(--space-6);
+    font-size: var(--text-xl);
+    color: rgba(255,255,255,0.72);
+    max-width: 580px;
+    line-height: 1.65;
+  }
+
+  .cta-block__inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+    max-width: 600px;
+    margin-inline: auto;
+  }
+</style>

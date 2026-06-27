@@ -1,0 +1,185 @@
+---
+import ServiceLayout from '../../layouts/ServiceLayout.astro';
+
+const steps = [
+  { n: '01', title: 'Audit e mappatura requisiti', desc: 'Capiamo i tuoi processi e definiamo i requisiti funzionali reali — non quelli che ti sembrano ovvi.' },
+  { n: '02', title: 'Selezione del software', desc: 'Valutiamo le opzioni sul mercato rispetto ai tuoi requisiti specifici. Non lavoriamo con un vendor unico.' },
+  { n: '03', title: 'Implementazione e configurazione', desc: 'Setup tecnico, configurazione flussi, integrazioni con i sistemi esistenti.' },
+  { n: '04', title: 'Formazione del team', desc: 'Il software è solo metà del lavoro. Il team deve saperlo usare — e volerlo usare.' },
+  { n: '05', title: 'Monitoraggio post-lancio', desc: 'Seguiamo l\'adozione e correggiamo il corso nelle prime settimane critiche.' },
+];
+---
+
+<ServiceLayout
+  title="Software Gestionali"
+  description="Scegliere il software gestionale sbagliato costa mesi di lavoro. Selezione rigorosa e implementazione organizzativa — non solo tecnica."
+  eyebrow="Gestione operativa digitale"
+  headline="Il software gestionale giusto,<br>implementato bene"
+  intro="Sul mercato ci sono centinaia di software gestionali. Scegliere quello sbagliato costa mesi di lavoro e migliaia di euro. La maggior parte delle implementazioni fallisce non per il software, ma per come è stato scelto e implementato."
+>
+
+  <section class="section body-section">
+    <div class="container">
+      <div class="content-lead reveal">
+        <p class="body-lead">
+          Noi facciamo selezione rigorosa: partiamo dall'audit dei tuoi processi, mappiamo i
+          requisiti funzionali reali, valutiamo le opzioni sul mercato, e poi implementiamo —
+          in modo non solo tecnico ma anche organizzativo.
+        </p>
+        <p>
+          Lavoriamo con i principali software gestionali del settore fitness & sport, oltre a
+          soluzioni enterprise per altri settori. Non siamo legati a un vendor specifico — siamo
+          legati ai tuoi obiettivi.
+        </p>
+      </div>
+
+      <div class="process-section reveal">
+        <span class="eyebrow">Il nostro processo</span>
+        <h2 class="section-title">Come selezioniamo<br>e implementiamo</h2>
+        <div class="divider"></div>
+        <div class="process-steps">
+          {steps.map(s => (
+            <div class="process-item">
+              <div class="process-item__num">{s.n}</div>
+              <div class="process-item__content">
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section why-section" style="background: var(--color-light);">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">Il problema comune</span>
+        <h2 class="section-title">Perché la maggior parte<br>delle implementazioni fallisce</h2>
+        <div class="divider"></div>
+        <div class="why-grid">
+          <div class="why-item">
+            <h3>Scelta sbagliata</h3>
+            <p>Si sceglie il software più popolare o quello consigliato da un amico — senza analizzare i propri requisiti.</p>
+          </div>
+          <div class="why-item">
+            <h3>Implementazione solo tecnica</h3>
+            <p>Si installa il software senza ripensare i processi. Il team continua a lavorare come prima, ignorando il nuovo sistema.</p>
+          </div>
+          <div class="why-item">
+            <h3>Nessuna formazione reale</h3>
+            <p>Una demo di 2 ore non è formazione. Senza affiancamento operativo, l'adozione fallisce entro 3 mesi.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</ServiceLayout>
+
+<style>
+  .content-lead {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-width: 760px;
+    margin-bottom: var(--space-16);
+  }
+
+  .body-lead {
+    font-size: var(--text-xl);
+    color: var(--color-charcoal);
+    line-height: 1.75;
+  }
+
+  .content-lead p {
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.75;
+  }
+
+  .process-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .process-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-top: var(--space-10);
+  }
+
+  .process-item {
+    display: flex;
+    gap: var(--space-8);
+    align-items: flex-start;
+    padding: var(--space-6) var(--space-8);
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-lg);
+    background: var(--color-white);
+    transition: border-color var(--transition-base);
+  }
+
+  .process-item:hover {
+    border-color: var(--color-orange);
+  }
+
+  .process-item__num {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 800;
+    color: var(--color-gray-light);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 56px;
+  }
+
+  .process-item__content h3 {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-bottom: var(--space-2);
+  }
+
+  .process-item__content p {
+    font-size: var(--text-base);
+    color: var(--color-gray-mid);
+    line-height: 1.6;
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    margin-top: var(--space-10);
+  }
+
+  .why-item {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+  }
+
+  .why-item h3 {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-bottom: var(--space-3);
+  }
+
+  .why-item p {
+    font-size: var(--text-base);
+    color: var(--color-gray-mid);
+    line-height: 1.65;
+  }
+
+  @media (max-width: 768px) {
+    .why-grid { grid-template-columns: 1fr; }
+    .process-item { flex-direction: column; gap: var(--space-3); }
+    .process-item__num { font-size: var(--text-2xl); }
+  }
+</style>

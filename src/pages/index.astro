@@ -1,0 +1,461 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import KPICard from '../components/KPICard.astro';
+import ProcessStep from '../components/ProcessStep.astro';
+import NodeDecoration from '../components/NodeDecoration.astro';
+
+const serviceIcons = {
+  audit: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h32M8 24h20M8 36h12"/><circle cx="38" cy="30" r="8"/><path d="m44 36-3-3"/></svg>`,
+  webapp: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="36" height="28" rx="2"/><path d="M6 18h36M16 10v4M32 10v4"/></svg>`,
+  ecom: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8h4l6 20h20"/><circle cx="22" cy="40" r="2"/><circle cx="38" cy="40" r="2"/><path d="M12 16h26l-4 14H16L12 16z"/></svg>`,
+  crm: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="16" r="8"/><path d="M6 40c0-9.94 8.06-18 18-18s18 8.06 18 18"/></svg>`,
+  ai: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="24" r="4"/><circle cx="36" cy="12" r="4"/><circle cx="36" cy="36" r="4"/><circle cx="24" cy="24" r="6"/><path d="M16 24h2M30 24h2M24 18v-2M24 30v2M27.5 20.5l1.5-1.5M20.5 27.5l-1.5 1.5M27.5 27.5l1.5 1.5M20.5 20.5l-1.5-1.5"/></svg>`,
+  software: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="32" height="32" rx="4"/><path d="M16 20l6 6-6 6M26 32h6"/></svg>`,
+};
+
+const services = [
+  {
+    title: 'Audit e Process Architecture',
+    description: 'Il punto di partenza di ogni progetto. Mappiamo i processi, identifichiamo i gap, definiamo l\'architettura target.',
+    href: '/servizi/audit',
+    icon: serviceIcons.audit,
+  },
+  {
+    title: 'Web & App Custom',
+    description: 'Soluzioni web che risolvono problemi reali, integrate nel tuo stack tecnologico esistente.',
+    href: '/servizi/web-app',
+    icon: serviceIcons.webapp,
+  },
+  {
+    title: 'Piattaforme di Vendita Servizi',
+    description: 'Prenotazioni, abbonamenti, pagamenti ricorrenti. Piattaforme native per vendere servizi online.',
+    href: '/servizi/ecommerce',
+    icon: serviceIcons.ecom,
+  },
+  {
+    title: 'CRM Custom',
+    description: 'Un CRM che il tuo team usa davvero, perché è disegnato attorno ai tuoi processi reali.',
+    href: '/servizi/crm',
+    icon: serviceIcons.crm,
+  },
+  {
+    title: 'AI & Automazione',
+    description: 'AI dove crea valore reale. Automazione dei workflow, analisi predittiva, integrazione di modelli.',
+    href: '/servizi/ai-automazione',
+    icon: serviceIcons.ai,
+  },
+  {
+    title: 'Software Gestionali',
+    description: 'Selezione rigorosa e implementazione organizzativa dei software gestionali giusti per te.',
+    href: '/servizi/software-gestionali',
+    icon: serviceIcons.software,
+  },
+];
+---
+
+<BaseLayout
+  title="Architetti dei Processi Digitali"
+  description="Ready2Digital non è un'agenzia di marketing. Siamo architetti dei processi aziendali. Partiamo dall'audit, mappiamo lo stato attuale, identifichiamo i gap — poi scegliamo la tecnologia."
+>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__bg-decoration" aria-hidden="true">
+      <NodeDecoration color="rgba(255,96,0,0.07)" />
+    </div>
+    <div class="container hero__content">
+      <span class="eyebrow hero__eyebrow">Architettura dei Processi Digitali</span>
+      <h1 class="hero__headline">
+        Non siamo<br>
+        un'agenzia<br>
+        <span class="hero__headline-accent">di marketing.</span>
+      </h1>
+      <p class="hero__sub">
+        Siamo architetti dei tuoi processi aziendali.<br>
+        Partiamo dal tuo obiettivo, mappiamo lo stato attuale,<br>
+        identifichiamo i gap — poi scegliamo la tecnologia.
+      </p>
+      <div class="hero__ctas">
+        <a href="/servizi/audit" class="btn btn-primary">Scopri come lavoriamo</a>
+        <a href="#risultati" class="hero__link-secondary">Vedi i risultati →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- COSA NON SIAMO -->
+  <section class="section differentiator">
+    <div class="container">
+      <div class="diff__grid">
+        <div class="diff__col diff__col--no reveal">
+          <div class="diff__header">
+            <span class="diff__badge diff__badge--no">✗</span>
+            <span>Quello che NON facciamo</span>
+          </div>
+          <ul class="diff__list">
+            <li>Non facciamo campagne pubblicitarie</li>
+            <li>Non vendiamo social media management</li>
+            <li>Non implementiamo software senza capire i tuoi processi</li>
+          </ul>
+        </div>
+        <div class="diff__divider" aria-hidden="true"></div>
+        <div class="diff__col diff__col--yes reveal">
+          <div class="diff__header">
+            <span class="diff__badge diff__badge--yes">✓</span>
+            <span>Quello che facciamo</span>
+          </div>
+          <ul class="diff__list">
+            <li>Partiamo sempre dall'audit</li>
+            <li>Disegniamo l'architettura prima degli strumenti</li>
+            <li>Misuriamo i risultati in modo concreto</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RISULTATI -->
+  <section class="section risultati" id="risultati">
+    <div class="container">
+      <div class="risultati__intro reveal">
+        <span class="eyebrow">Prova concreta</span>
+        <h2 class="section-title">Un caso reale.<br>Numeri reali.</h2>
+        <p class="section-subtitle" style="margin-top: 1.5rem;">
+          Atron Club 4.0, Roma. Da gestione operativa frammentata a digitalizzazione
+          completa dei processi. Il risultato: marginalità aumentata, incidenza del
+          costo del personale ridotta al 25%, dati centralizzati, team valorizzato.
+        </p>
+      </div>
+      <div class="kpi-grid">
+        <KPICard value="25%" label="Incidenza costi personale" sublabel="Ridotta e ottimizzata" />
+        <KPICard value="+%" label="Efficienza operativa" sublabel="Marginalità aumentata" />
+        <KPICard value="100%" label="Dati centralizzati" sublabel="Accessibili in tempo reale" />
+      </div>
+      <div class="risultati__cta reveal">
+        <a href="/contatti" class="btn btn-outline-dark">Leggi il case study (prossimamente)</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- METODO -->
+  <section class="section metodo" style="background: var(--color-light);">
+    <div class="container">
+      <div class="metodo__intro reveal">
+        <span class="eyebrow">Il nostro processo</span>
+        <h2 class="section-title">Il nostro metodo</h2>
+      </div>
+      <div class="process-grid">
+        <ProcessStep
+          number="01"
+          title="Audit"
+          description="Analizziamo la tua architettura attuale, i processi, i sistemi, le inefficienze"
+        />
+        <ProcessStep
+          number="02"
+          title="Gap Analysis"
+          description="Identifichiamo la distanza tra dove sei e dove vuoi essere"
+        />
+        <ProcessStep
+          number="03"
+          title="Soluzione"
+          description="Progettiamo la risposta tecnologica su misura per il tuo contesto"
+        />
+        <ProcessStep
+          number="04"
+          title="Implementazione"
+          description="Costruiamo e integriamo. Misuriamo i risultati."
+          isLast
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVIZI -->
+  <section class="section servizi-preview">
+    <div class="container">
+      <div class="servizi-preview__intro reveal">
+        <span class="eyebrow">Soluzioni</span>
+        <h2 class="section-title">Le nostre soluzioni</h2>
+      </div>
+      <div class="services-grid">
+        {services.map(s => (
+          <ServiceCard {...s} />
+        ))}
+      </div>
+      <div class="servizi-preview__cta reveal">
+        <a href="/servizi" class="btn btn-outline-dark">Vedi tutti i servizi</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SETTORE -->
+  <section class="section settore">
+    <div class="container">
+      <div class="settore__inner reveal">
+        <div class="settore__decoration" aria-hidden="true">
+          <NodeDecoration color="rgba(255,96,0,0.12)" />
+        </div>
+        <div class="settore__content">
+          <span class="eyebrow">Specializzazione verticale</span>
+          <h2 class="section-title settore__title">Specializziamo in<br>Fitness & Sport</h2>
+          <div class="divider"></div>
+          <p>
+            Conosciamo dall'interno le sfide operative di un club, di una palestra,
+            di un centro sportivo. Non come consulenti esterni, ma come imprenditori
+            che hanno vissuto le stesse criticità. Questo ci permette di proporre
+            soluzioni che funzionano davvero.
+          </p>
+          <a href="/chi-siamo" class="btn btn-primary" style="margin-top: var(--space-8);">
+            La nostra storia
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINALE -->
+  <section class="section cta-section" style="background: var(--color-dark);">
+    <div class="container cta-section__inner reveal">
+      <h2 class="section-title cta-section__title">
+        Pronto a partire dall'audit?
+      </h2>
+      <p class="cta-section__sub">
+        Raccontaci la tua realtà. Il primo passo è sempre capire la situazione.
+      </p>
+      <a href="/contatti" class="btn btn-primary">Prenota un Audit Gratuito</a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* HERO */
+  .hero {
+    position: relative;
+    background: var(--color-dark);
+    color: var(--color-white);
+    padding-block: clamp(var(--space-20), 12vw, var(--space-32));
+    overflow: hidden;
+  }
+
+  .hero__bg-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+  }
+
+  .hero__eyebrow {
+    color: var(--color-orange);
+  }
+
+  .hero__headline {
+    font-family: var(--font-display);
+    font-size: clamp(var(--text-5xl), 9vw, var(--text-7xl));
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-top: var(--space-4);
+    color: var(--color-white);
+  }
+
+  .hero__headline-accent {
+    color: var(--color-orange);
+  }
+
+  .hero__sub {
+    margin-top: var(--space-8);
+    font-size: clamp(var(--text-base), 2vw, var(--text-xl));
+    color: rgba(255,255,255,0.75);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  .hero__ctas {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    margin-top: var(--space-10);
+    flex-wrap: wrap;
+  }
+
+  .hero__link-secondary {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    transition: color var(--transition-fast);
+  }
+
+  .hero__link-secondary:hover {
+    color: var(--color-white);
+  }
+
+  /* DIFFERENTIATOR */
+  .differentiator {
+    background: var(--color-white);
+  }
+
+  .diff__grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--space-8);
+    align-items: center;
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-12);
+  }
+
+  .diff__divider {
+    width: 1px;
+    height: 200px;
+    background: var(--color-gray-light);
+  }
+
+  .diff__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-gray-mid);
+  }
+
+  .diff__badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .diff__badge--no  { background: rgba(220, 38, 38, 0.1); color: #dc2626; }
+  .diff__badge--yes { background: rgba(22, 163, 74, 0.1);  color: #16a34a; }
+
+  .diff__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .diff__col--no .diff__list li,
+  .diff__col--yes .diff__list li {
+    font-size: var(--text-base);
+    padding-left: var(--space-6);
+    position: relative;
+  }
+
+  .diff__col--no .diff__list li { color: var(--color-gray-mid); }
+  .diff__col--no .diff__list li::before { content: '✗'; position: absolute; left: 0; color: #dc2626; font-weight: 700; }
+
+  .diff__col--yes .diff__list li { color: var(--color-dark); font-weight: 500; }
+  .diff__col--yes .diff__list li::before { content: '✓'; position: absolute; left: 0; color: #16a34a; font-weight: 700; }
+
+  /* RISULTATI */
+  .risultati__intro { text-align: center; margin-bottom: var(--space-12); }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    margin-bottom: var(--space-10);
+  }
+
+  .risultati__cta { text-align: center; }
+
+  /* METODO */
+  .metodo__intro { text-align: center; margin-bottom: var(--space-12); }
+
+  .process-grid {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  /* SERVIZI */
+  .servizi-preview__intro { margin-bottom: var(--space-10); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    margin-bottom: var(--space-10);
+  }
+
+  .servizi-preview__cta { text-align: center; }
+
+  /* SETTORE */
+  .settore {
+    background: var(--color-dark);
+    color: var(--color-white);
+    overflow: hidden;
+  }
+
+  .settore__inner {
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+  }
+
+  .settore__decoration {
+    position: absolute;
+    right: -40px;
+    top: -60px;
+    width: 480px;
+    height: 480px;
+    pointer-events: none;
+  }
+
+  .settore__content {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+  }
+
+  .settore__title { color: var(--color-white); margin-top: var(--space-2); }
+
+  .settore__content p {
+    color: rgba(255,255,255,0.75);
+    font-size: var(--text-lg);
+    line-height: 1.7;
+  }
+
+  /* CTA SECTION */
+  .cta-section__inner {
+    text-align: center;
+    max-width: 640px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .cta-section__title { color: var(--color-white); }
+  .cta-section__sub { font-size: var(--text-lg); color: rgba(255,255,255,0.7); }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .diff__grid { grid-template-columns: 1fr; padding: var(--space-8); }
+    .diff__divider { width: 100%; height: 1px; }
+    .kpi-grid { grid-template-columns: 1fr; }
+    .process-grid { flex-direction: column; }
+    .services-grid { grid-template-columns: 1fr; }
+    .settore__decoration { display: none; }
+  }
+</style>

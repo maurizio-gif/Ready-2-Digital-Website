@@ -1,0 +1,47 @@
+---
+interface Props {
+  color?: string;
+  opacity?: number;
+}
+const { color = 'rgba(255,96,0,0.08)', opacity = 1 } = Astro.props;
+---
+<svg
+  class="node-decoration"
+  style={`opacity: ${opacity}`}
+  viewBox="0 0 600 400"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+>
+  <!-- Node circles -->
+  <circle cx="80"  cy="200" r="10" fill={color}/>
+  <circle cx="200" cy="80"  r="8"  fill={color}/>
+  <circle cx="200" cy="320" r="8"  fill={color}/>
+  <circle cx="320" cy="160" r="12" fill={color}/>
+  <circle cx="320" cy="280" r="8"  fill={color}/>
+  <circle cx="440" cy="100" r="8"  fill={color}/>
+  <circle cx="440" cy="240" r="10" fill={color}/>
+  <circle cx="520" cy="320" r="6"  fill={color}/>
+  <circle cx="140" cy="140" r="5"  fill={color}/>
+  <circle cx="380" cy="360" r="6"  fill={color}/>
+  <!-- Connecting lines -->
+  <line x1="80"  y1="200" x2="200" y2="80"  stroke={color} stroke-width="1.5"/>
+  <line x1="80"  y1="200" x2="200" y2="320" stroke={color} stroke-width="1.5"/>
+  <line x1="200" y1="80"  x2="320" y2="160" stroke={color} stroke-width="1.5"/>
+  <line x1="200" y1="320" x2="320" y2="280" stroke={color} stroke-width="1.5"/>
+  <line x1="320" y1="160" x2="440" y2="100" stroke={color} stroke-width="1.5"/>
+  <line x1="320" y1="160" x2="440" y2="240" stroke={color} stroke-width="1.5"/>
+  <line x1="320" y1="280" x2="440" y2="240" stroke={color} stroke-width="1.5"/>
+  <line x1="440" y1="100" x2="520" y2="320" stroke={color} stroke-width="1.5"/>
+  <line x1="440" y1="240" x2="520" y2="320" stroke={color} stroke-width="1.5"/>
+  <line x1="200" y1="80"  x2="140" y2="140" stroke={color} stroke-width="1"/>
+  <line x1="320" y1="280" x2="380" y2="360" stroke={color} stroke-width="1"/>
+</svg>
+
+<style>
+  .node-decoration {
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+  }
+</style>

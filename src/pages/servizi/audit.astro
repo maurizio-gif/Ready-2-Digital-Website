@@ -1,0 +1,211 @@
+---
+import ServiceLayout from '../../layouts/ServiceLayout.astro';
+---
+
+<ServiceLayout
+  title="Audit e Process Architecture"
+  description="L'audit è il punto di partenza di ogni progetto Ready2Digital. Mappiamo i processi, identifichiamo i gap e definiamo l'architettura target prima di scegliere qualsiasi strumento."
+  eyebrow="Il fondamento di tutto"
+  headline="L'audit è il passaggio<br>che cambia tutto"
+  intro="Non è una consulenza teorica. È lo scavo dentro la tua azienda: cosa funziona, cosa no, dove sono i colli di bottiglia, quale tecnologia manca, quale è obsoleta."
+>
+
+  <!-- TESTO PRINCIPALE -->
+  <section class="section body-section">
+    <div class="container body-inner">
+      <div class="body-text reveal">
+        <p class="body-lead">
+          Dall'audit emerge la tua architettura attuale: i processi, i sistemi, i flussi di dati,
+          le inefficienze nascoste. Poi disegniamo l'architettura target: come dovrebbero funzionare
+          i processi, quale tecnologia li abilita, quale sarà l'impatto concreto su margini,
+          costi, qualità.
+        </p>
+        <p>
+          Da lì partono tutte le soluzioni. Non è un passaggio preliminare. È il passaggio centrale.
+        </p>
+      </div>
+
+      <!-- COSA INCLUDE -->
+      <div class="include-box reveal">
+        <h2 class="section-title include-box__title">Cosa include un audit</h2>
+        <ul class="include-list">
+          <li>
+            <span class="include-list__icon">→</span>
+            <span>Mappatura dei processi operativi attuali</span>
+          </li>
+          <li>
+            <span class="include-list__icon">→</span>
+            <span>Analisi del patrimonio tecnologico esistente</span>
+          </li>
+          <li>
+            <span class="include-list__icon">→</span>
+            <span>Identificazione dei gap e delle inefficienze</span>
+          </li>
+          <li>
+            <span class="include-list__icon">→</span>
+            <span>Definizione dell'architettura target</span>
+          </li>
+          <li>
+            <span class="include-list__icon">→</span>
+            <span>Roadmap di implementazione con priorità e costi</span>
+          </li>
+          <li>
+            <span class="include-list__icon">→</span>
+            <span>KPI di misurazione dei risultati attesi</span>
+          </li>
+        </ul>
+        <a href="/contatti" class="btn btn-primary" style="margin-top: var(--space-8);">
+          Prenota un Audit
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERCHE' PRIMA -->
+  <section class="section why-section" style="background: var(--color-light);">
+    <div class="container why-inner">
+      <div class="reveal">
+        <span class="eyebrow">Perché iniziare qui</span>
+        <h2 class="section-title">La maggior parte dei progetti<br>fallisce senza audit</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="why-cards">
+        <div class="why-card reveal">
+          <div class="why-card__icon">✗</div>
+          <h3>Senza audit</h3>
+          <p>Si sceglie lo strumento prima di capire il problema. L'implementazione è parziale. I sistemi non comunicano. I team non adottano la soluzione.</p>
+        </div>
+        <div class="why-card why-card--positive reveal">
+          <div class="why-card__icon">✓</div>
+          <h3>Con l'audit</h3>
+          <p>Ogni scelta tecnologica è motivata da un'esigenza reale. L'architettura è coerente. Il team sa perché si sta cambiando. I risultati sono misurabili.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</ServiceLayout>
+
+<style>
+  .body-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+
+  .body-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .body-lead {
+    font-size: var(--text-xl);
+    color: var(--color-charcoal);
+    line-height: 1.75;
+    font-weight: 400;
+  }
+
+  .body-text p {
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.75;
+  }
+
+  .include-box {
+    background: var(--color-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-10);
+  }
+
+  .include-box__title {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-8);
+  }
+
+  .include-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .include-list li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    font-size: var(--text-base);
+    color: var(--color-charcoal);
+    line-height: 1.5;
+  }
+
+  .include-list__icon {
+    color: var(--color-orange);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .why-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .why-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+
+  .why-card {
+    padding: var(--space-8);
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-xl);
+    background: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .why-card--positive {
+    border-color: var(--color-orange);
+  }
+
+  .why-card__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--text-lg);
+  }
+
+  .why-card:not(.why-card--positive) .why-card__icon {
+    background: rgba(220,38,38,0.1);
+    color: #dc2626;
+  }
+
+  .why-card--positive .why-card__icon {
+    background: rgba(22,163,74,0.1);
+    color: #16a34a;
+  }
+
+  .why-card h3 {
+    font-size: var(--text-xl);
+    font-weight: 700;
+  }
+
+  .why-card p {
+    font-size: var(--text-base);
+    color: var(--color-gray-mid);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 768px) {
+    .body-inner { grid-template-columns: 1fr; }
+    .why-cards { grid-template-columns: 1fr; }
+  }
+</style>

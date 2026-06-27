@@ -1,0 +1,170 @@
+---
+import ServiceLayout from '../../layouts/ServiceLayout.astro';
+
+const applicazioni = [
+  { title: 'Automazione workflow operativi', desc: 'Processi ripetitivi automatizzati con n8n e integrazioni custom. Il team si concentra sul valore.' },
+  { title: 'Analisi predittiva clienti', desc: 'Pattern di comportamento, rischio abbandono, opportunità di upsell — basati su dati reali.' },
+  { title: 'Chatbot e assistenti interni', desc: 'Supporto al team e ai clienti su operazioni ripetitive. Risposte immediate, 24/7.' },
+  { title: 'Sistemi di alert intelligenti', desc: 'Notifiche in tempo reale su anomalie, scadenze, cambiamenti nei KPI.' },
+  { title: 'Integrazione modelli AI', desc: 'GPT, Claude e altri modelli integrati nelle piattaforme esistenti per task specifici.' },
+];
+---
+
+<ServiceLayout
+  title="AI & Automazione"
+  description="AI dove crea valore reale, non ovunque. Automazione workflow, analisi predittiva, chatbot interni — ma solo dopo l'audit dei processi."
+  eyebrow="Intelligenza artificiale applicata"
+  headline="AI dove crea valore reale.<br>Non ovunque."
+  intro="L'intelligenza artificiale non è magia. È uno strumento che potenzia i processi che già hai — se quei processi sono disegnati bene. Se non lo sono, l'AI amplifica il disordine."
+>
+
+  <section class="section body-section">
+    <div class="container">
+      <div class="philosophy-block reveal">
+        <div class="philosophy-text">
+          <p class="body-lead">
+            Per questo l'AI entra sempre dopo l'audit. Solo quando l'architettura dei processi
+            è chiara, possiamo capire dove l'AI crea vero valore.
+          </p>
+          <p>
+            Non implementiamo AI perché è di moda. La implementiamo quando ci sono processi
+            ben definiti, dati di qualità, e un impatto misurabile sull'efficienza o sulla
+            qualità del servizio.
+          </p>
+        </div>
+        <div class="philosophy-highlight">
+          <blockquote>
+            "L'AI amplifica quello che c'è. Se c'è ordine, amplifica l'efficienza.
+            Se c'è disordine, amplifica il disordine."
+          </blockquote>
+        </div>
+      </div>
+
+      <div class="applications reveal">
+        <span class="eyebrow">Applicazioni concrete</span>
+        <h2 class="section-title">Dove implementiamo AI</h2>
+        <div class="divider"></div>
+        <div class="applications-grid">
+          {applicazioni.map(a => (
+            <div class="application-card">
+              <h3 class="application-card__title">{a.title}</h3>
+              <p class="application-card__desc">{a.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section process-section" style="background: var(--color-light);">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">Come lavoriamo</span>
+        <h2 class="section-title">Prima i processi,<br>poi l'AI</h2>
+        <div class="divider"></div>
+        <p class="process-text">
+          Ogni progetto AI parte dall'audit dei processi esistenti. Identifichiamo i task
+          ripetitivi, i pattern nascosti nei dati, le decisioni che potrebbero essere
+          supportate da algoritmi. Solo allora scegliamo la tecnologia — che sia n8n per
+          l'automazione, modelli predittivi custom, o integrazione di LLM per task linguistici.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</ServiceLayout>
+
+<style>
+  .philosophy-block {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+    margin-bottom: var(--space-16);
+  }
+
+  .philosophy-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .body-lead {
+    font-size: var(--text-xl);
+    color: var(--color-charcoal);
+    line-height: 1.75;
+  }
+
+  .philosophy-text p {
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.75;
+  }
+
+  .philosophy-highlight {
+    background: var(--color-dark);
+    border-radius: var(--radius-xl);
+    padding: var(--space-10);
+  }
+
+  .philosophy-highlight blockquote {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-white);
+    line-height: 1.4;
+    border-left: 3px solid var(--color-orange);
+    padding-left: var(--space-6);
+    margin: 0;
+  }
+
+  .applications-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    margin-top: var(--space-10);
+  }
+
+  .application-card {
+    padding: var(--space-8);
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-xl);
+    background: var(--color-white);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .application-card:hover {
+    border-color: var(--color-orange);
+    box-shadow: var(--shadow-md);
+  }
+
+  .application-card__title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-bottom: var(--space-3);
+  }
+
+  .application-card__desc {
+    font-size: var(--text-sm);
+    color: var(--color-gray-mid);
+    line-height: 1.65;
+  }
+
+  .process-text {
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.75;
+    max-width: 700px;
+    margin-top: var(--space-4);
+  }
+
+  @media (max-width: 1024px) {
+    .applications-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .philosophy-block { grid-template-columns: 1fr; }
+    .applications-grid { grid-template-columns: 1fr; }
+  }
+</style>

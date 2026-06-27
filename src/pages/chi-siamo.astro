@@ -1,0 +1,310 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NodeDecoration from '../components/NodeDecoration.astro';
+---
+
+<BaseLayout
+  title="Chi Siamo"
+  description="Ready2Digital nasce dall'esperienza diretta. Maurizio Carucci ha vissuto dall'interno le sfide operative di un'impresa, e ha trasformato quella visione in un metodo: audit, architettura, implementazione."
+>
+
+  <!-- HERO -->
+  <section class="page-hero" style="background: var(--color-dark);">
+    <div class="hero__bg-decoration" aria-hidden="true">
+      <NodeDecoration color="rgba(255,96,0,0.06)" />
+    </div>
+    <div class="container page-hero__content">
+      <span class="eyebrow">La nostra storia</span>
+      <h1 class="page-hero__title">La strategia<br>prima degli strumenti</h1>
+      <p class="page-hero__sub">
+        Ready2Digital nasce da un'esperienza diretta: non da una slide di consulenza.
+      </p>
+    </div>
+  </section>
+
+  <!-- STORIA -->
+  <section class="section storia">
+    <div class="container storia__inner">
+      <div class="storia__text reveal">
+        <span class="eyebrow">Maurizio Carucci</span>
+        <h2 class="section-title">Da imprenditore<br>operativo ad architetto<br>digitale</h2>
+        <div class="divider"></div>
+        <p>
+          Maurizio Carucci ha iniziato come imprenditore operativo. Ha gestito un'azienda,
+          ha visto i problemi veri dall'interno, e ha capito che la soluzione non era comprare
+          software costosi senza una strategia. La soluzione era ripensare completamente come
+          i processi funzionavano — e poi abilitarli con la tecnologia giusta.
+        </p>
+        <p>
+          Quella intuizione si è trasformata in un caso di successo concreto: Atron Club 4.0
+          a Roma, dove la digitalizzazione completa dei processi ha portato a marginalità
+          superiori alla media di settore, con un'incidenza del costo del personale ridotta
+          al 25% — senza sacrificare la qualità del lavoro, anzi valorizzando le risorse umane.
+        </p>
+        <p>
+          Oggi Ready2Digital è la materializzazione di quella visione. Non veniamo da grandi
+          agenzie di marketing. Veniamo dall'operatività. Sappiamo cosa significa gestire
+          margini, costi, flussi di cassa, qualità del servizio. E sappiamo che la
+          digitalizzazione è la leva più potente per migliorare tutto questo simultaneamente.
+        </p>
+      </div>
+      <div class="storia__photo reveal">
+        <div class="storia__photo-placeholder">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5">
+            <circle cx="40" cy="30" r="16"/>
+            <path d="M10 70c0-16.57 13.43-30 30-30s30 13.43 30 30"/>
+          </svg>
+          <span>Maurizio Carucci</span>
+          <span style="font-size: var(--text-sm); opacity: 0.5;">Fondatore, Ready2Digital</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIONE -->
+  <section class="section visione" style="background: var(--color-light);">
+    <div class="container visione__inner">
+      <div class="visione__content reveal">
+        <span class="eyebrow">La nostra visione</span>
+        <h2 class="section-title">Digitalizzazione è strategia,<br>non tecnologia</h2>
+        <div class="divider"></div>
+        <div class="visione__text">
+          <p>
+            Tante volte si è parlato di strumenti come soluzione unica ai problemi aziendali.
+            La realtà è che in qualsiasi settore, quando si implementa uno strumento senza una
+            visione di processo, l'implementazione è parziale, i puntini non si connettono,
+            e i risultati non arrivano.
+          </p>
+          <p>
+            Quello che facciamo è partire dall'obiettivo: capire lo stato attuale, mappare i gap,
+            identificare le soluzioni con il giusto grado di profondità per la tipologia di cliente.
+            Solo allora scegliamo gli strumenti.
+          </p>
+        </div>
+      </div>
+      <div class="visione__decoration" aria-hidden="true">
+        <NodeDecoration color="rgba(255,96,0,0.10)" />
+      </div>
+    </div>
+  </section>
+
+  <!-- VALORI -->
+  <section class="section valori">
+    <div class="container">
+      <div class="valori__intro reveal">
+        <span class="eyebrow">I nostri principi</span>
+        <h2 class="section-title">Quello in cui crediamo</h2>
+      </div>
+      <div class="valori__grid">
+        <div class="valore-card reveal">
+          <div class="valore-card__number">01</div>
+          <h3 class="valore-card__title">Prima l'audit</h3>
+          <p class="valore-card__desc">
+            Non proponiamo mai una soluzione senza capire la situazione. Ogni progetto
+            inizia con un'analisi approfondita dell'architettura esistente.
+          </p>
+        </div>
+        <div class="valore-card reveal">
+          <div class="valore-card__number">02</div>
+          <h3 class="valore-card__title">Misurabilità</h3>
+          <p class="valore-card__desc">
+            Ogni progetto ha KPI definiti. I risultati si misurano. Non lavoriamo
+            per impressionare — lavoriamo per produrre impatto concreto.
+          </p>
+        </div>
+        <div class="valore-card reveal">
+          <div class="valore-card__number">03</div>
+          <h3 class="valore-card__title">Settore specifico</h3>
+          <p class="valore-card__desc">
+            Fitness & Sport non è un contesto generico. È la nostra specializzazione.
+            Conosciamo dall'interno le sfide di un club, una palestra, un centro sportivo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-block" style="background: var(--color-dark);">
+    <div class="container cta-block__inner reveal">
+      <h2 class="section-title" style="color: var(--color-white);">
+        Inizia dall'audit
+      </h2>
+      <p style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
+        Il primo passo è sempre capire la situazione. Prenota una call gratuita.
+      </p>
+      <a href="/contatti" class="btn btn-primary">Prenota un Audit</a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .page-hero {
+    position: relative;
+    padding-block: clamp(var(--space-16), 10vw, var(--space-24));
+    overflow: hidden;
+    color: var(--color-white);
+  }
+
+  .hero__bg-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .page-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+  }
+
+  .page-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(var(--text-4xl), 7vw, var(--text-6xl));
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--color-white);
+    margin-top: var(--space-4);
+  }
+
+  .page-hero__sub {
+    margin-top: var(--space-6);
+    font-size: var(--text-xl);
+    color: rgba(255,255,255,0.7);
+    max-width: 500px;
+  }
+
+  /* STORIA */
+  .storia__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
+  }
+
+  .storia__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .storia__text p {
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.75;
+  }
+
+  .storia__photo-placeholder {
+    aspect-ratio: 3/4;
+    background: var(--color-charcoal);
+    border-radius: var(--radius-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    color: rgba(255,255,255,0.6);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    max-width: 400px;
+  }
+
+  /* VISIONE */
+  .visione__inner {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
+  }
+
+  .visione__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .visione__text p {
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.75;
+  }
+
+  .visione__decoration {
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 400px;
+    justify-self: end;
+  }
+
+  /* VALORI */
+  .valori__intro {
+    margin-bottom: var(--space-12);
+  }
+
+  .valori__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
+  }
+
+  .valore-card {
+    padding: var(--space-10) var(--space-8);
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .valore-card:hover {
+    border-color: var(--color-orange);
+    box-shadow: var(--shadow-md);
+  }
+
+  .valore-card__number {
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--color-gray-light);
+    line-height: 1;
+  }
+
+  .valore-card__title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-dark);
+  }
+
+  .valore-card__desc {
+    font-size: var(--text-base);
+    color: var(--color-gray-mid);
+    line-height: 1.7;
+  }
+
+  /* CTA BLOCK */
+  .cta-block__inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .visione__inner { grid-template-columns: 1fr; }
+    .visione__decoration { max-width: 320px; }
+  }
+
+  @media (max-width: 768px) {
+    .storia__inner { grid-template-columns: 1fr; }
+    .storia__photo { order: -1; }
+    .storia__photo-placeholder { max-width: 100%; aspect-ratio: 4/3; }
+    .valori__grid { grid-template-columns: 1fr; }
+  }
+</style>

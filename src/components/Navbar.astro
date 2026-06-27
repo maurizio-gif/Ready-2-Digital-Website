@@ -1,0 +1,338 @@
+---
+const navLinks = [
+  { label: 'Chi Siamo', href: '/chi-siamo' },
+  { label: 'Contatti', href: '/contatti' },
+];
+
+const servizi = [
+  { label: 'Audit e Process Architecture', href: '/servizi/audit' },
+  { label: 'Web & App Custom', href: '/servizi/web-app' },
+  { label: 'Piattaforme di Vendita Servizi', href: '/servizi/ecommerce' },
+  { label: 'CRM Custom', href: '/servizi/crm' },
+  { label: 'AI & Automazione', href: '/servizi/ai-automazione' },
+  { label: 'Software Gestionali', href: '/servizi/software-gestionali' },
+  { label: 'Hardware & Soluzioni Immersive', href: '/servizi/hardware' },
+];
+---
+
+<header class="navbar" id="navbar">
+  <div class="container navbar__inner">
+    <a href="/" class="navbar__logo" aria-label="Ready2Digital Home">
+      <img
+        src="/images/logo_ready2digital.png"
+        alt="Ready2Digital"
+        width="180"
+        height="40"
+        loading="eager"
+      />
+    </a>
+
+    <nav class="navbar__nav" aria-label="Menu principale">
+      <ul class="navbar__links">
+        <li>
+          <a href="/chi-siamo" class="navbar__link">Chi Siamo</a>
+        </li>
+        <li class="navbar__dropdown-wrap">
+          <button class="navbar__link navbar__dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+            Servizi
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+              <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <div class="navbar__dropdown" role="menu">
+            {servizi.map(s => (
+              <a href={s.href} class="navbar__dropdown-item" role="menuitem">{s.label}</a>
+            ))}
+            <div class="navbar__dropdown-divider"></div>
+            <a href="/servizi" class="navbar__dropdown-item navbar__dropdown-item--all" role="menuitem">
+              Tutti i servizi →
+            </a>
+          </div>
+        </li>
+        <li>
+          <a href="/contatti" class="navbar__link">Contatti</a>
+        </li>
+      </ul>
+    </nav>
+
+    <a href="/contatti" class="btn btn-primary navbar__cta">Prenota un Audit</a>
+
+    <button class="navbar__hamburger" aria-label="Apri menu" aria-expanded="false" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="navbar__mobile" id="mobile-menu" aria-hidden="true">
+    <nav>
+      <ul class="navbar__mobile-links">
+        <li><a href="/chi-siamo">Chi Siamo</a></li>
+        <li class="navbar__mobile-group">
+          <button class="navbar__mobile-toggle" aria-expanded="false">
+            Servizi
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+              <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <ul class="navbar__mobile-sub">
+            {servizi.map(s => (
+              <li><a href={s.href}>{s.label}</a></li>
+            ))}
+            <li><a href="/servizi">Tutti i servizi</a></li>
+          </ul>
+        </li>
+        <li><a href="/contatti">Contatti</a></li>
+        <li><a href="/contatti" class="btn btn-primary" style="margin-top: 0.5rem; display:inline-flex;">Prenota un Audit</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-gray-light);
+    transition: box-shadow var(--transition-base);
+  }
+
+  .navbar.scrolled {
+    box-shadow: var(--shadow-md);
+  }
+
+  .navbar__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    height: 72px;
+  }
+
+  .navbar__logo img {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .navbar__nav {
+    flex: 1;
+  }
+
+  .navbar__links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  .navbar__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--color-charcoal);
+    transition: color var(--transition-fast);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0;
+  }
+
+  .navbar__link:hover {
+    color: var(--color-orange);
+  }
+
+  /* Dropdown */
+  .navbar__dropdown-wrap {
+    position: relative;
+  }
+
+  .navbar__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: -16px;
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-3) 0;
+    min-width: 280px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity var(--transition-base), transform var(--transition-base);
+  }
+
+  .navbar__dropdown-wrap:hover .navbar__dropdown,
+  .navbar__dropdown-wrap:focus-within .navbar__dropdown {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .navbar__dropdown-item {
+    display: block;
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--color-charcoal);
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+
+  .navbar__dropdown-item:hover {
+    background: var(--color-light);
+    color: var(--color-orange);
+  }
+
+  .navbar__dropdown-divider {
+    height: 1px;
+    background: var(--color-gray-light);
+    margin: var(--space-2) 0;
+  }
+
+  .navbar__dropdown-item--all {
+    font-weight: 600;
+    color: var(--color-orange);
+  }
+
+  .navbar__cta {
+    margin-left: auto;
+    flex-shrink: 0;
+    padding: 0.625rem 1.25rem;
+    font-size: var(--text-sm);
+  }
+
+  /* Hamburger */
+  .navbar__hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    padding: var(--space-2);
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: auto;
+  }
+
+  .navbar__hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--color-charcoal);
+    border-radius: 2px;
+    transition: all var(--transition-base);
+  }
+
+  .navbar__hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .navbar__hamburger.open span:nth-child(2) { opacity: 0; }
+  .navbar__hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+  /* Mobile menu */
+  .navbar__mobile {
+    display: none;
+    border-top: 1px solid var(--color-gray-light);
+    background: var(--color-white);
+    padding: var(--space-6) var(--space-4) var(--space-8);
+  }
+
+  .navbar__mobile.open {
+    display: block;
+  }
+
+  .navbar__mobile-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .navbar__mobile-links a {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--color-charcoal);
+    border-radius: var(--radius-md);
+    transition: background var(--transition-fast);
+  }
+
+  .navbar__mobile-links a:hover {
+    background: var(--color-light);
+  }
+
+  .navbar__mobile-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--color-charcoal);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+    border-radius: var(--radius-md);
+    transition: background var(--transition-fast);
+  }
+
+  .navbar__mobile-toggle:hover {
+    background: var(--color-light);
+  }
+
+  .navbar__mobile-sub {
+    padding-left: var(--space-4);
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height var(--transition-slow);
+  }
+
+  .navbar__mobile-sub.open {
+    max-height: 500px;
+  }
+
+  .navbar__mobile-sub a {
+    font-size: var(--text-base) !important;
+    color: var(--color-gray-mid) !important;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .navbar__nav,
+    .navbar__cta {
+      display: none;
+    }
+
+    .navbar__hamburger {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  // Sticky shadow
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar?.classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+
+  // Hamburger
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger?.addEventListener('click', () => {
+    const isOpen = mobileMenu?.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', String(isOpen));
+    mobileMenu?.setAttribute('aria-hidden', String(!isOpen));
+  });
+
+  // Mobile sub-menu toggle
+  const mobileToggle = document.querySelector('.navbar__mobile-toggle');
+  const mobileSub = document.querySelector('.navbar__mobile-sub');
+  mobileToggle?.addEventListener('click', () => {
+    const isOpen = mobileSub?.classList.toggle('open');
+    mobileToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+</script>
