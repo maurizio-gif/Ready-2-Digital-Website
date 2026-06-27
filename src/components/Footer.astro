@@ -93,8 +93,12 @@ const servizi = [
   }
 
   .footer__brand img {
-    opacity: 0.9;
+    /* Logo is dark charcoal; render it white so it reads on the dark footer */
+    filter: brightness(0) invert(1);
+    opacity: 0.92;
     margin-bottom: var(--space-4);
+    height: 34px;
+    width: auto;
   }
 
   .footer__tagline {
