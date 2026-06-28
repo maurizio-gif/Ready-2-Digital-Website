@@ -11,13 +11,13 @@ import { withBase } from '../utils/url';
 
   <!-- HERO -->
   <section class="page-hero" style="background: var(--color-dark);">
-    <div class="hero__bg-decoration" aria-hidden="true">
-      <NodeDecoration color="rgba(255,96,0,0.06)" />
+    <div class="hero__bg-decoration float-soft" aria-hidden="true">
+      <NodeDecoration color="rgba(255,96,0,0.10)" animated={true} />
     </div>
-    <div class="container page-hero__content">
-      <span class="eyebrow">La nostra storia</span>
-      <h1 class="page-hero__title">La strategia<br>prima degli strumenti</h1>
-      <p class="page-hero__sub">
+    <div class="container page-hero__content" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">La nostra storia</span>
+      <h1 class="page-hero__title" data-animate="clip-up">La strategia<br>prima degli strumenti</h1>
+      <p class="page-hero__sub" data-animate="fade-up">
         Ready2Digital nasce da un'esperienza diretta: non da una slide di consulenza.
       </p>
     </div>
@@ -26,7 +26,7 @@ import { withBase } from '../utils/url';
   <!-- STORIA -->
   <section class="section storia">
     <div class="container storia__inner">
-      <div class="storia__text reveal">
+      <div class="storia__text" data-animate="fade-right">
         <span class="eyebrow">Maurizio Taruggi · Founder &amp; CEO</span>
         <h2 class="section-title">Da imprenditore<br>del fitness ad architetto<br>digitale</h2>
         <div class="divider"></div>
@@ -59,7 +59,7 @@ import { withBase } from '../utils/url';
           digitalizzazione è la leva più potente per migliorare tutto questo simultaneamente.
         </p>
       </div>
-      <div class="storia__photo reveal">
+      <div class="storia__photo" data-animate="fade-left">
         <figure class="storia__figure">
           <img
             src={withBase('/images/maurizio-taruggi.jpg')}
@@ -90,7 +90,7 @@ import { withBase } from '../utils/url';
         </p>
       </div>
 
-      <div class="formazione__grid">
+      <div class="formazione__grid" data-stagger="100">
         <div class="credenziale reveal">
           <span class="credenziale__tag">Formazione</span>
           <h3 class="credenziale__title">Master in Management</h3>
@@ -123,7 +123,7 @@ import { withBase } from '../utils/url';
   <!-- VISIONE -->
   <section class="section visione">
     <div class="container visione__inner">
-      <div class="visione__content reveal">
+      <div class="visione__content" data-animate="fade-right">
         <span class="eyebrow">La nostra visione</span>
         <h2 class="section-title">Digitalizzazione è strategia,<br>non tecnologia</h2>
         <div class="divider"></div>
@@ -141,8 +141,8 @@ import { withBase } from '../utils/url';
           </p>
         </div>
       </div>
-      <div class="visione__decoration" aria-hidden="true">
-        <NodeDecoration color="rgba(255,96,0,0.10)" />
+      <div class="visione__decoration float-soft" aria-hidden="true" data-animate="fade-left">
+        <NodeDecoration color="rgba(255,96,0,0.12)" animated={true} />
       </div>
     </div>
   </section>
@@ -154,7 +154,7 @@ import { withBase } from '../utils/url';
         <span class="eyebrow">I nostri principi</span>
         <h2 class="section-title">Quello in cui crediamo</h2>
       </div>
-      <div class="valori__grid">
+      <div class="valori__grid" data-stagger="120">
         <div class="valore-card reveal">
           <div class="valore-card__number">01</div>
           <h3 class="valore-card__title">Prima l'audit</h3>

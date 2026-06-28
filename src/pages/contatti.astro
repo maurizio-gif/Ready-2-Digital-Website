@@ -9,13 +9,13 @@ import NodeDecoration from '../components/NodeDecoration.astro';
 >
 
   <section class="contact-hero" style="background: var(--color-dark);">
-    <div class="hero__bg-decoration" aria-hidden="true">
-      <NodeDecoration color="rgba(255,96,0,0.06)" />
+    <div class="hero__bg-decoration float-soft" aria-hidden="true">
+      <NodeDecoration color="rgba(255,96,0,0.10)" animated={true} />
     </div>
-    <div class="container contact-hero__content">
-      <span class="eyebrow">Inizia con noi</span>
-      <h1 class="contact-hero__title">Inizia dall'audit</h1>
-      <p class="contact-hero__sub">
+    <div class="container contact-hero__content" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">Inizia con noi</span>
+      <h1 class="contact-hero__title" data-animate="clip-up">Inizia dall'audit</h1>
+      <p class="contact-hero__sub" data-animate="fade-up">
         Il primo passo è sempre capire la situazione. Raccontaci la tua realtà,
         quello che funziona e quello che no, dove vuoi arrivare. Il resto viene da lì.
       </p>
@@ -26,8 +26,8 @@ import NodeDecoration from '../components/NodeDecoration.astro';
     <div class="container contact-inner">
 
       <!-- FORM -->
-      <div class="contact-form-wrap reveal">
-        <form class="contact-form" name="contatti" method="POST" novalidate>
+      <div class="contact-form-wrap" data-animate="fade-right">
+        <form class="contact-form stagger-list" name="contatti" method="POST" novalidate>
           <div class="form-row">
             <div class="form-group">
               <label for="nome">Nome e Cognome <span class="required">*</span></label>
@@ -116,7 +116,7 @@ import NodeDecoration from '../components/NodeDecoration.astro';
       </div>
 
       <!-- INFO -->
-      <aside class="contact-info reveal">
+      <aside class="contact-info stagger-list">
         <div class="contact-info__block">
           <h3>Come lavoriamo</h3>
           <p>

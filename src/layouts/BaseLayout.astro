@@ -79,7 +79,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.read
 
       if (reduced) {
         document
-          .querySelectorAll('[data-animate], .reveal, .reveal-lines')
+          .querySelectorAll('[data-animate], .reveal, .reveal-lines, .stagger-list')
           .forEach((el) => {
             el.classList.add('is-visible', 'visible');
             el.querySelectorAll('[data-count]').forEach((c) => {
@@ -114,7 +114,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.read
         const targets = new Set();
         document.querySelectorAll('[data-stagger]').forEach((el) => targets.add(el));
         document
-          .querySelectorAll('[data-animate], .reveal, .reveal-lines')
+          .querySelectorAll('[data-animate], .reveal, .reveal-lines, .stagger-list')
           .forEach((el) => {
             if (!el.closest('[data-stagger]')) targets.add(el);
           });

@@ -17,14 +17,14 @@ const { title, description, eyebrow, headline, intro } = Astro.props;
 <BaseLayout title={title} description={description}>
 
   <section class="service-hero" style="background: var(--color-dark);">
-    <div class="hero__bg-decoration" aria-hidden="true">
-      <NodeDecoration color="rgba(255,96,0,0.06)" />
+    <div class="hero__bg-decoration float-soft" aria-hidden="true">
+      <NodeDecoration color="rgba(255,96,0,0.10)" animated={true} />
     </div>
-    <div class="container service-hero__content">
-      <span class="eyebrow">{eyebrow}</span>
-      <h1 class="service-hero__title" set:html={headline}></h1>
-      <p class="service-hero__intro">{intro}</p>
-      <a href={withBase('/contatti')} class="btn btn-primary" style="margin-top: var(--space-8);">
+    <div class="container service-hero__content" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">{eyebrow}</span>
+      <h1 class="service-hero__title" data-animate="clip-up" set:html={headline}></h1>
+      <p class="service-hero__intro" data-animate="fade-up">{intro}</p>
+      <a href={withBase('/contatti')} class="btn btn-primary" data-animate="fade-up" style="margin-top: var(--space-8);">
         Prenota un Audit →
       </a>
     </div>
@@ -33,14 +33,14 @@ const { title, description, eyebrow, headline, intro } = Astro.props;
   <slot />
 
   <section class="section cta-block" style="background: var(--color-dark);">
-    <div class="container cta-block__inner reveal">
-      <h2 class="section-title" style="color: var(--color-white);">
+    <div class="container cta-block__inner" data-stagger="120">
+      <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">
         Vuoi sapere se questa soluzione è giusta per te?
       </h2>
-      <p style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
+      <p data-animate="fade-up" style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
         Partiamo dall'audit. È gratuito e senza impegno.
       </p>
-      <a href={withBase('/contatti')} class="btn btn-primary">Prenota un Audit</a>
+      <a href={withBase('/contatti')} class="btn btn-primary" data-animate="fade-up">Prenota un Audit</a>
     </div>
   </section>
 

@@ -32,13 +32,13 @@ const services = [
 
   <!-- HERO -->
   <section class="page-hero" style="background: var(--color-dark);">
-    <div class="hero__bg-decoration" aria-hidden="true">
-      <NodeDecoration color="rgba(255,96,0,0.06)" />
+    <div class="hero__bg-decoration float-soft" aria-hidden="true">
+      <NodeDecoration color="rgba(255,96,0,0.10)" animated={true} />
     </div>
-    <div class="container page-hero__content">
-      <span class="eyebrow">Le nostre soluzioni</span>
-      <h1 class="page-hero__title">Soluzioni che nascono<br>dai processi</h1>
-      <p class="page-hero__sub">
+    <div class="container page-hero__content" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">Le nostre soluzioni</span>
+      <h1 class="page-hero__title" data-animate="clip-up">Soluzioni che nascono<br>dai processi</h1>
+      <p class="page-hero__sub" data-animate="fade-up">
         La maggior parte dei progetti digitali fallisce perché si parte dallo strumento sbagliato.
         Noi facciamo il contrario. Partiamo sempre dall'audit.
       </p>
@@ -69,7 +69,7 @@ const services = [
   <!-- SERVIZI GRID -->
   <section class="section servizi-grid-section" style="background: var(--color-light);">
     <div class="container">
-      <div class="services-grid">
+      <div class="services-grid" data-stagger="100">
         {services.map(s => (
           <ServiceCard {...s} />
         ))}

@@ -29,7 +29,7 @@ const integrazioni = [
         </div>
         <div class="flow-box reveal">
           <h3 class="flow-box__title">Come funziona in pratica</h3>
-          <div class="flow-steps">
+          <div class="flow-steps stagger-list">
             <div class="flow-step">
               <div class="flow-step__num">1</div>
               <p>Cliente prenota un evento attraverso la piattaforma</p>
@@ -67,7 +67,7 @@ const integrazioni = [
         <h2 class="section-title">Pagamenti e sistemi<br>già integrati</h2>
         <div class="divider"></div>
       </div>
-      <div class="integrazioni-grid">
+      <div class="integrazioni-grid" data-stagger="120">
         {integrazioni.map(i => (
           <div class="integrazione-card reveal">
             <h3 class="integrazione-card__name">{i.name}</h3>
