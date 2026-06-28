@@ -41,6 +41,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.read
     <title>{title} | Ready2Digital</title>
   </head>
   <body>
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
     <Navbar />
     <main>
       <slot />
@@ -48,20 +50,100 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.read
     <Footer />
 
     <script>
-      // Intersection Observer reveal
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.12 }
-      );
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      // --- Count-up for stat numbers ---
+      function countUp(el) {
+        const target = parseFloat(el.dataset.count || '0');
+        const suffix = el.dataset.countSuffix || '';
+        const prefix = el.dataset.countPrefix || '';
+        const dur = 1500;
+        let startTs = null;
+        function step(ts) {
+          if (startTs === null) startTs = ts;
+          const p = Math.min((ts - startTs) / dur, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = prefix + Math.round(target * eased) + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      // --- Reveal helpers ---
+      function reveal(el, delay) {
+        if (delay) el.style.setProperty('--reveal-delay', delay + 'ms');
+        el.classList.add('is-visible', 'visible');
+        el.querySelectorAll('[data-count]').forEach((c) => countUp(c));
+        if (el.hasAttribute('data-count')) countUp(el);
+      }
+
+      if (reduced) {
+        document
+          .querySelectorAll('[data-animate], .reveal, .reveal-lines')
+          .forEach((el) => {
+            el.classList.add('is-visible', 'visible');
+            el.querySelectorAll('[data-count]').forEach((c) => {
+              c.textContent =
+                (c.dataset.countPrefix || '') +
+                c.dataset.count +
+                (c.dataset.countSuffix || '');
+            });
+          });
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              const el = entry.target;
+              io.unobserve(el);
+
+              if (el.hasAttribute('data-stagger')) {
+                const step = parseInt(el.dataset.stagger || '100', 10);
+                const kids = el.querySelectorAll(':scope > [data-animate], :scope > .reveal');
+                kids.forEach((k, i) => reveal(k, i * step));
+                el.classList.add('is-visible');
+              } else {
+                reveal(el, parseInt(el.dataset.delay || '0', 10));
+              }
+            });
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -6% 0px' }
+        );
+
+        // Observe stagger containers, top-level animated elements, legacy reveals, and line headlines
+        const targets = new Set();
+        document.querySelectorAll('[data-stagger]').forEach((el) => targets.add(el));
+        document
+          .querySelectorAll('[data-animate], .reveal, .reveal-lines')
+          .forEach((el) => {
+            if (!el.closest('[data-stagger]')) targets.add(el);
+          });
+        targets.forEach((el) => io.observe(el));
+      }
+
+      // --- Scroll progress bar ---
+      const bar = document.getElementById('scroll-progress');
+      if (bar && !reduced) {
+        let ticking = false;
+        const update = () => {
+          const h = document.documentElement;
+          const max = h.scrollHeight - h.clientHeight;
+          const p = max > 0 ? h.scrollTop / max : 0;
+          bar.style.transform = 'scaleX(' + p + ')';
+          ticking = false;
+        };
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(update);
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        update();
+      }
     </script>
   </body>
 </html>

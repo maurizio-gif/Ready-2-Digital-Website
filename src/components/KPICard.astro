@@ -5,10 +5,23 @@ interface Props {
   sublabel?: string;
 }
 const { value, label, sublabel } = Astro.props;
+
+// Split a value like "25%" into prefix / number / suffix for count-up.
+// Non-numeric values (e.g. "+%") render as-is without animation.
+const match = value.match(/^(\D*)(\d+)(\D*)$/);
 ---
 
 <div class="kpi-card reveal">
-  <div class="kpi-card__value">{value}</div>
+  {match ? (
+    <div
+      class="kpi-card__value"
+      data-count={match[2]}
+      data-count-prefix={match[1]}
+      data-count-suffix={match[3]}
+    >{match[1]}0{match[3]}</div>
+  ) : (
+    <div class="kpi-card__value">{value}</div>
+  )}
   <div class="kpi-card__label">{label}</div>
   {sublabel && <div class="kpi-card__sub">{sublabel}</div>}
 </div>

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
 @import './variables.css';
+@import './animations.css';
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -145,11 +146,14 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: var(--space-4);
 }
 
-/* Reveal animation */
+/* Reveal animation (legacy class, upgraded easing) */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  transform: translateY(36px);
+  transition:
+    opacity 0.8s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
 .reveal.visible {

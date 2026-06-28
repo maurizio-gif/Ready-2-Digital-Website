@@ -62,24 +62,63 @@ const services = [
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero__bg-decoration" aria-hidden="true">
-      <NodeDecoration color="rgba(255,96,0,0.07)" />
+    <div class="hero__bg-decoration float-soft" aria-hidden="true">
+      <NodeDecoration color="rgba(255,96,0,0.10)" animated={true} />
     </div>
+    <div class="hero__glow" aria-hidden="true"></div>
     <div class="container hero__content">
-      <span class="eyebrow hero__eyebrow">Architettura dei Processi Digitali</span>
-      <h1 class="hero__headline">
-        Non siamo<br>
-        un'agenzia<br>
-        <span class="hero__headline-accent">di marketing.</span>
+      <span class="eyebrow hero__eyebrow" data-animate="fade-up" data-delay="0">Architettura dei Processi Digitali</span>
+      <h1 class="hero__headline reveal-lines">
+        <span class="line"><span style="--reveal-delay: 100ms">Non siamo</span></span>
+        <span class="line"><span style="--reveal-delay: 220ms">un'agenzia</span></span>
+        <span class="line"><span class="hero__headline-accent" style="--reveal-delay: 340ms">di marketing.</span></span>
       </h1>
-      <p class="hero__sub">
+      <p class="hero__sub" data-animate="fade-up" data-delay="520">
         Siamo architetti dei tuoi processi aziendali.<br>
         Partiamo dal tuo obiettivo, mappiamo lo stato attuale,<br>
         identifichiamo i gap — poi scegliamo la tecnologia.
       </p>
-      <div class="hero__ctas">
+      <div class="hero__ctas" data-animate="fade-up" data-delay="660">
         <a href={withBase('/servizi/audit')} class="btn btn-primary">Scopri come lavoriamo</a>
         <a href="#risultati" class="hero__link-secondary">Vedi i risultati →</a>
+      </div>
+    </div>
+    <div class="hero__scroll-hint" aria-hidden="true" data-animate="fade-up" data-delay="900">
+      <span>Scroll</span>
+      <span class="hero__scroll-line"></span>
+    </div>
+  </section>
+
+  <!-- TECH MARQUEE -->
+  <section class="tech-band" aria-label="Tecnologie e competenze">
+    <div class="marquee">
+      <div class="marquee__track">
+        {[0, 1].map(() => (
+          <ul class="tech-band__list" aria-hidden="false">
+            <li>Audit &amp; Process Architecture</li>
+            <li class="tech-band__dot">◆</li>
+            <li>CRM Custom</li>
+            <li class="tech-band__dot">◆</li>
+            <li>AI &amp; Automazione</li>
+            <li class="tech-band__dot">◆</li>
+            <li>Stripe</li>
+            <li class="tech-band__dot">◆</li>
+            <li>GoCardless</li>
+            <li class="tech-band__dot">◆</li>
+            <li>n8n Workflow</li>
+            <li class="tech-band__dot">◆</li>
+            <li>Web &amp; App Custom</li>
+            <li class="tech-band__dot">◆</li>
+            <li>PWA</li>
+            <li class="tech-band__dot">◆</li>
+            <li>Totem &amp; POS</li>
+            <li class="tech-band__dot">◆</li>
+            <li>Software Gestionali</li>
+            <li class="tech-band__dot">◆</li>
+            <li>Dati Centralizzati</li>
+            <li class="tech-band__dot">◆</li>
+          </ul>
+        ))}
       </div>
     </div>
   </section>
@@ -87,7 +126,7 @@ const services = [
   <!-- COSA NON SIAMO -->
   <section class="section differentiator">
     <div class="container">
-      <div class="diff__grid">
+      <div class="diff__grid" data-stagger="160">
         <div class="diff__col diff__col--no reveal">
           <div class="diff__header">
             <span class="diff__badge diff__badge--no">✗</span>
@@ -118,16 +157,16 @@ const services = [
   <!-- RISULTATI -->
   <section class="section risultati" id="risultati">
     <div class="container">
-      <div class="risultati__intro reveal">
-        <span class="eyebrow">Prova concreta</span>
-        <h2 class="section-title">Un caso reale.<br>Numeri reali.</h2>
-        <p class="section-subtitle" style="margin-top: 1.5rem;">
+      <div class="risultati__intro" data-stagger="130">
+        <span class="eyebrow" data-animate="fade-up">Prova concreta</span>
+        <h2 class="section-title" data-animate="clip-up">Un caso reale.<br>Numeri reali.</h2>
+        <p class="section-subtitle" data-animate="fade-up" style="margin-top: 1.5rem;">
           Athlon Club 4.0, Roma. Da gestione operativa frammentata a digitalizzazione
           completa dei processi. Il risultato: marginalità aumentata, incidenza del
           costo del personale ridotta al 25%, dati centralizzati, team valorizzato.
         </p>
       </div>
-      <div class="kpi-grid">
+      <div class="kpi-grid" data-stagger="140">
         <KPICard value="25%" label="Incidenza costi personale" sublabel="Ridotta e ottimizzata" />
         <KPICard value="+%" label="Efficienza operativa" sublabel="Marginalità aumentata" />
         <KPICard value="100%" label="Dati centralizzati" sublabel="Accessibili in tempo reale" />
@@ -141,11 +180,11 @@ const services = [
   <!-- METODO -->
   <section class="section metodo" style="background: var(--color-light);">
     <div class="container">
-      <div class="metodo__intro reveal">
-        <span class="eyebrow">Il nostro processo</span>
-        <h2 class="section-title">Il nostro metodo</h2>
+      <div class="metodo__intro" data-stagger="130">
+        <span class="eyebrow" data-animate="fade-up">Il nostro processo</span>
+        <h2 class="section-title" data-animate="clip-up">Il nostro metodo</h2>
       </div>
-      <div class="process-grid">
+      <div class="process-grid" data-stagger="130">
         <ProcessStep
           number="01"
           title="Audit"
@@ -174,11 +213,11 @@ const services = [
   <!-- SERVIZI -->
   <section class="section servizi-preview">
     <div class="container">
-      <div class="servizi-preview__intro reveal">
-        <span class="eyebrow">Soluzioni</span>
-        <h2 class="section-title">Le nostre soluzioni</h2>
+      <div class="servizi-preview__intro" data-stagger="130">
+        <span class="eyebrow" data-animate="fade-up">Soluzioni</span>
+        <h2 class="section-title" data-animate="clip-up">Le nostre soluzioni</h2>
       </div>
-      <div class="services-grid">
+      <div class="services-grid" data-stagger="110">
         {services.map(s => (
           <ServiceCard {...s} />
         ))}
@@ -192,21 +231,21 @@ const services = [
   <!-- SETTORE -->
   <section class="section settore">
     <div class="container">
-      <div class="settore__inner reveal">
-        <div class="settore__decoration" aria-hidden="true">
-          <NodeDecoration color="rgba(255,96,0,0.12)" />
+      <div class="settore__inner">
+        <div class="settore__decoration float-soft" aria-hidden="true" data-animate="zoom-in">
+          <NodeDecoration color="rgba(255,96,0,0.14)" animated={true} />
         </div>
-        <div class="settore__content">
-          <span class="eyebrow">Specializzazione verticale</span>
-          <h2 class="section-title settore__title">Specializziamo in<br>Fitness & Sport</h2>
-          <div class="divider"></div>
-          <p>
+        <div class="settore__content" data-stagger="120">
+          <span class="eyebrow" data-animate="fade-up">Specializzazione verticale</span>
+          <h2 class="section-title settore__title" data-animate="clip-up">Specializziamo in<br>Fitness & Sport</h2>
+          <div class="divider" data-animate="fade-right"></div>
+          <p data-animate="fade-up">
             Conosciamo dall'interno le sfide operative di un club, di una palestra,
             di un centro sportivo. Non come consulenti esterni, ma come imprenditori
             che hanno vissuto le stesse criticità. Questo ci permette di proporre
             soluzioni che funzionano davvero.
           </p>
-          <a href={withBase('/chi-siamo')} class="btn btn-primary" style="margin-top: var(--space-8);">
+          <a href={withBase('/chi-siamo')} class="btn btn-primary" data-animate="fade-up" style="margin-top: var(--space-8);">
             La nostra storia
           </a>
         </div>
@@ -216,14 +255,14 @@ const services = [
 
   <!-- CTA FINALE -->
   <section class="section cta-section" style="background: var(--color-dark);">
-    <div class="container cta-section__inner reveal">
-      <h2 class="section-title cta-section__title">
+    <div class="container cta-section__inner" data-stagger="120">
+      <h2 class="section-title cta-section__title" data-animate="clip-up">
         Pronto a partire dall'audit?
       </h2>
-      <p class="cta-section__sub">
+      <p class="cta-section__sub" data-animate="fade-up">
         Raccontaci la tua realtà. Il primo passo è sempre capire la situazione.
       </p>
-      <a href={withBase('/contatti')} class="btn btn-primary">Prenota un Audit Gratuito</a>
+      <a href={withBase('/contatti')} class="btn btn-primary" data-animate="fade-up">Prenota un Audit Gratuito</a>
     </div>
   </section>
 
@@ -243,6 +282,21 @@ const services = [
     position: absolute;
     inset: 0;
     pointer-events: none;
+  }
+
+  /* Radial glow behind the headline */
+  .hero__glow {
+    position: absolute;
+    top: 30%;
+    left: 18%;
+    width: 520px;
+    height: 520px;
+    max-width: 80vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,96,0,0.22) 0%, rgba(255,96,0,0) 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: glow-pulse 7s ease-in-out infinite;
   }
 
   .hero__content {
@@ -285,6 +339,44 @@ const services = [
     flex-wrap: wrap;
   }
 
+  .hero__scroll-hint {
+    position: absolute;
+    bottom: var(--space-8);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    z-index: 1;
+  }
+
+  .hero__scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,96,0,0.8), transparent);
+    animation: scroll-hint 2s ease-in-out infinite;
+    transform-origin: top;
+  }
+
+  @keyframes scroll-hint {
+    0%   { transform: scaleY(0); opacity: 0; }
+    40%  { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(1) translateY(40px); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__glow, .hero__scroll-line { animation: none; }
+  }
+
+  @media (max-width: 768px) {
+    .hero__scroll-hint { display: none; }
+  }
+
   .hero__link-secondary {
     font-size: var(--text-base);
     font-weight: 600;
@@ -294,6 +386,36 @@ const services = [
 
   .hero__link-secondary:hover {
     color: var(--color-white);
+  }
+
+  /* TECH BAND */
+  .tech-band {
+    background: var(--color-dark);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-block: var(--space-5);
+  }
+
+  .tech-band__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    padding-right: var(--space-8);
+    white-space: nowrap;
+  }
+
+  .tech-band__list li {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+  }
+
+  .tech-band__dot {
+    color: var(--color-orange) !important;
+    font-size: var(--text-xs) !important;
   }
 
   /* DIFFERENTIATOR */
