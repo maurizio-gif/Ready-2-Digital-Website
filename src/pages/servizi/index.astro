@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
 import NodeDecoration from '../../components/NodeDecoration.astro';
+import { withBase } from '../../utils/url';
 
 const serviceIcons = {
   audit: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h32M8 24h20M8 36h12"/><circle cx="38" cy="30" r="8"/><path d="m44 36-3-3"/></svg>`,
@@ -60,7 +61,7 @@ const services = [
         </p>
       </div>
       <div class="intro-section__cta">
-        <a href="/servizi/audit" class="btn btn-primary">Inizia dall'Audit →</a>
+        <a href={withBase('/servizi/audit')} class="btn btn-primary">Inizia dall'Audit →</a>
       </div>
     </div>
   </section>
@@ -84,7 +85,7 @@ const services = [
         Il nostro punto di partenza è sempre l'audit. È il modo più veloce per capire
         qual è la soluzione giusta per te.
       </p>
-      <a href="/contatti" class="btn btn-primary">Prenota un Audit Gratuito</a>
+      <a href={withBase('/contatti')} class="btn btn-primary">Prenota un Audit Gratuito</a>
     </div>
   </section>
 

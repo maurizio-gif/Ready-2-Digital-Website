@@ -1,5 +1,6 @@
 ---
 import ServiceLayout from '../../layouts/ServiceLayout.astro';
+import { withBase } from '../../utils/url';
 ---
 
 <ServiceLayout
@@ -54,7 +55,7 @@ import ServiceLayout from '../../layouts/ServiceLayout.astro';
             <span>KPI di misurazione dei risultati attesi</span>
           </li>
         </ul>
-        <a href="/contatti" class="btn btn-primary" style="margin-top: var(--space-8);">
+        <a href={withBase('/contatti')} class="btn btn-primary" style="margin-top: var(--space-8);">
           Prenota un Audit
         </a>
       </div>

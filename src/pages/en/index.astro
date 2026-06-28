@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../utils/url';
 ---
 
 <BaseLayout
@@ -17,8 +18,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         Meanwhile, you can explore our Italian site or contact us directly.
       </p>
       <div style="margin-top: 2.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="/" class="btn btn-primary">Italian Site</a>
-        <a href="/contatti" class="btn btn-outline-dark">Contact Us</a>
+        <a href={withBase('/')} class="btn btn-primary">Italian Site</a>
+        <a href={withBase('/contatti')} class="btn btn-outline-dark">Contact Us</a>
       </div>
     </div>
   </section>

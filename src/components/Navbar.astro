@@ -1,8 +1,5 @@
 ---
-const navLinks = [
-  { label: 'Chi Siamo', href: '/chi-siamo' },
-  { label: 'Contatti', href: '/contatti' },
-];
+import { withBase } from '../utils/url';
 
 const servizi = [
   { label: 'Audit e Process Architecture', href: '/servizi/audit' },
@@ -17,9 +14,9 @@ const servizi = [
 
 <header class="navbar" id="navbar">
   <div class="container navbar__inner">
-    <a href="/" class="navbar__logo" aria-label="Ready2Digital Home">
+    <a href={withBase('/')} class="navbar__logo" aria-label="Ready2Digital Home">
       <img
-        src="/images/logo_ready2digital.png"
+        src={withBase('/images/logo_ready2digital.png')}
         alt="Ready2Digital"
         width="180"
         height="40"
@@ -30,7 +27,7 @@ const servizi = [
     <nav class="navbar__nav" aria-label="Menu principale">
       <ul class="navbar__links">
         <li>
-          <a href="/chi-siamo" class="navbar__link">Chi Siamo</a>
+          <a href={withBase('/chi-siamo')} class="navbar__link">Chi Siamo</a>
         </li>
         <li class="navbar__dropdown-wrap">
           <button class="navbar__link navbar__dropdown-toggle" aria-expanded="false" aria-haspopup="true">
@@ -41,21 +38,21 @@ const servizi = [
           </button>
           <div class="navbar__dropdown" role="menu">
             {servizi.map(s => (
-              <a href={s.href} class="navbar__dropdown-item" role="menuitem">{s.label}</a>
+              <a href={withBase(s.href)} class="navbar__dropdown-item" role="menuitem">{s.label}</a>
             ))}
             <div class="navbar__dropdown-divider"></div>
-            <a href="/servizi" class="navbar__dropdown-item navbar__dropdown-item--all" role="menuitem">
+            <a href={withBase('/servizi')} class="navbar__dropdown-item navbar__dropdown-item--all" role="menuitem">
               Tutti i servizi →
             </a>
           </div>
         </li>
         <li>
-          <a href="/contatti" class="navbar__link">Contatti</a>
+          <a href={withBase('/contatti')} class="navbar__link">Contatti</a>
         </li>
       </ul>
     </nav>
 
-    <a href="/contatti" class="btn btn-primary navbar__cta">Prenota un Audit</a>
+    <a href={withBase('/contatti')} class="btn btn-primary navbar__cta">Prenota un Audit</a>
 
     <button class="navbar__hamburger" aria-label="Apri menu" aria-expanded="false" id="hamburger">
       <span></span><span></span><span></span>
@@ -66,7 +63,7 @@ const servizi = [
   <div class="navbar__mobile" id="mobile-menu" aria-hidden="true">
     <nav>
       <ul class="navbar__mobile-links">
-        <li><a href="/chi-siamo">Chi Siamo</a></li>
+        <li><a href={withBase('/chi-siamo')}>Chi Siamo</a></li>
         <li class="navbar__mobile-group">
           <button class="navbar__mobile-toggle" aria-expanded="false">
             Servizi
@@ -76,13 +73,13 @@ const servizi = [
           </button>
           <ul class="navbar__mobile-sub">
             {servizi.map(s => (
-              <li><a href={s.href}>{s.label}</a></li>
+              <li><a href={withBase(s.href)}>{s.label}</a></li>
             ))}
-            <li><a href="/servizi">Tutti i servizi</a></li>
+            <li><a href={withBase('/servizi')}>Tutti i servizi</a></li>
           </ul>
         </li>
-        <li><a href="/contatti">Contatti</a></li>
-        <li><a href="/contatti" class="btn btn-primary" style="margin-top: 0.5rem; display:inline-flex;">Prenota un Audit</a></li>
+        <li><a href={withBase('/contatti')}>Contatti</a></li>
+        <li><a href={withBase('/contatti')} class="btn btn-primary" style="margin-top: 0.5rem; display:inline-flex;">Prenota un Audit</a></li>
       </ul>
     </nav>
   </div>

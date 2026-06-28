@@ -1,6 +1,7 @@
 ---
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import { withBase } from '../utils/url';
 import '../styles/global.css';
 
 interface Props {
@@ -13,7 +14,7 @@ interface Props {
 const {
   title,
   description = 'Ready2Digital — Architettura dei Processi Digitali. Partiamo dall\'audit, disegniamo la soluzione, implementiamo e misuriamo.',
-  ogImage = '/images/og-default.png',
+  ogImage = withBase('/images/og-default.png'),
   lang = 'it',
 } = Astro.props;
 
@@ -34,8 +35,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.read
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:type" content="website" />
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="icon" type="image/x-icon" href={withBase('/favicon.ico')} />
 
     <title>{title} | Ready2Digital</title>
   </head>

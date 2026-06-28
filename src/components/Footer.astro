@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../utils/url';
+
 const servizi = [
   { label: 'Audit e Process Architecture', href: '/servizi/audit' },
   { label: 'Web & App Custom', href: '/servizi/web-app' },
@@ -13,9 +15,9 @@ const servizi = [
 <footer class="footer">
   <div class="container footer__inner">
     <div class="footer__brand">
-      <a href="/" aria-label="Ready2Digital Home">
+      <a href={withBase('/')} aria-label="Ready2Digital Home">
         <img
-          src="/images/logo_r2digital.png"
+          src={withBase('/images/logo_r2digital.png')}
           alt="R2Digital"
           width="140"
           height="36"
@@ -43,7 +45,7 @@ const servizi = [
       <h4>Servizi</h4>
       <ul>
         {servizi.map(s => (
-          <li><a href={s.href}>{s.label}</a></li>
+          <li><a href={withBase(s.href)}>{s.label}</a></li>
         ))}
       </ul>
     </div>
@@ -51,9 +53,9 @@ const servizi = [
     <div class="footer__col">
       <h4>Azienda</h4>
       <ul>
-        <li><a href="/chi-siamo">Chi Siamo</a></li>
-        <li><a href="/servizi">Tutti i Servizi</a></li>
-        <li><a href="/contatti">Contatti</a></li>
+        <li><a href={withBase('/chi-siamo')}>Chi Siamo</a></li>
+        <li><a href={withBase('/servizi')}>Tutti i Servizi</a></li>
+        <li><a href={withBase('/contatti')}>Contatti</a></li>
       </ul>
     </div>
 
@@ -65,14 +67,14 @@ const servizi = [
         </li>
         <li>Italia</li>
       </ul>
-      <a href="/contatti" class="btn btn-primary footer__cta">Prenota un Audit</a>
+      <a href={withBase('/contatti')} class="btn btn-primary footer__cta">Prenota un Audit</a>
     </div>
   </div>
 
   <div class="footer__bottom">
     <div class="container footer__bottom-inner">
       <p>&copy; 2024 Ready2Digital. Tutti i diritti riservati.</p>
-      <a href="/en/" class="footer__lang">EN</a>
+      <a href={withBase('/en/')} class="footer__lang">EN</a>
     </div>
   </div>
 </footer>

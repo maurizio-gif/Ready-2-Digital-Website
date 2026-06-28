@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import NodeDecoration from '../components/NodeDecoration.astro';
+import { withBase } from '../utils/url';
 
 interface Props {
   title: string;
@@ -23,7 +24,7 @@ const { title, description, eyebrow, headline, intro } = Astro.props;
       <span class="eyebrow">{eyebrow}</span>
       <h1 class="service-hero__title" set:html={headline}></h1>
       <p class="service-hero__intro">{intro}</p>
-      <a href="/contatti" class="btn btn-primary" style="margin-top: var(--space-8);">
+      <a href={withBase('/contatti')} class="btn btn-primary" style="margin-top: var(--space-8);">
         Prenota un Audit →
       </a>
     </div>
@@ -39,7 +40,7 @@ const { title, description, eyebrow, headline, intro } = Astro.props;
       <p style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
         Partiamo dall'audit. È gratuito e senza impegno.
       </p>
-      <a href="/contatti" class="btn btn-primary">Prenota un Audit</a>
+      <a href={withBase('/contatti')} class="btn btn-primary">Prenota un Audit</a>
     </div>
   </section>
 

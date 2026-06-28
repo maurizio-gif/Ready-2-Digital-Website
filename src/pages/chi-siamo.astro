@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NodeDecoration from '../components/NodeDecoration.astro';
+import { withBase } from '../utils/url';
 ---
 
 <BaseLayout
@@ -133,7 +134,7 @@ import NodeDecoration from '../components/NodeDecoration.astro';
       <p style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
         Il primo passo è sempre capire la situazione. Prenota una call gratuita.
       </p>
-      <a href="/contatti" class="btn btn-primary">Prenota un Audit</a>
+      <a href={withBase('/contatti')} class="btn btn-primary">Prenota un Audit</a>
     </div>
   </section>
 
