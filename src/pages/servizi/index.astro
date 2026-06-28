@@ -61,7 +61,7 @@ const services = [
         </p>
       </div>
       <div class="intro-section__cta">
-        <a href={withBase('/servizi/audit')} class="btn btn-primary">Inizia dall'Audit →</a>
+        <a href={withBase('/servizi/audit')} class="link-arrow">Scopri il nostro metodo →</a>
       </div>
     </div>
   </section>
@@ -77,15 +77,16 @@ const services = [
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- MANIFESTO -->
   <section class="section cta-block" style="background: var(--color-dark);">
-    <div class="container cta-block__inner reveal">
-      <h2 class="section-title" style="color: var(--color-white);">Non sai da dove iniziare?</h2>
-      <p style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
-        Il nostro punto di partenza è sempre l'audit. È il modo più veloce per capire
-        qual è la soluzione giusta per te.
+    <div class="container cta-block__inner" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up" style="color: var(--color-orange);">Il nostro approccio</span>
+      <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">Innovazione con i piedi<br>per terra.</h2>
+      <p data-animate="fade-up" style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
+        Aiutiamo le aziende a innovare mantenendo il focus su operatività e risultati.
+        Ogni soluzione nasce dai processi, non dallo strumento.
       </p>
-      <a href={withBase('/contatti')} class="btn btn-primary">Prenota un Audit Gratuito</a>
+      <a href={withBase('/insights')} class="link-arrow" data-animate="fade-up">Leggi il nostro punto di vista →</a>
     </div>
   </section>
 

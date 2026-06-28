@@ -183,16 +183,17 @@ import { withBase } from '../utils/url';
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- MANIFESTO -->
   <section class="section cta-block" style="background: var(--color-dark);">
-    <div class="container cta-block__inner reveal">
-      <h2 class="section-title" style="color: var(--color-white);">
-        Inizia dall'audit
+    <div class="container cta-block__inner" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up" style="color: var(--color-orange);">La nostra missione</span>
+      <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">
+        Innovazione con i piedi<br>per terra.
       </h2>
-      <p style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
-        Il primo passo è sempre capire la situazione. Prenota una call gratuita.
+      <p data-animate="fade-up" style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
+        Aiutiamo le aziende a innovare mantenendo il focus su operatività e risultati.
       </p>
-      <a href={withBase('/contatti')} class="btn btn-primary">Prenota un Audit</a>
+      <a href={withBase('/insights')} class="link-arrow" data-animate="fade-up">Leggi il nostro punto di vista →</a>
     </div>
   </section>
 

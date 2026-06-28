@@ -47,12 +47,13 @@ const servizi = [
           </div>
         </li>
         <li>
+          <a href={withBase('/insights')} class="navbar__link">Insights</a>
+        </li>
+        <li>
           <a href={withBase('/contatti')} class="navbar__link">Contatti</a>
         </li>
       </ul>
     </nav>
-
-    <a href={withBase('/contatti')} class="btn btn-primary navbar__cta">Prenota un Audit</a>
 
     <button class="navbar__hamburger" aria-label="Apri menu" aria-expanded="false" id="hamburger">
       <span></span><span></span><span></span>
@@ -78,8 +79,8 @@ const servizi = [
             <li><a href={withBase('/servizi')}>Tutti i servizi</a></li>
           </ul>
         </li>
+        <li><a href={withBase('/insights')}>Insights</a></li>
         <li><a href={withBase('/contatti')}>Contatti</a></li>
-        <li><a href={withBase('/contatti')} class="btn btn-primary" style="margin-top: 0.5rem; display:inline-flex;">Prenota un Audit</a></li>
       </ul>
     </nav>
   </div>
@@ -114,6 +115,8 @@ const servizi = [
 
   .navbar__nav {
     flex: 1;
+    display: flex;
+    justify-content: flex-end;
   }
 
   .navbar__links {

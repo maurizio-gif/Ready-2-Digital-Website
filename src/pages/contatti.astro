@@ -5,7 +5,7 @@ import NodeDecoration from '../components/NodeDecoration.astro';
 
 <BaseLayout
   title="Contatti"
-  description="Inizia dall'audit. Raccontaci la tua realtà, quello che funziona e quello che no, dove vuoi arrivare. Il resto viene da lì."
+  description="Aiutiamo le aziende a innovare mantenendo il focus su operatività e risultati. Scrivici per parlare del tuo progetto di digitalizzazione."
 >
 
   <section class="contact-hero" style="background: var(--color-dark);">
@@ -13,151 +13,59 @@ import NodeDecoration from '../components/NodeDecoration.astro';
       <NodeDecoration color="rgba(255,96,0,0.10)" animated={true} />
     </div>
     <div class="container contact-hero__content" data-stagger="120">
-      <span class="eyebrow" data-animate="fade-up">Inizia con noi</span>
-      <h1 class="contact-hero__title" data-animate="clip-up">Inizia dall'audit</h1>
+      <span class="eyebrow" data-animate="fade-up">Parliamone</span>
+      <h1 class="contact-hero__title" data-animate="clip-up">Innovazione con i piedi<br>per terra</h1>
       <p class="contact-hero__sub" data-animate="fade-up">
-        Il primo passo è sempre capire la situazione. Raccontaci la tua realtà,
-        quello che funziona e quello che no, dove vuoi arrivare. Il resto viene da lì.
+        Aiutiamo le aziende a innovare mantenendo il focus su operatività e risultati.
+        Se vuoi confrontarti sul tuo progetto di digitalizzazione, scrivici.
       </p>
     </div>
   </section>
 
   <section class="section contact-section">
-    <div class="container contact-inner">
+    <div class="container">
+      <div class="contact-grid">
 
-      <!-- FORM -->
-      <div class="contact-form-wrap" data-animate="fade-right">
-        <form class="contact-form stagger-list" name="contatti" method="POST" novalidate>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="nome">Nome e Cognome <span class="required">*</span></label>
-              <input
-                type="text"
-                id="nome"
-                name="nome"
-                required
-                autocomplete="name"
-                placeholder="Mario Rossi"
-              />
-            </div>
-            <div class="form-group">
-              <label for="azienda">Azienda <span class="required">*</span></label>
-              <input
-                type="text"
-                id="azienda"
-                name="azienda"
-                required
-                autocomplete="organization"
-                placeholder="Nome della tua azienda"
-              />
-            </div>
+        <!-- DIRECT CONTACTS -->
+        <div class="contact-direct stagger-list">
+          <div class="contact-channel">
+            <span class="contact-channel__label">Email</span>
+            <a href="mailto:info@ready2digital.it" class="contact-channel__value">info@ready2digital.it</a>
+            <span class="contact-channel__note">Ti rispondiamo entro 48 ore.</span>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="email">Email <span class="required">*</span></label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                autocomplete="email"
-                placeholder="mario@azienda.it"
-              />
-            </div>
-            <div class="form-group">
-              <label for="telefono">Telefono</label>
-              <input
-                type="tel"
-                id="telefono"
-                name="telefono"
-                autocomplete="tel"
-                placeholder="+39 333 000 0000"
-              />
-            </div>
+          <div class="contact-channel">
+            <span class="contact-channel__label">LinkedIn</span>
+            <a href="https://www.linkedin.com/in/maurizio-taruggi-060614241" target="_blank" rel="noopener" class="contact-channel__value">Maurizio Taruggi</a>
+            <span class="contact-channel__note">Founder &amp; CEO, Ready2Digital</span>
           </div>
 
-          <div class="form-group">
-            <label for="settore">Settore <span class="required">*</span></label>
-            <select id="settore" name="settore" required>
-              <option value="" disabled selected>Seleziona il tuo settore</option>
-              <option value="fitness-sport">Fitness & Sport</option>
-              <option value="retail">Retail</option>
-              <option value="servizi">Servizi</option>
-              <option value="altro">Altro</option>
-            </select>
+          <div class="contact-channel">
+            <span class="contact-channel__label">Dove siamo</span>
+            <span class="contact-channel__value">Italia</span>
+            <span class="contact-channel__note">Lavoriamo con clienti in tutto il Paese.</span>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label for="messaggio">
-              Descrivici la tua situazione <span class="required">*</span>
-            </label>
-            <textarea
-              id="messaggio"
-              name="messaggio"
-              required
-              rows="6"
-              placeholder="Raccontaci dove sei adesso, cosa funziona, cosa non funziona, dove vuoi arrivare..."
-            ></textarea>
+        <!-- STATEMENT -->
+        <aside class="contact-statement" data-animate="fade-left">
+          <div class="contact-statement__decoration" aria-hidden="true">
+            <NodeDecoration color="rgba(255,96,0,0.12)" animated={true} />
           </div>
-
-          <div class="form-submit">
-            <button type="submit" class="btn btn-primary form-submit__btn">
-              Invia richiesta
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <p class="form-submit__note">
-              Senza spam. Senza newsletter. Solo una risposta concreta entro 48h.
+          <div class="contact-statement__content">
+            <span class="eyebrow">Come lavoriamo</span>
+            <p>
+              Non vendiamo pacchetti standard. Partiamo sempre dall'obiettivo:
+              capire lo stato attuale, mappare i gap, e solo allora individuare
+              la soluzione giusta — con il giusto grado di profondità.
+            </p>
+            <p>
+              Se questo modo di pensare ti somiglia, scrivici. Da lì nasce tutto.
             </p>
           </div>
-        </form>
+        </aside>
+
       </div>
-
-      <!-- INFO -->
-      <aside class="contact-info stagger-list">
-        <div class="contact-info__block">
-          <h3>Come lavoriamo</h3>
-          <p>
-            Ogni progetto inizia con una call di discovery gratuita. In 30-45 minuti
-            capiamo la tua situazione e ti diciamo onestamente se possiamo aiutarti.
-          </p>
-        </div>
-
-        <div class="contact-info__block">
-          <h3>Contatti diretti</h3>
-          <ul class="contact-details">
-            <li>
-              <span class="contact-details__label">Email</span>
-              <a href="mailto:info@ready2digital.it">info@ready2digital.it</a>
-            </li>
-            <li>
-              <span class="contact-details__label">Dove siamo</span>
-              <span>Italia</span>
-            </li>
-          </ul>
-        </div>
-
-        <div class="contact-info__block">
-          <h3>Cosa succede dopo</h3>
-          <ol class="what-next">
-            <li>
-              <span class="what-next__num">1</span>
-              <span>Leggiamo la tua richiesta entro 24h</span>
-            </li>
-            <li>
-              <span class="what-next__num">2</span>
-              <span>Ti proponiamo una call di 30 minuti</span>
-            </li>
-            <li>
-              <span class="what-next__num">3</span>
-              <span>Se c'è fit, definiamo insieme il perimetro dell'audit</span>
-            </li>
-          </ol>
-        </div>
-      </aside>
-
     </div>
   </section>
 
@@ -180,7 +88,7 @@ import NodeDecoration from '../components/NodeDecoration.astro';
   .contact-hero__content {
     position: relative;
     z-index: 1;
-    max-width: 600px;
+    max-width: 680px;
   }
 
   .contact-hero__title {
@@ -197,211 +105,105 @@ import NodeDecoration from '../components/NodeDecoration.astro';
     margin-top: var(--space-6);
     font-size: var(--text-xl);
     color: rgba(255,255,255,0.72);
-    max-width: 520px;
+    max-width: 560px;
     line-height: 1.65;
   }
 
-  /* CONTACT SECTION */
-  .contact-inner {
+  /* CONTACT GRID */
+  .contact-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-16);
     align-items: start;
   }
 
-  /* FORM */
-  .contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-5);
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  .form-group label {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-charcoal);
-  }
-
-  .required { color: var(--color-orange); }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-family: var(--font-body);
-    font-size: var(--text-base);
-    color: var(--color-charcoal);
-    background: var(--color-white);
-    border: 1.5px solid var(--color-gray-light);
-    border-radius: var(--radius-md);
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    outline: none;
-    -webkit-appearance: none;
-  }
-
-  .form-group input::placeholder,
-  .form-group textarea::placeholder {
-    color: var(--color-gray-mid);
-    opacity: 0.7;
-  }
-
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    border-color: var(--color-orange);
-    box-shadow: 0 0 0 3px rgba(255, 96, 0, 0.12);
-  }
-
-  .form-group select {
-    cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6B6B' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 40px;
-  }
-
-  .form-group textarea {
-    resize: vertical;
-    min-height: 160px;
-  }
-
-  .form-submit {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .form-submit__btn {
-    align-self: flex-start;
-    padding: 1rem 2rem;
-    font-size: var(--text-base);
-  }
-
-  .form-submit__note {
-    font-size: var(--text-sm);
-    color: var(--color-gray-mid);
-  }
-
-  /* ASIDE */
-  .contact-info {
+  .contact-direct {
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
-    position: sticky;
-    top: 100px;
   }
 
-  .contact-info__block {
-    padding: var(--space-8);
-    border: 1px solid var(--color-gray-light);
-    border-radius: var(--radius-xl);
-  }
-
-  .contact-info__block h3 {
-    font-size: var(--text-xl);
-    font-weight: 700;
-    color: var(--color-dark);
-    margin-bottom: var(--space-4);
-  }
-
-  .contact-info__block p {
-    font-size: var(--text-base);
-    color: var(--color-gray-mid);
-    line-height: 1.7;
-  }
-
-  .contact-details {
+  .contact-channel {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-2);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-gray-light);
   }
 
-  .contact-details li {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
+  .contact-channel:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
 
-  .contact-details__label {
+  .contact-channel__label {
     font-size: var(--text-xs);
     font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
     color: var(--color-gray-mid);
   }
 
-  .contact-details a,
-  .contact-details span {
-    font-size: var(--text-base);
-    color: var(--color-charcoal);
+  .contact-channel__value {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-dark);
+    line-height: 1.1;
     transition: color var(--transition-fast);
   }
 
-  .contact-details a:hover {
+  a.contact-channel__value:hover {
     color: var(--color-orange);
   }
 
-  .what-next {
+  .contact-channel__note {
+    font-size: var(--text-sm);
+    color: var(--color-gray-mid);
+  }
+
+  /* STATEMENT */
+  .contact-statement {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-dark);
+    color: var(--color-white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-12);
+    min-height: 100%;
+  }
+
+  .contact-statement__decoration {
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 320px;
+    height: 320px;
+    pointer-events: none;
+  }
+
+  .contact-statement__content {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-5);
   }
 
-  .what-next li {
-    display: flex;
-    gap: var(--space-4);
-    align-items: flex-start;
-    font-size: var(--text-base);
-    color: var(--color-gray-mid);
-    line-height: 1.5;
+  .contact-statement .eyebrow {
+    color: var(--color-orange);
   }
 
-  .what-next__num {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--color-orange);
-    color: var(--color-white);
-    font-size: var(--text-xs);
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  .contact-statement p {
+    font-size: var(--text-lg);
+    color: rgba(255,255,255,0.78);
+    line-height: 1.75;
   }
 
-  /* Responsive */
-  @media (max-width: 1024px) {
-    .contact-inner { grid-template-columns: 1fr; }
-    .contact-info { position: static; }
-  }
-
-  @media (max-width: 640px) {
-    .form-row { grid-template-columns: 1fr; }
+  @media (max-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-10);
+    }
   }
 </style>
-
-<script>
-  const form = document.querySelector('.contact-form') as HTMLFormElement | null;
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const btn = form.querySelector('.form-submit__btn') as HTMLButtonElement;
-    btn.textContent = 'Messaggio inviato!';
-    btn.disabled = true;
-    btn.style.background = '#16a34a';
-    btn.style.borderColor = '#16a34a';
-  });
-</script>

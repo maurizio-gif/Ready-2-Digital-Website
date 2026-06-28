@@ -24,9 +24,6 @@ const { title, description, eyebrow, headline, intro } = Astro.props;
       <span class="eyebrow" data-animate="fade-up">{eyebrow}</span>
       <h1 class="service-hero__title" data-animate="clip-up" set:html={headline}></h1>
       <p class="service-hero__intro" data-animate="fade-up">{intro}</p>
-      <a href={withBase('/contatti')} class="btn btn-primary" data-animate="fade-up" style="margin-top: var(--space-8);">
-        Prenota un Audit →
-      </a>
     </div>
   </section>
 
@@ -34,13 +31,14 @@ const { title, description, eyebrow, headline, intro } = Astro.props;
 
   <section class="section cta-block" style="background: var(--color-dark);">
     <div class="container cta-block__inner" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up" style="color: var(--color-orange);">Il nostro approccio</span>
       <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">
-        Vuoi sapere se questa soluzione è giusta per te?
+        Innovazione con i piedi<br>per terra.
       </h2>
       <p data-animate="fade-up" style="color: rgba(255,255,255,0.7); font-size: var(--text-lg);">
-        Partiamo dall'audit. È gratuito e senza impegno.
+        Aiutiamo le aziende a innovare mantenendo il focus su operatività e risultati.
       </p>
-      <a href={withBase('/contatti')} class="btn btn-primary" data-animate="fade-up">Prenota un Audit</a>
+      <a href={withBase('/insights')} class="link-arrow" data-animate="fade-up" style="margin-top: var(--space-2);">Leggi il nostro punto di vista →</a>
     </div>
   </section>
 
