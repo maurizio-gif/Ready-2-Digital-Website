@@ -72,8 +72,56 @@ import { withBase } from '../utils/url';
     </div>
   </section>
 
+  <!-- FORMAZIONE & CREDENZIALI -->
+  <section class="section formazione" style="background: var(--color-light);">
+    <div class="container">
+      <div class="formazione__intro reveal">
+        <span class="eyebrow">Formazione &amp; Credenziali</span>
+        <h2 class="section-title">Management e sport,<br>nello stesso percorso</h2>
+        <div class="divider"></div>
+        <p class="formazione__lead">
+          Una formazione che unisce competenza gestionale e conoscenza profonda del settore
+          sportivo — la stessa doppia prospettiva che mettiamo in ogni progetto.
+        </p>
+      </div>
+
+      <div class="formazione__grid">
+        <div class="credenziale reveal">
+          <span class="credenziale__tag">Formazione</span>
+          <h3 class="credenziale__title">Master in Management</h3>
+          <p class="credenziale__org">LUISS Guido Carli</p>
+        </div>
+        <div class="credenziale reveal">
+          <span class="credenziale__tag">Formazione</span>
+          <h3 class="credenziale__title">Master in International Marketing</h3>
+          <p class="credenziale__org">European School of Economics — New York</p>
+        </div>
+        <div class="credenziale reveal">
+          <span class="credenziale__tag">Formazione</span>
+          <h3 class="credenziale__title">Master in Sports Management</h3>
+          <p class="credenziale__org">LUISS / CONI</p>
+        </div>
+        <div class="credenziale reveal">
+          <span class="credenziale__tag">Esperienza</span>
+          <h3 class="credenziale__title">Direttore Sportivo</h3>
+          <p class="credenziale__org">Federazione Italiana Nuoto (FIN)</p>
+        </div>
+        <div class="credenziale reveal">
+          <span class="credenziale__tag">Impresa</span>
+          <h3 class="credenziale__title">Titolare Athlon Club 4.0</h3>
+          <p class="credenziale__org">Storico club sportivo di Roma, dal 1973</p>
+        </div>
+        <div class="credenziale reveal">
+          <span class="credenziale__tag">Network</span>
+          <h3 class="credenziale__title">Membro ANIF</h3>
+          <p class="credenziale__org">Associazione Nazionale Impianti Sport &amp; Fitness</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- VISIONE -->
-  <section class="section visione" style="background: var(--color-light);">
+  <section class="section visione">
     <div class="container visione__inner">
       <div class="visione__content reveal">
         <span class="eyebrow">La nostra visione</span>
@@ -222,6 +270,64 @@ import { withBase } from '../utils/url';
     max-width: 400px;
   }
 
+  /* FORMAZIONE */
+  .formazione__intro {
+    max-width: 680px;
+    margin-bottom: var(--space-12);
+  }
+
+  .formazione__lead {
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.75;
+  }
+
+  .formazione__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  .credenziale {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    border-top: 3px solid var(--color-orange);
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+  }
+
+  .credenziale:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+  }
+
+  .credenziale__tag {
+    align-self: flex-start;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-orange);
+  }
+
+  .credenziale__title {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-dark);
+    line-height: 1.2;
+  }
+
+  .credenziale__org {
+    font-size: var(--text-sm);
+    color: var(--color-gray-mid);
+    line-height: 1.5;
+    margin-top: auto;
+  }
+
   /* VISIONE */
   .visione__inner {
     display: grid;
@@ -310,6 +416,7 @@ import { withBase } from '../utils/url';
   @media (max-width: 1024px) {
     .visione__inner { grid-template-columns: 1fr; }
     .visione__decoration { max-width: 320px; }
+    .formazione__grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (max-width: 768px) {
@@ -317,5 +424,6 @@ import { withBase } from '../utils/url';
     .storia__photo { order: -1; }
     .storia__photo-placeholder { max-width: 100%; aspect-ratio: 4/3; }
     .valori__grid { grid-template-columns: 1fr; }
+    .formazione__grid { grid-template-columns: 1fr; }
   }
 </style>
