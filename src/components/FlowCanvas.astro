@@ -57,7 +57,10 @@ const loopPath = 'M1110,320 C1160,470 1040,560 600,560 C160,560 40,470 90,320';
   <g class="flow-pulses">
     {paths.map((p) => (
       <circle class="flow-pulse" r="4" fill="var(--color-flow-active)">
-        <animateMotion dur="3.6s" begin={p.delay} repeatCount="indefinite" rotate="auto">
+        {/* Finite repeatCount, not "indefinite": the diagram settles into a
+            static state once it has shown the flow a few times, instead of
+            running as ambient wallpaper for as long as the tab is open. */}
+        <animateMotion dur="3.6s" begin={p.delay} repeatCount="3" rotate="auto">
           <mpath href={`#${p.id}`} />
         </animateMotion>
       </circle>

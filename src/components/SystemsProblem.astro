@@ -1,0 +1,121 @@
+---
+// The homepage's "problem" visual: the same eight systems, scattered and
+// disconnected on the left, realigned on the right once Ready2Digital sits
+// between them. The contrast carries the message — no connecting lines
+// needed, no continuous animation, just two states of the same set.
+interface Props {
+  systems: string[];
+  labels: { before: string; middle: string; after: string };
+}
+const { systems, labels } = Astro.props;
+---
+
+<div class="systems-problem" data-stagger="100">
+  <div class="systems-problem__group reveal">
+    <span class="systems-problem__caption">{labels.before}</span>
+    <div class="systems-problem__scatter">
+      {systems.map((s, i) => (
+        <span class="chip chip--scattered" style={`--r: ${((i % 5) - 2) * 3}deg; --y: ${((i % 3) - 1) * 6}px`}>{s}</span>
+      ))}
+    </div>
+  </div>
+
+  <div class="systems-problem__arrow reveal" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+      <path d="M4 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </div>
+
+  <div class="systems-problem__node reveal">{labels.middle}</div>
+
+  <div class="systems-problem__arrow reveal" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+      <path d="M4 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </div>
+
+  <div class="systems-problem__group reveal">
+    <span class="systems-problem__caption">{labels.after}</span>
+    <div class="systems-problem__grid">
+      {systems.map((s) => (
+        <span class="chip">{s}</span>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .systems-problem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .systems-problem__group {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .systems-problem__caption {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-gray-mid);
+  }
+
+  .systems-problem__scatter,
+  .systems-problem__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-sm);
+    color: var(--color-charcoal);
+    background: var(--color-white);
+  }
+
+  .chip--scattered {
+    transform: rotate(var(--r, 0deg)) translateY(var(--y, 0));
+    border-color: var(--color-gray-mid);
+    color: var(--color-gray-mid);
+  }
+
+  .systems-problem__node {
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-lg);
+    letter-spacing: -0.01em;
+    color: var(--color-white);
+    background: var(--color-dark);
+    border: 1px solid var(--color-orange);
+    padding: var(--space-4) var(--space-5);
+    text-align: center;
+  }
+
+  .systems-problem__arrow {
+    flex-shrink: 0;
+    color: var(--color-gray-mid);
+  }
+
+  @media (max-width: 900px) {
+    .systems-problem {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .systems-problem__arrow svg { transform: rotate(90deg); }
+    .chip--scattered { transform: none; }
+  }
+</style>

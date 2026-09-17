@@ -1,0 +1,60 @@
+---
+import { withBase } from '../../utils/url';
+import { routes, type Locale } from '../../i18n/routes';
+
+// Centralised SEO head block: canonical, hreflang (both locales + x-default),
+// Open Graph and Twitter metadata. Every page passes its own title/description
+// and its alternate-locale URL; nothing else should hand-roll these tags.
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  path: string; // this page's own path, e.g. "/it/soluzioni/"
+  alternatePath?: string | null; // the other locale's equivalent path, if one exists
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  locale,
+  path,
+  alternatePath = null,
+  ogImage = withBase('/images/og-default.png'),
+  noindex = false,
+} = Astro.props;
+
+const site = Astro.site ?? new URL('https://www.ready2digital.it');
+const canonicalURL = new URL(withBase(path), site);
+const alternateURL = alternatePath ? new URL(withBase(alternatePath), site) : null;
+const defaultURL = new URL(withBase(routes.home.it), site);
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- hreflang: self-referencing for both locales, plus x-default pointing at
+     the Italian version (the reference market), never at a bare homepage. -->
+<link rel="alternate" hreflang="it" href={locale === 'it' ? canonicalURL : alternateURL ?? defaultURL} />
+<link rel="alternate" hreflang="en" href={locale === 'en' ? canonicalURL : alternateURL ?? defaultURL} />
+<link rel="alternate" hreflang="x-default" href={locale === 'it' ? canonicalURL : (alternateURL ?? defaultURL)} />
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content={locale === 'it' ? 'it_IT' : 'en_US'} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<title>{title} | Ready2Digital</title>

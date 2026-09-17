@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { routeFor } from '../../../i18n/routes';
+---
+
+<BaseLayout
+  title="Cookie Policy — Ready2Digital"
+  description="Quali cookie usa questo sito — e quali non usa."
+  locale="it"
+  path={routeFor('cookiePolicy', 'it')}
+  alternatePath={routeFor('cookiePolicy', 'en')}
+  noindex={true}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-animate="fade-up">Legale</span>
+      <h1 class="page-hero__title" data-animate="clip-up">Cookie Policy</h1>
+    </div>
+  </section>
+
+  <section class="section legal">
+    <div class="container legal__content">
+      <p class="reveal">
+        Questo sito non installa cookie di analisi, di profilazione o di
+        marketing, e non mostra un banner dei cookie perché non ne ha bisogno:
+        non c'è niente da consentire.
+      </p>
+      <h2>L'unica richiesta verso terzi</h2>
+      <p>
+        Il sito carica i font (Barlow Condensed, Inter, JetBrains Mono) da
+        Google Fonts, per mostrare correttamente la tipografia. Questo comporta
+        una richiesta al servizio di Google, ma non installa cookie sul tuo
+        browser per questo sito.
+      </p>
+      <h2>Se in futuro cambia</h2>
+      <p>
+        Se in un secondo momento aggiungessimo analytics o strumenti di
+        marketing, questa pagina — e un banner di consenso — verrebbero
+        aggiornati prima, non dopo.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(var(--space-16), 8vw, var(--space-20)); }
+  .page-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl)); font-weight: 800; margin-top: var(--space-4); }
+  .legal__content { max-width: 680px; }
+  .legal h2 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; margin-top: var(--space-8); margin-bottom: var(--space-3); }
+  .legal p { font-size: var(--text-base); color: var(--color-gray-mid); line-height: 1.7; }
+</style>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maurizio-gif.github.io/Ready-2-Digital-Website/sitemap-index.xml

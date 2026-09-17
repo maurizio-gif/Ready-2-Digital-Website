@@ -1,0 +1,162 @@
+---
+import { withBase } from '../../utils/url';
+import { routeFor, otherLocale, type Locale } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  alternatePath?: string | null;
+}
+const { locale, alternatePath = null } = Astro.props;
+const other = otherLocale(locale);
+const strings = t(locale);
+const switchHref = alternatePath ?? routeFor('home', other);
+
+const nav = [
+  { label: strings.nav.solutions, href: routeFor('solutions', locale) },
+  { label: strings.nav.method, href: routeFor('method', locale) },
+  { label: strings.nav.work, href: routeFor('work', locale) },
+  { label: strings.nav.technology, href: routeFor('technology', locale) },
+];
+
+const company = [
+  { label: strings.nav.about, href: routeFor('about', locale) },
+  { label: strings.nav.contact, href: routeFor('contact', locale) },
+];
+
+const legal = [
+  { label: strings.footer.privacy, href: routeFor('privacy', locale) },
+  { label: strings.footer.cookiePolicy, href: routeFor('cookiePolicy', locale) },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <a href={withBase(routeFor('home', locale))} aria-label="Ready2Digital">
+        <img src={withBase('/images/logo_r2digital.png')} alt="R2Digital" width="140" height="36" loading="lazy" />
+      </a>
+      <p class="footer__tagline">{strings.footer.tagline}</p>
+    </div>
+
+    <div class="footer__col">
+      <h4>{strings.footer.nav}</h4>
+      <ul>
+        {nav.map((item) => <li><a href={withBase(item.href)}>{item.label}</a></li>)}
+      </ul>
+    </div>
+
+    <div class="footer__col">
+      <h4>{strings.footer.company}</h4>
+      <ul>
+        {company.map((item) => <li><a href={withBase(item.href)}>{item.label}</a></li>)}
+      </ul>
+    </div>
+
+    <div class="footer__col">
+      <h4>{strings.footer.legal}</h4>
+      <ul>
+        {legal.map((item) => <li><a href={withBase(item.href)}>{item.label}</a></li>)}
+        <li><a href="mailto:info@ready2digital.it">info@ready2digital.it</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <div class="container footer__bottom-inner">
+      <p>&copy; {year} Ready2Digital. {strings.footer.rights}</p>
+      <a href={withBase(switchHref)} class="footer__lang" hreflang={other} lang={other}>
+        {strings.lang.switchTo}
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--color-charcoal);
+    color: rgba(255,255,255,0.75);
+    padding-top: var(--space-16);
+  }
+
+  .footer__inner {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: var(--space-12);
+    padding-bottom: var(--space-12);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .footer__brand img {
+    filter: brightness(0) invert(1);
+    opacity: 0.92;
+    margin-bottom: var(--space-4);
+    height: 34px;
+    width: auto;
+  }
+
+  .footer__tagline {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,0.55);
+  }
+
+  .footer__col h4 {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: var(--space-5);
+  }
+
+  .footer__col ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer__col a {
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,0.7);
+    transition: color var(--transition-fast);
+  }
+
+  .footer__col a:hover { color: var(--color-white); }
+
+  .footer__bottom { padding-block: var(--space-5); }
+
+  .footer__bottom-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer__bottom p {
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,0.4);
+  }
+
+  .footer__lang {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast);
+  }
+
+  .footer__lang:hover { color: var(--color-white); border-color: rgba(255,255,255,0.4); }
+
+  @media (max-width: 1024px) {
+    .footer__inner { grid-template-columns: 1fr 1fr; gap: var(--space-10); }
+  }
+  @media (max-width: 640px) {
+    .footer__inner { grid-template-columns: 1fr; gap: var(--space-8); }
+  }
+</style>

@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { withBase } from '../../../utils/url';
+import { routeFor } from '../../../i18n/routes';
+---
+
+<BaseLayout
+  title="About — Ready2Digital"
+  description="Ready2Digital grew out of running Athlon Club. We didn't learn operations from a brief. We lived them."
+  locale="en"
+  path={routeFor('about', 'en')}
+  alternatePath={routeFor('about', 'it')}
+  breadcrumbs={[{ name: 'Home', path: routeFor('home', 'en') }, { name: 'About', path: routeFor('about', 'en') }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-animate="fade-up">About</span>
+      <h1 class="page-hero__title" data-animate="clip-up">Before building software, we ran businesses.</h1>
+    </div>
+  </section>
+
+  <section class="section origin">
+    <div class="container origin__inner">
+      <div class="origin__text" data-stagger="140">
+        <p class="lead reveal">
+          Ready2Digital started with a practical problem: making a real service
+          business work better. Its founder, Maurizio Taruggi, runs Athlon Club
+          4.0, a long-standing sports club in Rome operating since 1973 — and
+          that's where all of this began.
+        </p>
+        <p class="reveal">
+          A growing amount of data, enrolments, leads, payments, communication,
+          software and customer requests, running through tools that didn't
+          talk to each other well. The answer wasn't to simply add more
+          software: it was to first redesign the processes, and only then build
+          the technology infrastructure needed to run them.
+        </p>
+        <p class="reveal">
+          That method has since been applied to other businesses — other sports
+          clubs, a tennis club, businesses just opening their doors. It hasn't
+          stayed theoretical: it's still tested every day on Athlon, which
+          remains our first client and our most demanding proving ground.
+        </p>
+      </div>
+      <aside class="origin__quote reveal">
+        <p>We didn't learn operations from a brief. We lived them.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section principle" style="background: var(--color-light);">
+    <div class="container principle__inner" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">The principle</span>
+      <h2 class="section-title" data-animate="clip-up">Software is a tool. Not the starting point.</h2>
+      <p class="reveal">
+        That's why technology is never where we start. We start from how the
+        business works, find what's slowing people and processes down, and
+        build only what's actually needed. The protagonist of this work stays
+        the method — not whoever applies it.
+      </p>
+      <a href={withBase('/en/method/')} class="link-arrow reveal">The full method →</a>
+    </div>
+  </section>
+
+  <section class="section cta-block" style="background: var(--color-dark);">
+    <div class="container cta-block__inner" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">Let's talk</span>
+      <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">If this way of thinking sounds like you</h2>
+      <a href={withBase('/en/contact/')} class="btn btn-primary" data-animate="fade-up">Tell us about your project</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(var(--space-16), 10vw, var(--space-20)); max-width: 800px; }
+  .page-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-top: var(--space-4); }
+
+  .origin__inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--space-16); align-items: start; }
+  .origin__text { display: flex; flex-direction: column; gap: var(--space-5); max-width: 620px; }
+  .origin__text .lead { font-size: var(--text-xl); color: var(--color-charcoal); line-height: 1.6; }
+  .origin__text p:not(.lead) { font-size: var(--text-lg); color: var(--color-gray-mid); line-height: 1.7; }
+
+  .origin__quote {
+    border-left: 2px solid var(--color-orange);
+    padding-left: var(--space-6);
+    align-self: center;
+  }
+  .origin__quote p {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-dark);
+    line-height: 1.3;
+  }
+
+  .principle__inner { max-width: 700px; display: flex; flex-direction: column; gap: var(--space-5); }
+  .principle__inner p { font-size: var(--text-lg); color: var(--color-gray-mid); line-height: 1.7; }
+
+  .cta-block__inner { text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-6); }
+
+  @media (max-width: 900px) {
+    .origin__inner { grid-template-columns: 1fr; gap: var(--space-8); }
+    .origin__quote { border-left: none; border-top: 2px solid var(--color-orange); padding-left: 0; padding-top: var(--space-5); }
+  }
+</style>

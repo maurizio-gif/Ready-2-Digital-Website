@@ -1,33 +1,77 @@
 ---
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import SEO from '../components/seo/SEO.astro';
 import { withBase } from '../utils/url';
+import type { Locale } from '../i18n/routes';
 import '../styles/global.css';
+
+interface Breadcrumb {
+  name: string;
+  path: string;
+}
 
 interface Props {
   title: string;
-  description?: string;
+  description: string;
+  locale: Locale;
+  path: string;
+  alternatePath?: string | null;
   ogImage?: string;
-  lang?: string;
+  noindex?: boolean;
+  breadcrumbs?: Breadcrumb[];
 }
 
 const {
   title,
-  description = 'Ready2Digital — Architettura dei Processi Digitali. Partiamo dall\'audit, disegniamo la soluzione, implementiamo e misuriamo.',
-  ogImage = withBase('/images/og-default.png'),
-  lang = 'it',
+  description,
+  locale,
+  path,
+  alternatePath = null,
+  ogImage,
+  noindex = false,
+  breadcrumbs,
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.ready2digital.it');
+const site = Astro.site ?? new URL('https://www.ready2digital.it');
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Ready2Digital',
+  url: site.toString(),
+  description:
+    locale === 'it'
+      ? "Ready2Digital progetta sistemi digitali su misura attorno ai processi reali delle aziende di servizi."
+      : 'Ready2Digital designs custom digital systems built around the real operating processes of service businesses.',
+  sameAs: [],
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Ready2Digital',
+  url: site.toString(),
+};
+
+const breadcrumbJsonLd = breadcrumbs
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((b, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: b.name,
+        item: new URL(withBase(b.path), site).toString(),
+      })),
+    }
+  : null;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={locale}>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
+    <SEO title={title} description={description} locale={locale} path={path} alternatePath={alternatePath} ogImage={ogImage} noindex={noindex} />
 
     <!-- Fonts: preconnect + stylesheet (no @import — avoids the extra DNS/parse hop
          of a CSS-level import chain before the browser even discovers the font). -->
@@ -38,38 +82,34 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.read
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
     />
 
-    <!-- Open Graph -->
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
-    <meta property="og:url" content={canonicalURL} />
-    <meta property="og:type" content="website" />
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <link rel="icon" type="image/x-icon" href={withBase('/favicon.ico')} />
 
-    <title>{title} | Ready2Digital</title>
+    <script type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
+    {breadcrumbJsonLd && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />}
   </head>
   <body>
+    <a class="skip-link" href="#main-content">{locale === 'it' ? 'Vai al contenuto' : 'Skip to content'}</a>
     <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
-    <Navbar />
-    <main>
+    <Header locale={locale} alternatePath={alternatePath} />
+    <main id="main-content">
       <slot />
     </main>
-    <Footer />
+    <Footer locale={locale} alternatePath={alternatePath} />
 
     <script>
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       // --- Count-up for stat numbers ---
-      function countUp(el) {
+      function countUp(el: HTMLElement) {
         const target = parseFloat(el.dataset.count || '0');
         const suffix = el.dataset.countSuffix || '';
         const prefix = el.dataset.countPrefix || '';
         const dur = 1500;
-        let startTs = null;
-        function step(ts) {
+        let startTs: number | null = null;
+        function step(ts: number) {
           if (startTs === null) startTs = ts;
           const p = Math.min((ts - startTs) / dur, 1);
           const eased = 1 - Math.pow(1 - p, 3);
@@ -80,19 +120,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.read
       }
 
       // --- Reveal helpers ---
-      function reveal(el, delay) {
+      function reveal(el: HTMLElement, delay?: number) {
         if (delay) el.style.setProperty('--reveal-delay', delay + 'ms');
         el.classList.add('is-visible', 'visible');
-        el.querySelectorAll('[data-count]').forEach((c) => countUp(c));
+        el.querySelectorAll<HTMLElement>('[data-count]').forEach((c) => countUp(c));
         if (el.hasAttribute('data-count')) countUp(el);
       }
 
       if (reduced) {
         document
-          .querySelectorAll('[data-animate], .reveal, .reveal-lines, .stagger-list')
+          .querySelectorAll<HTMLElement>('[data-animate], .reveal, .reveal-lines, .stagger-list')
           .forEach((el) => {
             el.classList.add('is-visible', 'visible');
-            el.querySelectorAll('[data-count]').forEach((c) => {
+            el.querySelectorAll<HTMLElement>('[data-count]').forEach((c) => {
               c.textContent =
                 (c.dataset.countPrefix || '') +
                 c.dataset.count +
@@ -104,12 +144,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.read
           (entries) => {
             entries.forEach((entry) => {
               if (!entry.isIntersecting) return;
-              const el = entry.target;
+              const el = entry.target as HTMLElement;
               io.unobserve(el);
 
               if (el.hasAttribute('data-stagger')) {
                 const step = parseInt(el.dataset.stagger || '100', 10);
-                const kids = el.querySelectorAll(':scope > [data-animate], :scope > .reveal');
+                const kids = el.querySelectorAll<HTMLElement>(':scope > [data-animate], :scope > .reveal');
                 kids.forEach((k, i) => reveal(k, i * step));
                 el.classList.add('is-visible');
               } else {
@@ -120,11 +160,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.read
           { threshold: 0.15, rootMargin: '0px 0px -6% 0px' }
         );
 
-        // Observe stagger containers, top-level animated elements, legacy reveals, and line headlines
-        const targets = new Set();
-        document.querySelectorAll('[data-stagger]').forEach((el) => targets.add(el));
+        const targets = new Set<HTMLElement>();
+        document.querySelectorAll<HTMLElement>('[data-stagger]').forEach((el) => targets.add(el));
         document
-          .querySelectorAll('[data-animate], .reveal, .reveal-lines, .stagger-list')
+          .querySelectorAll<HTMLElement>('[data-animate], .reveal, .reveal-lines, .stagger-list')
           .forEach((el) => {
             if (!el.closest('[data-stagger]')) targets.add(el);
           });
@@ -157,3 +196,21 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://www.read
     </script>
   </body>
 </html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 300;
+    background: var(--color-dark);
+    color: var(--color-white);
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  .skip-link:focus {
+    left: var(--space-4);
+    top: var(--space-4);
+  }
+</style>
