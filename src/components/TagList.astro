@@ -1,0 +1,33 @@
+---
+// A row of plain-text tags for a tech stack or a capability list — hairline
+// border, no fill, no icon. Reads as a spec line, not a badge collection.
+interface Props {
+  tags: string[];
+}
+const { tags } = Astro.props;
+---
+
+<ul class="tag-list">
+  {tags.map((t) => (
+    <li class="tag-list__item">{t}</li>
+  ))}
+</ul>
+
+<style>
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .tag-list__item {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.02em;
+    color: inherit;
+    opacity: 0.75;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.6rem;
+  }
+</style>

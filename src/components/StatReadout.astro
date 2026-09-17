@@ -1,0 +1,75 @@
+---
+// A single measurement in a data-readout strip — the anti-card. No border,
+// no icon-in-circle: just a number, a rule, and what it measures. Value can
+// carry a leading/trailing non-numeric fragment (~, +, %) which renders
+// static while the numeric core count-up animates, same convention as the
+// legacy KPICard.
+interface Props {
+  value: string;
+  label: string;
+  note?: string;
+}
+const { value, label, note } = Astro.props;
+// Deliberately excludes "." from the digit group: a value like "2.281"
+// (Italian thousands separator) must NOT count up digit-by-digit through
+// parseFloat, which would read it as 2.281 and animate to "2". It falls
+// through to the plain-text branch instead — simple integers like "570"
+// or "400" still get the count-up treatment.
+const match = value.match(/^(\D*)(\d+)(\D*)$/);
+---
+
+<div class="stat-readout reveal">
+  <div class="stat-readout__rule" aria-hidden="true"></div>
+  {match ? (
+    <div
+      class="stat-readout__value"
+      data-count={match[2]}
+      data-count-prefix={match[1]}
+      data-count-suffix={match[3]}
+    >{match[1]}0{match[3]}</div>
+  ) : (
+    <div class="stat-readout__value">{value}</div>
+  )}
+  <div class="stat-readout__label">{label}</div>
+  {note && <div class="stat-readout__note">{note}</div>}
+</div>
+
+<style>
+  .stat-readout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .stat-readout__rule {
+    width: 100%;
+    height: 1px;
+    background: var(--color-gray-light);
+    margin-bottom: var(--space-4);
+  }
+
+  .stat-readout__value {
+    font-family: var(--font-mono);
+    font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));
+    font-weight: 500;
+    color: var(--color-dark);
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+
+  .stat-readout__label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-charcoal);
+  }
+
+  .stat-readout__note {
+    font-size: var(--text-xs);
+    color: var(--color-gray-mid);
+  }
+
+  :global(.on-dark) .stat-readout__rule { background: rgba(255,255,255,0.15); }
+  :global(.on-dark) .stat-readout__value { color: var(--color-white); }
+  :global(.on-dark) .stat-readout__label { color: rgba(255,255,255,0.75); }
+  :global(.on-dark) .stat-readout__note { color: rgba(255,255,255,0.45); }
+</style>

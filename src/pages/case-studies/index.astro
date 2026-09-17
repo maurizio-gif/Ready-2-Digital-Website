@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FlowCanvas from '../../components/FlowCanvas.astro';
+import { withBase } from '../../utils/url';
+
+const cases = [
+  {
+    client: 'Athlon Club 4.0',
+    sector: 'Club sportivo · Roma · dal 1973',
+    result: '570 lead/mese · 400 nuovi contratti in 4 mesi',
+    description: "Sito con assistente AI su knowledge base verificata, CRM interno, sincronizzazione col gestionale, totem di check-in in sede.",
+    href: '/case-studies/athlon',
+  },
+  {
+    client: 'Tennis Club Ambrosiano',
+    sector: 'Circolo sportivo',
+    result: '353 eventi storici importati · 220 anagrafiche deduplicate',
+    description: 'Sito pubblico e CRM di segreteria: iscrizioni, scuola tennis, summer camp e newsletter su un\'unica anagrafica.',
+    href: '/case-studies/tca',
+  },
+  {
+    client: 'Ronchiverdi',
+    sector: 'Circolo sportivo',
+    result: 'Audit completo dei processi prima del primo componente',
+    description: 'Pipeline commerciale, agenda con promemoria, notifiche in tempo reale sulle opportunità non assegnate.',
+    href: '/case-studies/ronchiverdi',
+  },
+];
+---
+
+<BaseLayout
+  title="Case Study"
+  description="Casi reali di digitalizzazione dei processi: club sportivi, CRM custom, automazioni, agenti AI. Numeri veri, non promesse."
+>
+
+  <section class="page-hero" style="background: var(--color-dark);">
+    <div class="hero__canvas" aria-hidden="true">
+      <FlowCanvas hideLabels align="xMaxYMid slice" />
+    </div>
+    <div class="hero__scrim" aria-hidden="true"></div>
+    <div class="container page-hero__content" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">Prova concreta</span>
+      <h1 class="page-hero__title" data-animate="clip-up">Casi reali,<br>non promesse</h1>
+      <p class="page-hero__sub" data-animate="fade-up">
+        Ogni progetto qui sotto è in produzione. I numeri sono quelli reali dei
+        clienti, non stime.
+      </p>
+    </div>
+  </section>
+
+  <section class="section cases-section">
+    <div class="container">
+      <div class="cases-list" data-stagger="120">
+        {cases.map((c) => (
+          <a href={withBase(c.href)} class="case-row reveal">
+            <div class="case-row__main">
+              <span class="case-row__sector">{c.sector}</span>
+              <h2 class="case-row__client">{c.client}</h2>
+              <p class="case-row__desc">{c.description}</p>
+            </div>
+            <div class="case-row__side">
+              <span class="case-row__result">{c.result}</span>
+              <span class="case-row__link">Leggi il case study →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div class="case-note reveal">
+        <span class="case-note__label">E non solo club affermati</span>
+        <p>
+          Un altro progetto in corso — riservato, non ancora pubblicabile per nome —
+          è un sistema di prevendita abbonamenti per l'apertura di nuove sedi:
+          landing per sede, pagamento online, integrazione col gestionale, automazioni
+          per lo staff in loco. Se stai per aprire, è lo stesso metodo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-block" style="background: var(--color-light);">
+    <div class="container cta-block__inner" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">Il prossimo caso</span>
+      <h2 class="section-title" data-animate="clip-up">
+        Potrebbe essere<br>il tuo processo.
+      </h2>
+      <a href={withBase('/contatti')} class="btn btn-primary" data-animate="fade-up">Parliamo del tuo progetto</a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .page-hero {
+    position: relative;
+    padding-block: clamp(var(--space-16), 10vw, var(--space-24));
+    overflow: hidden;
+    color: var(--color-white);
+  }
+
+  .hero__canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, var(--color-dark) 0%, var(--color-dark) 32%, rgba(26,26,26,0.4) 62%, rgba(26,26,26,0.1) 82%);
+    pointer-events: none;
+  }
+
+  .page-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+  }
+
+  .page-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(var(--text-4xl), 7vw, var(--text-6xl));
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--color-white);
+    margin-top: var(--space-4);
+  }
+
+  .page-hero__sub {
+    margin-top: var(--space-6);
+    font-size: var(--text-xl);
+    color: rgba(255,255,255,0.7);
+    max-width: 520px;
+  }
+
+  /* CASES LIST */
+  .cases-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .case-row {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--space-10);
+    align-items: center;
+    padding-block: var(--space-10);
+    border-top: 1px solid var(--color-gray-light);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cases-list a:last-of-type {
+    border-bottom: 1px solid var(--color-gray-light);
+  }
+
+  .case-row__sector {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-orange);
+  }
+
+  .case-row__client {
+    font-family: var(--font-display);
+    font-size: clamp(var(--text-3xl), 4vw, var(--text-4xl));
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-top: var(--space-2);
+    transition: color var(--transition-fast);
+  }
+
+  .case-row:hover .case-row__client { color: var(--color-orange); }
+
+  .case-row__desc {
+    margin-top: var(--space-3);
+    font-size: var(--text-base);
+    color: var(--color-gray-mid);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .case-row__side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-3);
+    text-align: right;
+  }
+
+  .case-row__result {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-dark);
+  }
+
+  .case-row__link {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-orange);
+  }
+
+  .case-note {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px dashed var(--color-gray-light);
+    max-width: 680px;
+  }
+
+  .case-note__label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-gray-mid);
+    margin-bottom: var(--space-3);
+  }
+
+  .case-note p {
+    font-size: var(--text-base);
+    color: var(--color-gray-mid);
+    line-height: 1.65;
+  }
+
+  .cta-block__inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  @media (max-width: 768px) {
+    .case-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+    .case-row__side {
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+</style>

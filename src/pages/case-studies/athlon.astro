@@ -1,0 +1,233 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatReadout from '../../components/StatReadout.astro';
+import TagList from '../../components/TagList.astro';
+import { withBase } from '../../utils/url';
+
+const built = [
+  {
+    title: 'Sito con assistente AI',
+    desc: "Risponde su prezzi, orari e procedure leggendo una knowledge base verificata — non un modello che indovina. Ogni risposta cita la fonte; le domande fuori perimetro passano a una persona.",
+  },
+  {
+    title: 'CRM interno',
+    desc: 'Pipeline commerciale, agenda condivisa, scheda cliente con cronologia completa, matching automatico lead↔anagrafica con punteggio e motivazione visibile.',
+  },
+  {
+    title: 'Sincronizzazione col gestionale',
+    desc: 'Il sito e il CRM leggono e scrivono sullo stesso gestionale (PerfectGym) usato in reception: nessuna anagrafica doppia, nessun dato da ricopiare a mano.',
+  },
+  {
+    title: 'Automazioni',
+    desc: 'Email e WhatsApp automatici su lead e scadenze, classificazione delle note delle chiamate commerciali, riconciliazione degli appuntamenti.',
+  },
+  {
+    title: 'Totem di check-in in sede',
+    desc: 'Iscrizione e raccolta dati per chi arriva senza account, pensato per lo schermo verticale all\'ingresso — non una versione ridimensionata del sito.',
+  },
+];
+---
+
+<BaseLayout
+  title="Case study: Athlon Club 4.0"
+  description="Come abbiamo digitalizzato Athlon Club 4.0: sito con assistente AI, CRM, automazioni, sincronizzazione col gestionale. 570 lead al mese, 400 nuovi contratti in 4 mesi."
+>
+
+  <section class="case-hero" style="background: var(--color-dark);">
+    <div class="container case-hero__content" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">Club sportivo · Roma · dal 1973</span>
+      <h1 class="case-hero__title" data-animate="clip-up">Athlon Club 4.0</h1>
+      <p class="case-hero__sub" data-animate="fade-up">
+        Nuoto, fitness, pattinaggio su ghiaccio. Da gestione operativa frammentata
+        a digitalizzazione completa dei processi — mantenendo la conduzione del club.
+      </p>
+      <div class="case-hero__tags" data-animate="fade-up">
+        <TagList tags={['Astro', 'Next.js', 'Supabase', 'n8n', 'PerfectGym API', 'WhatsApp']} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section case-section">
+    <div class="container case-grid">
+      <div class="case-col">
+        <span class="eyebrow">La sfida</span>
+        <p class="case-lead">
+          Un club da oltre cinquant'anni di storia, gestito ogni giorno dall'interno.
+          Iscrizioni su carta, comunicazione sparsa fra reception e telefono, nessuna
+          vista unificata su chi fosse davvero un'opportunità commerciale e chi un
+          contatto già sistemato.
+        </p>
+      </div>
+      <div class="case-col">
+        <span class="eyebrow">Il metodo</span>
+        <p class="case-lead">
+          Nessun software comprato "a scatola chiusa". Prima l'audit dei processi
+          reali — prenotazioni, abbonamenti, accessi, nuclei familiari — poi la
+          scelta degli strumenti. L'architettura tecnica è arrivata dopo aver capito
+          come il club lavora davvero.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section built-section" style="background: var(--color-light);">
+    <div class="container">
+      <span class="eyebrow reveal">Cosa abbiamo costruito</span>
+      <div class="built-list" data-stagger="100">
+        {built.map((b, i) => (
+          <div class="built-item reveal">
+            <span class="built-item__index">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="built-item__title">{b.title}</h3>
+              <p class="built-item__desc">{b.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section stats-section">
+    <div class="container">
+      <span class="eyebrow reveal">I numeri</span>
+      <div class="stat-grid" data-stagger="130">
+        <StatReadout value="570" label="Lead unici al mese" note="Sito + assistente AI" />
+        <StatReadout value="2.281" label="Lead in 4 mesi" note="Da campagna a contatto qualificato" />
+        <StatReadout value="400" label="Nuovi contratti" note="Nello stesso periodo" />
+        <StatReadout value="100%" label="Iscrizione digitale" note="Firma compresa, zero carta" />
+        <StatReadout value="25%" label="Incidenza costo personale" note="Ridotta, senza tagliare qualità" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-block" style="background: var(--color-dark);">
+    <div class="container cta-block__inner" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">Il prossimo caso</span>
+      <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">
+        Potrebbe essere<br>il tuo processo.
+      </h2>
+      <div class="cta-block__ctas" data-animate="fade-up">
+        <a href={withBase('/contatti')} class="btn btn-primary">Parliamo del tuo progetto</a>
+        <a href={withBase('/case-studies')} class="link-arrow" style="color: rgba(255,255,255,0.7);">← Altri case study</a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .case-hero {
+    padding-block: clamp(var(--space-16), 10vw, var(--space-24));
+    color: var(--color-white);
+  }
+
+  .case-hero__content { max-width: 720px; }
+
+  .case-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(var(--text-5xl), 8vw, var(--text-7xl));
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--color-white);
+    margin-top: var(--space-4);
+  }
+
+  .case-hero__sub {
+    margin-top: var(--space-6);
+    font-size: var(--text-xl);
+    color: rgba(255,255,255,0.72);
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  .case-hero__tags {
+    margin-top: var(--space-8);
+    color: rgba(255,255,255,0.6);
+  }
+
+  .case-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+  }
+
+  .case-lead {
+    margin-top: var(--space-4);
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+    line-height: 1.7;
+  }
+
+  /* BUILT LIST */
+  .built-list {
+    margin-top: var(--space-10);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .built-item {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    gap: var(--space-6);
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-gray-light);
+  }
+
+  .built-list .built-item:last-child {
+    border-bottom: 1px solid var(--color-gray-light);
+  }
+
+  .built-item__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-orange);
+  }
+
+  .built-item__title {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-bottom: var(--space-2);
+  }
+
+  .built-item__desc {
+    font-size: var(--text-base);
+    color: var(--color-gray-mid);
+    line-height: 1.65;
+    max-width: 640px;
+  }
+
+  /* STATS */
+  .stat-grid {
+    margin-top: var(--space-10);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-6);
+  }
+
+  .cta-block__inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .cta-block__ctas {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  @media (max-width: 900px) {
+    .case-grid { grid-template-columns: 1fr; gap: var(--space-8); }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .built-item { grid-template-columns: 1fr; gap: var(--space-2); }
+  }
+</style>

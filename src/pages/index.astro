@@ -1,85 +1,82 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ServiceCard from '../components/ServiceCard.astro';
-import KPICard from '../components/KPICard.astro';
+import FlowCanvas from '../components/FlowCanvas.astro';
+import StatReadout from '../components/StatReadout.astro';
 import ProcessStep from '../components/ProcessStep.astro';
-import NodeDecoration from '../components/NodeDecoration.astro';
+import SolutionRow from '../components/SolutionRow.astro';
 import { withBase } from '../utils/url';
-
-const serviceIcons = {
-  audit: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h32M8 24h20M8 36h12"/><circle cx="38" cy="30" r="8"/><path d="m44 36-3-3"/></svg>`,
-  webapp: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="36" height="28" rx="2"/><path d="M6 18h36M16 10v4M32 10v4"/></svg>`,
-  ecom: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8h4l6 20h20"/><circle cx="22" cy="40" r="2"/><circle cx="38" cy="40" r="2"/><path d="M12 16h26l-4 14H16L12 16z"/></svg>`,
-  crm: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="16" r="8"/><path d="M6 40c0-9.94 8.06-18 18-18s18 8.06 18 18"/></svg>`,
-  ai: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="24" r="4"/><circle cx="36" cy="12" r="4"/><circle cx="36" cy="36" r="4"/><circle cx="24" cy="24" r="6"/><path d="M16 24h2M30 24h2M24 18v-2M24 30v2M27.5 20.5l1.5-1.5M20.5 27.5l-1.5 1.5M27.5 27.5l1.5 1.5M20.5 20.5l-1.5-1.5"/></svg>`,
-  software: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="32" height="32" rx="4"/><path d="M16 20l6 6-6 6M26 32h6"/></svg>`,
-};
 
 const services = [
   {
+    index: '01',
     title: 'Audit e Process Architecture',
-    description: 'Il punto di partenza di ogni progetto. Mappiamo i processi, identifichiamo i gap, definiamo l\'architettura target.',
+    description: "Il punto di partenza di ogni progetto. Mappiamo i processi, identifichiamo i gap, definiamo l'architettura target.",
     href: '/servizi/audit',
-    icon: serviceIcons.audit,
   },
   {
+    index: '02',
     title: 'Web & App Custom',
-    description: 'Soluzioni web che risolvono problemi reali, integrate nel tuo stack tecnologico esistente.',
+    description: 'Siti e applicazioni che risolvono problemi reali, integrate nel tuo stack tecnologico esistente.',
     href: '/servizi/web-app',
-    icon: serviceIcons.webapp,
   },
   {
+    index: '03',
     title: 'Piattaforme di Vendita Servizi',
     description: 'Prenotazioni, abbonamenti, pagamenti ricorrenti. Piattaforme native per vendere servizi online.',
     href: '/servizi/ecommerce',
-    icon: serviceIcons.ecom,
   },
   {
+    index: '04',
     title: 'CRM Custom',
     description: 'Un CRM che il tuo team usa davvero, perché è disegnato attorno ai tuoi processi reali.',
     href: '/servizi/crm',
-    icon: serviceIcons.crm,
   },
   {
+    index: '05',
     title: 'AI & Automazione',
-    description: 'AI dove crea valore reale. Automazione dei workflow, analisi predittiva, integrazione di modelli.',
+    description: 'AI dove crea valore reale. Automazione dei workflow, agenti che qualificano i lead, integrazione di modelli.',
     href: '/servizi/ai-automazione',
-    icon: serviceIcons.ai,
   },
   {
+    index: '06',
     title: 'Software Gestionali',
-    description: 'Selezione rigorosa e implementazione organizzativa dei software gestionali giusti per te.',
+    description: 'Selezione rigorosa e integrazione dei software gestionali giusti per te — o un sostituto custom, quando conviene.',
     href: '/servizi/software-gestionali',
-    icon: serviceIcons.software,
+  },
+  {
+    index: '07',
+    title: 'Hardware & Soluzioni Immersive',
+    description: 'Totem di check-in, schermi con il palinsesto, chioschi self-service. Il software vive anche fuori dallo schermo.',
+    href: '/servizi/hardware',
   },
 ];
 ---
 
 <BaseLayout
   title="Architetti dei Processi Digitali"
-  description="Ready2Digital non è un'agenzia di marketing. Siamo architetti dei processi aziendali. Partiamo dall'audit, mappiamo lo stato attuale, identifichiamo i gap — poi scegliamo la tecnologia."
+  description="Ready2Digital non è un'agenzia di marketing. Costruiamo il software che fa funzionare un'azienda ogni giorno — sito, CRM, automazioni, agenti AI — a partire dall'audit dei processi reali."
 >
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero__bg-decoration float-soft" aria-hidden="true">
-      <NodeDecoration color="rgba(255,96,0,0.10)" animated={true} />
+    <div class="hero__canvas" aria-hidden="true">
+      <FlowCanvas align="xMaxYMid slice" />
     </div>
-    <div class="hero__glow" aria-hidden="true"></div>
+    <div class="hero__scrim" aria-hidden="true"></div>
     <div class="container hero__content">
-      <span class="eyebrow hero__eyebrow" data-animate="fade-up" data-delay="0">Architettura dei Processi Digitali</span>
+      <span class="eyebrow hero__eyebrow" data-animate="fade-up" data-delay="0">architettura-processi-digitali</span>
       <h1 class="hero__headline reveal-lines">
         <span class="line"><span style="--reveal-delay: 100ms">Non siamo</span></span>
         <span class="line"><span style="--reveal-delay: 220ms">un'agenzia</span></span>
         <span class="line"><span class="hero__headline-accent" style="--reveal-delay: 340ms">di marketing.</span></span>
       </h1>
       <p class="hero__sub" data-animate="fade-up" data-delay="520">
-        Aiutiamo le aziende a innovare mantenendo il focus<br>
-        su operatività e risultati. Partiamo dall'obiettivo,<br>
-        mappiamo i processi — poi scegliamo la tecnologia.
+        Costruiamo il software che fa funzionare un'azienda ogni giorno: il sito
+        che genera il contatto, il CRM che lo lavora, l'automazione che lo smista,
+        l'agente AI che gli risponde prima del concorrente.
       </p>
       <div class="hero__ctas" data-animate="fade-up" data-delay="660">
-        <a href={withBase('/servizi/audit')} class="btn btn-primary">Scopri come lavoriamo</a>
+        <a href={withBase('/contatti')} class="btn btn-primary">Parliamo del tuo processo</a>
         <a href="#risultati" class="hero__link-secondary">Vedi i risultati →</a>
       </div>
     </div>
@@ -129,7 +126,6 @@ const services = [
       <div class="diff__grid" data-stagger="160">
         <div class="diff__col diff__col--no reveal">
           <div class="diff__header">
-            <span class="diff__badge diff__badge--no">✗</span>
             <span>Quello che NON facciamo</span>
           </div>
           <ul class="diff__list">
@@ -141,7 +137,6 @@ const services = [
         <div class="diff__divider" aria-hidden="true"></div>
         <div class="diff__col diff__col--yes reveal">
           <div class="diff__header">
-            <span class="diff__badge diff__badge--yes">✓</span>
             <span>Quello che facciamo</span>
           </div>
           <ul class="diff__list">
@@ -162,17 +157,19 @@ const services = [
         <h2 class="section-title" data-animate="clip-up">Un caso reale.<br>Numeri reali.</h2>
         <p class="section-subtitle" data-animate="fade-up" style="margin-top: 1.5rem;">
           Athlon Club 4.0, Roma. Da gestione operativa frammentata a digitalizzazione
-          completa dei processi. Il risultato: marginalità aumentata, incidenza del
-          costo del personale ridotta al 25%, dati centralizzati, team valorizzato.
+          completa dei processi: sito con assistente AI, CRM interno, automazioni,
+          sincronizzazione col gestionale, totem di check-in in sede.
         </p>
       </div>
-      <div class="kpi-grid" data-stagger="140">
-        <KPICard value="25%" label="Incidenza costi personale" sublabel="Ridotta e ottimizzata" />
-        <KPICard value="+%" label="Efficienza operativa" sublabel="Marginalità aumentata" />
-        <KPICard value="100%" label="Dati centralizzati" sublabel="Accessibili in tempo reale" />
+      <div class="stat-grid" data-stagger="140">
+        <StatReadout value="570" label="Lead unici al mese" note="Sito + assistente AI" />
+        <StatReadout value="2.281" label="Lead in 4 mesi" note="Da campagna a contatto qualificato" />
+        <StatReadout value="400" label="Nuovi contratti" note="Nello stesso periodo" />
+        <StatReadout value="100%" label="Iscrizione digitale" note="Firma compresa, zero carta" />
       </div>
       <div class="risultati__cta reveal">
-        <a href={withBase('/contatti')} class="btn btn-outline-dark">Leggi il case study (prossimamente)</a>
+        <a href={withBase('/case-studies/athlon')} class="link-arrow">Leggi il case study completo →</a>
+        <a href={withBase('/case-studies')} class="risultati__cta-secondary">Guarda tutti i case study</a>
       </div>
     </div>
   </section>
@@ -217,13 +214,10 @@ const services = [
         <span class="eyebrow" data-animate="fade-up">Soluzioni</span>
         <h2 class="section-title" data-animate="clip-up">Le nostre soluzioni</h2>
       </div>
-      <div class="services-grid" data-stagger="110">
+      <div class="solutions-list" data-stagger="70">
         {services.map(s => (
-          <ServiceCard {...s} />
+          <SolutionRow {...s} />
         ))}
-      </div>
-      <div class="servizi-preview__cta reveal">
-        <a href={withBase('/servizi')} class="btn btn-outline-dark">Vedi tutti i servizi</a>
       </div>
     </div>
   </section>
@@ -232,8 +226,8 @@ const services = [
   <section class="section settore">
     <div class="container">
       <div class="settore__inner">
-        <div class="settore__decoration float-soft" aria-hidden="true" data-animate="zoom-in">
-          <NodeDecoration color="rgba(255,96,0,0.14)" animated={true} />
+        <div class="settore__decoration" aria-hidden="true" data-animate="zoom-in">
+          <FlowCanvas hideLabels showLoop={false} />
         </div>
         <div class="settore__content" data-stagger="120">
           <span class="eyebrow" data-animate="fade-up">Specializzazione verticale</span>
@@ -243,10 +237,11 @@ const services = [
             Conosciamo dall'interno le sfide operative di un club, di una palestra,
             di un centro sportivo. Non come consulenti esterni, ma come imprenditori
             che hanno vissuto le stesse criticità. Questo ci permette di proporre
-            soluzioni che funzionano davvero.
+            soluzioni che funzionano davvero — e lo stesso metodo si estende a
+            qualsiasi azienda con processi reali da digitalizzare.
           </p>
-          <a href={withBase('/chi-siamo')} class="btn btn-primary" data-animate="fade-up" style="margin-top: var(--space-8);">
-            La nostra storia
+          <a href={withBase('/chi-siamo')} class="link-arrow" data-animate="fade-up" style="margin-top: var(--space-6);">
+            La nostra storia →
           </a>
         </div>
       </div>
@@ -280,25 +275,20 @@ const services = [
     overflow: hidden;
   }
 
-  .hero__bg-decoration {
+  .hero__canvas {
     position: absolute;
     inset: 0;
     pointer-events: none;
+    opacity: 0.9;
   }
 
-  /* Radial glow behind the headline */
-  .hero__glow {
+  /* Functional, not decorative: without this the flow diagram sits under
+     the headline with too little contrast on some displays. */
+  .hero__scrim {
     position: absolute;
-    top: 30%;
-    left: 18%;
-    width: 520px;
-    height: 520px;
-    max-width: 80vw;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,96,0,0.22) 0%, rgba(255,96,0,0) 70%);
-    transform: translate(-50%, -50%);
+    inset: 0;
+    background: linear-gradient(100deg, var(--color-dark) 0%, var(--color-dark) 28%, rgba(26,26,26,0.55) 52%, rgba(26,26,26,0.15) 72%);
     pointer-events: none;
-    animation: glow-pulse 7s ease-in-out infinite;
   }
 
   .hero__content {
@@ -350,8 +340,9 @@ const services = [
     flex-direction: column;
     align-items: center;
     gap: var(--space-2);
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
-    letter-spacing: 0.2em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.45);
     z-index: 1;
@@ -372,11 +363,13 @@ const services = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__glow, .hero__scroll-line { animation: none; }
+    .hero__scroll-line { animation: none; }
   }
 
   @media (max-width: 768px) {
     .hero__scroll-hint { display: none; }
+    .hero__canvas { opacity: 0.4; }
+    .hero__scrim { background: linear-gradient(180deg, var(--color-dark) 55%, rgba(26,26,26,0.4) 100%); }
   }
 
   .hero__link-secondary {
@@ -407,10 +400,10 @@ const services = [
   }
 
   .tech-band__list li {
-    font-family: var(--font-display);
-    font-size: var(--text-xl);
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: 500;
+    letter-spacing: 0.01em;
     color: rgba(255,255,255,0.55);
     text-transform: uppercase;
   }
@@ -420,7 +413,7 @@ const services = [
     font-size: var(--text-xs) !important;
   }
 
-  /* DIFFERENTIATOR */
+  /* DIFFERENTIATOR — a spec-sheet comparison, not a bordered card */
   .differentiator {
     background: var(--color-white);
   }
@@ -428,76 +421,73 @@ const services = [
   .diff__grid {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    gap: var(--space-8);
-    align-items: center;
-    border: 1px solid var(--color-gray-light);
-    border-radius: var(--radius-xl);
-    padding: var(--space-12);
+    gap: var(--space-10);
+    /* default (stretch) align-items so the divider's height: 100% below
+       actually spans the row — the text columns still read from the top
+       since their own content is block-flow, unaffected by the stretch. */
   }
 
   .diff__divider {
     width: 1px;
-    height: 200px;
+    height: 100%;
     background: var(--color-gray-light);
   }
 
   .diff__header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
+    font-family: var(--font-mono);
     margin-bottom: var(--space-6);
-    font-weight: 600;
+    font-weight: 500;
     font-size: var(--text-sm);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     color: var(--color-gray-mid);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-gray-light);
   }
-
-  .diff__badge {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--text-sm);
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .diff__badge--no  { background: rgba(220, 38, 38, 0.1); color: #dc2626; }
-  .diff__badge--yes { background: rgba(22, 163, 74, 0.1);  color: #16a34a; }
 
   .diff__list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-5);
   }
 
   .diff__col--no .diff__list li,
   .diff__col--yes .diff__list li {
-    font-size: var(--text-base);
+    font-size: var(--text-lg);
     padding-left: var(--space-6);
     position: relative;
   }
 
   .diff__col--no .diff__list li { color: var(--color-gray-mid); }
-  .diff__col--no .diff__list li::before { content: '✗'; position: absolute; left: 0; color: #dc2626; font-weight: 700; }
+  .diff__col--no .diff__list li::before { content: '✗'; position: absolute; left: 0; top: 2px; color: var(--color-gray-mid); font-size: var(--text-sm); }
 
   .diff__col--yes .diff__list li { color: var(--color-dark); font-weight: 500; }
-  .diff__col--yes .diff__list li::before { content: '✓'; position: absolute; left: 0; color: #16a34a; font-weight: 700; }
+  .diff__col--yes .diff__list li::before { content: '✓'; position: absolute; left: 0; top: 2px; color: var(--color-orange); font-size: var(--text-sm); }
 
   /* RISULTATI */
-  .risultati__intro { text-align: center; margin-bottom: var(--space-12); }
+  .risultati__intro { text-align: center; margin-bottom: var(--space-12); margin-inline: auto; max-width: 640px; }
 
-  .kpi-grid {
+  .stat-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-6);
-    margin-bottom: var(--space-10);
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
   }
 
-  .risultati__cta { text-align: center; }
+  .risultati__cta {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .risultati__cta-secondary {
+    font-size: var(--text-sm);
+    color: var(--color-gray-mid);
+    text-decoration: underline;
+    text-decoration-color: var(--color-gray-light);
+  }
 
   /* METODO */
   .metodo__intro { text-align: center; margin-bottom: var(--space-12); }
@@ -508,16 +498,12 @@ const services = [
   }
 
   /* SERVIZI */
-  .servizi-preview__intro { margin-bottom: var(--space-10); }
+  .servizi-preview__intro { margin-bottom: var(--space-8); }
 
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-6);
-    margin-bottom: var(--space-10);
+  .solutions-list {
+    display: flex;
+    flex-direction: column;
   }
-
-  .servizi-preview__cta { text-align: center; }
 
   /* SETTORE */
   .settore {
@@ -535,11 +521,12 @@ const services = [
 
   .settore__decoration {
     position: absolute;
-    right: -40px;
-    top: -60px;
-    width: 480px;
-    height: 480px;
+    right: -60px;
+    top: -40px;
+    width: 520px;
+    height: 520px;
     pointer-events: none;
+    opacity: 0.8;
   }
 
   .settore__content {
@@ -571,16 +558,11 @@ const services = [
   .cta-section__sub { font-size: var(--text-lg); color: rgba(255,255,255,0.7); }
 
   /* Responsive */
-  @media (max-width: 1024px) {
-    .services-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
   @media (max-width: 768px) {
-    .diff__grid { grid-template-columns: 1fr; padding: var(--space-8); }
-    .diff__divider { width: 100%; height: 1px; }
-    .kpi-grid { grid-template-columns: 1fr; }
+    .diff__grid { grid-template-columns: 1fr; gap: var(--space-10); }
+    .diff__divider { display: none; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-8) var(--space-6); }
     .process-grid { flex-direction: column; }
-    .services-grid { grid-template-columns: 1fr; }
-    .settore__decoration { display: none; }
+    .settore__decoration { width: 340px; height: 340px; right: -100px; }
   }
 </style>
