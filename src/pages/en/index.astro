@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SystemsProblem from '../../components/SystemsProblem.astro';
 import ProcessStep from '../../components/ProcessStep.astro';
 import SolutionRow from '../../components/SolutionRow.astro';
+import Layers3D from '../../components/Layers3D.astro';
 import { withBase } from '../../utils/url';
 import { routeFor } from '../../i18n/routes';
 
@@ -111,10 +112,17 @@ const solutions = [
       <div class="work__grid" data-stagger="100">
         {work.map((w, i) => (
           <a href={withBase(`/en/work/${w.data.slug}/`)} class:list={['work-card', 'reveal', { 'work-card--lg': i === 0, 'work-card--md': i > 0 && i < 4 }]}>
-            <span class="work-card__sector">{w.data.sector}</span>
-            <h3 class="work-card__client">{w.data.client}</h3>
-            <p class="work-card__excerpt">{w.data.excerpt}</p>
-            <span class="work-card__link">See the project →</span>
+            {w.data.cover && (
+              <div class="work-card__media">
+                <img src={withBase(w.data.cover)} alt={w.data.coverAlt ?? w.data.client} loading="lazy" decoding="async" width="640" height="400" />
+              </div>
+            )}
+            <div class="work-card__body">
+              <span class="work-card__sector">{w.data.sector}</span>
+              <h3 class="work-card__client">{w.data.client}</h3>
+              <p class="work-card__excerpt">{w.data.excerpt}</p>
+              <span class="work-card__link">See the project →</span>
+            </div>
           </a>
         ))}
       </div>
@@ -165,18 +173,21 @@ const solutions = [
         <span class="eyebrow" data-animate="fade-up">How we decide</span>
         <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">We don't start from the software we'd like to sell</h2>
       </div>
-      <div class="bvb__grid" data-stagger="120">
-        <div class="bvb__item reveal">
-          <span class="bvb__label">We use</span>
-          <p>Existing software when it already does its job well.</p>
-        </div>
-        <div class="bvb__item reveal">
-          <span class="bvb__label">We integrate</span>
-          <p>What already works, when it's just missing a connection.</p>
-        </div>
-        <div class="bvb__item reveal">
-          <span class="bvb__label">We build</span>
-          <p>Only when the process needs something the market doesn't offer.</p>
+      <div class="bvb__layout">
+        <Layers3D layers={[{ label: 'We use' }, { label: 'We integrate' }, { label: 'We build' }]} />
+        <div class="bvb__grid" data-stagger="120">
+          <div class="bvb__item reveal">
+            <span class="bvb__label">We use</span>
+            <p>Existing software when it already does its job well.</p>
+          </div>
+          <div class="bvb__item reveal">
+            <span class="bvb__label">We integrate</span>
+            <p>What already works, when it's just missing a connection.</p>
+          </div>
+          <div class="bvb__item reveal">
+            <span class="bvb__label">We build</span>
+            <p>Only when the process needs something the market doesn't offer.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -322,14 +333,37 @@ const solutions = [
   .work-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-6);
     border: 1px solid var(--color-gray-light);
     grid-column: span 1;
     color: inherit;
+    overflow: hidden;
   }
 
-  .work-card--lg { grid-column: span 2; grid-row: span 2; padding: var(--space-8); background: var(--color-dark); color: var(--color-white); border-color: var(--color-dark); }
+  .work-card__media {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--color-gray-light);
+  }
+  .work-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s var(--ease-out-expo);
+  }
+  .work-card:hover .work-card__media img { transform: scale(1.045); }
+
+  .work-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    flex: 1;
+  }
+
+  .work-card--lg { grid-column: span 2; grid-row: span 2; background: var(--color-dark); color: var(--color-white); border-color: var(--color-dark); }
+  .work-card--lg .work-card__media { aspect-ratio: unset; flex: 1; min-height: 260px; }
+  .work-card--lg .work-card__body { flex: 0 0 auto; padding: var(--space-8); }
   .work-card--lg .work-card__sector { color: rgba(255,255,255,0.55); }
   .work-card--lg .work-card__client { color: var(--color-white); font-size: var(--text-3xl); }
   .work-card--lg .work-card__excerpt { color: rgba(255,255,255,0.75); }
@@ -377,6 +411,7 @@ const solutions = [
 
   /* BUILD VS BUY */
   .bvb__intro { max-width: 700px; margin-bottom: var(--space-12); }
+  .bvb__layout { display: grid; grid-template-columns: 300px 1fr; gap: var(--space-12); align-items: center; }
   .bvb__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
   .bvb__item { border-top: 1px solid rgba(255,255,255,0.15); padding-top: var(--space-6); }
   .bvb__label { display: block; font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-orange); margin-bottom: var(--space-3); }
@@ -397,6 +432,7 @@ const solutions = [
     .work__grid { grid-template-columns: repeat(2, 1fr); }
     .work-card--lg { grid-column: span 2; grid-row: span 1; }
     .work-card--md { grid-column: span 1; }
+    .bvb__layout { grid-template-columns: 1fr; gap: var(--space-8); }
     .bvb__grid { grid-template-columns: 1fr; gap: var(--space-6); }
   }
 

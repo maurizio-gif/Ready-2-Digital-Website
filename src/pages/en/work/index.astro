@@ -34,7 +34,12 @@ const work = order
     <div class="container">
       <div class="cases-list" data-stagger="120">
         {work.map((w) => (
-          <a href={withBase(`/en/work/${w.data.slug}/`)} class="case-row reveal">
+          <a href={withBase(`/en/work/${w.data.slug}/`)} class:list={['case-row', 'reveal', { 'case-row--no-thumb': !w.data.cover }]}>
+            {w.data.cover && (
+              <div class="case-row__thumb">
+                <img src={withBase(w.data.cover)} alt={w.data.coverAlt ?? w.data.client} loading="lazy" decoding="async" width="400" height="260" />
+              </div>
+            )}
             <div class="case-row__main">
               <span class="case-row__sector">{w.data.sector}</span>
               <h2 class="case-row__client">{w.data.client}</h2>
@@ -70,14 +75,30 @@ const work = order
 
   .case-row {
     display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    gap: var(--space-10);
+    grid-template-columns: 180px 1.1fr 1fr;
+    gap: var(--space-8);
     align-items: center;
-    padding-block: var(--space-10);
+    padding-block: var(--space-8);
     border-top: 1px solid var(--color-gray-light);
     color: inherit;
   }
+  .case-row--no-thumb { grid-template-columns: 1.3fr 1fr; gap: var(--space-10); }
   .cases-list a:last-of-type { border-bottom: 1px solid var(--color-gray-light); }
+
+  .case-row__thumb {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-gray-light);
+  }
+  .case-row__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s var(--ease-out-expo);
+  }
+  .case-row:hover .case-row__thumb img { transform: scale(1.05); }
 
   .case-row__sector { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-orange); }
   .case-row__client { font-family: var(--font-display); font-size: clamp(var(--text-3xl), 4vw, var(--text-4xl)); font-weight: 700; color: var(--color-dark); margin-top: var(--space-2); }
@@ -91,7 +112,8 @@ const work = order
   .cta-block__inner { text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-6); }
 
   @media (max-width: 768px) {
-    .case-row { grid-template-columns: 1fr; gap: var(--space-4); }
+    .case-row, .case-row--no-thumb { grid-template-columns: 1fr; gap: var(--space-4); }
+    .case-row__thumb { aspect-ratio: 16 / 9; }
     .case-row__side { align-items: flex-start; text-align: left; }
   }
 </style>

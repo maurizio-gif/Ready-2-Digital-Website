@@ -7,6 +7,8 @@ title: "Un'unica anagrafica al posto di sistemi scollegati"
 excerpt: "Iscrizioni, scuola tennis, summer camp ed eventi: una segreteria che lavorava su strumenti scollegati, unificata su un'unica anagrafica invece di ricostruita a mano."
 sector: "Circolo sportivo"
 featured: true
+cover: "/images/work/tca.jpg"
+coverAlt: "I campi in terra rossa del Tennis Club Ambrosiano"
 services: ["Business Systems", "Digital Experience", "Integrations", "Automation"]
 metrics:
   - value: "353"

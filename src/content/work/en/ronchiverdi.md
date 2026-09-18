@@ -7,6 +7,8 @@ title: "We studied the business first. Then we wrote the software."
 excerpt: "The case that shows the method most clearly: no system existed yet, and the priority wasn't picking a tool — it was understanding how the business actually works."
 sector: "Sports club"
 featured: false
+cover: "/images/work/ronchiverdi.jpg"
+coverAlt: "The park and pool at Ronchiverdi Sport Club"
 services: ["Digital Experience", "Business Systems", "Automation"]
 metrics: []
 technologies: ["Astro", "TinaCMS", "Next.js", "Supabase", "Web Push"]
