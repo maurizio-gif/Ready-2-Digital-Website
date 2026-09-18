@@ -34,7 +34,16 @@ const langButtonLabel = locale === 'it' ? 'Lingua' : 'Language';
   <div class="container header__inner">
     <a href={withBase(routeFor('home', locale))} class="header__logo" aria-label="Ready2Digital">
       <img
+        class="header__logo-img header__logo-img--light"
         src={withBase('/images/logo_ready2digital.png')}
+        alt="Ready2Digital"
+        width="180"
+        height="40"
+        loading="eager"
+      />
+      <img
+        class="header__logo-img header__logo-img--dark"
+        src={withBase('/images/logo_ready2digital_dark.png')}
         alt="Ready2Digital"
         width="180"
         height="40"
@@ -185,10 +194,23 @@ const langButtonLabel = locale === 'it' ? 'Lingua' : 'Language';
     height: 72px;
   }
 
-  .header__logo img {
+  .header__logo-img {
     height: 34px;
     width: auto;
     object-fit: contain;
+  }
+
+  /* The wordmark's text is dark charcoal on a transparent PNG — on a dark
+     header that reads as dark-on-dark, so a second export with light text
+     (same orange mark) swaps in under the dark theme instead. */
+  .header__logo-img--dark {
+    display: none;
+  }
+  :global(:root[data-theme="dark"]) .header__logo-img--light {
+    display: none;
+  }
+  :global(:root[data-theme="dark"]) .header__logo-img--dark {
+    display: block;
   }
 
   .header__nav {
