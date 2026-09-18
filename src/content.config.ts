@@ -25,9 +25,13 @@ const work = defineCollection({
     sector: z.string(),
     year: z.string().optional(),
     featured: z.boolean().default(false),
-    // No `image()` helper: this is a plain path into public/images/work/,
-    // not an Astro-optimised asset. Optional and omitted (not a generic
-    // placeholder) for cases with no real screenshot to show yet.
+    // No `image()` helper: these are plain paths into public/images/work/,
+    // not Astro-optimised assets. Optional and omitted (not a generic
+    // placeholder) for cases with no real asset to show yet.
+    // `logo` is the client mark shown on the Home/Work list cards; `cover`
+    // is the full screenshot shown on the case study page itself — two
+    // different jobs, so a case can have one without the other.
+    logo: z.string().optional(),
     cover: z.string().optional(),
     coverAlt: z.string().optional(),
     services: z.array(z.string()).default([]),

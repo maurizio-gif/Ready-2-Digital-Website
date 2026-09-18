@@ -7,6 +7,7 @@ title: "Il club dove il metodo è nato"
 excerpt: "Un club sportivo attivo dal 1973, digitalizzato dall'interno: non un cliente come gli altri, il luogo dove il metodo Ready2Digital nasce e si testa ogni giorno."
 sector: "Club sportivo multi-attività · Roma"
 featured: true
+logo: "/images/work/logos/athlon-mark.svg"
 cover: "/images/work/athlon.jpg"
 coverAlt: "L'ingresso di Athlon Club 4.0"
 services: ["Digital Experience", "Business Systems", "Automation", "AI", "Integrations", "Physical Experience"]

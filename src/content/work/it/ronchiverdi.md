@@ -7,6 +7,7 @@ title: "Prima abbiamo studiato l'azienda. Poi abbiamo scritto il software."
 excerpt: "Il caso in cui si vede meglio il metodo: nessun sistema esisteva ancora, e la priorità non era scegliere uno strumento — era capire come lavora davvero l'azienda."
 sector: "Circolo sportivo"
 featured: false
+logo: "/images/work/logos/ronchiverdi-mark.png"
 cover: "/images/work/ronchiverdi.jpg"
 coverAlt: "Il parco e la piscina di Ronchiverdi Sport Club"
 services: ["Digital Experience", "Business Systems", "Automation"]

@@ -34,10 +34,10 @@ const work = order
     <div class="container">
       <div class="cases-list" data-stagger="120">
         {work.map((w) => (
-          <a href={withBase(`/en/work/${w.data.slug}/`)} class:list={['case-row', 'reveal', { 'case-row--no-thumb': !w.data.cover }]}>
-            {w.data.cover && (
+          <a href={withBase(`/en/work/${w.data.slug}/`)} class:list={['case-row', 'reveal', { 'case-row--no-thumb': !w.data.logo }]}>
+            {w.data.logo && (
               <div class="case-row__thumb">
-                <img src={withBase(w.data.cover)} alt={w.data.coverAlt ?? w.data.client} loading="lazy" decoding="async" width="400" height="260" />
+                <img src={withBase(w.data.logo)} alt={w.data.client} loading="lazy" decoding="async" width="140" height="140" />
               </div>
             )}
             <div class="case-row__main">
@@ -89,16 +89,20 @@ const work = order
     aspect-ratio: 4 / 3;
     overflow: hidden;
     border-radius: var(--radius-sm);
-    background: var(--color-gray-light);
+    background: var(--color-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
   }
   .case-row__thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 60%;
+    max-height: 60%;
+    object-fit: contain;
     display: block;
-    transition: transform 0.5s var(--ease-out-expo);
+    transition: transform 0.3s var(--ease-out-expo);
   }
-  .case-row:hover .case-row__thumb img { transform: scale(1.05); }
+  .case-row:hover .case-row__thumb img { transform: scale(1.08); }
 
   .case-row__sector { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-orange); }
   .case-row__client { font-family: var(--font-display); font-size: clamp(var(--text-3xl), 4vw, var(--text-4xl)); font-weight: 700; color: var(--color-dark); margin-top: var(--space-2); }

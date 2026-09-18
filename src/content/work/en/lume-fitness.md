@@ -7,6 +7,7 @@ title: "From lead to customer management, in one system"
 excerpt: "A multi-site gym network opening in stages: from pre-selling memberships before a location even exists, to managing the customer once they've joined."
 sector: "Multi-site gyms"
 featured: true
+logo: "/images/work/logos/lume-mark.svg"
 cover: "/images/work/lume.jpg"
 coverAlt: "The class catalogue on the Lume Fitness site"
 services: ["Digital Experience", "Business Systems", "Automation", "Integrations"]
