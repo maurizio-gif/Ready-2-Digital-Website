@@ -34,15 +34,15 @@ const work = order
     <div class="container">
       <div class="cases-list" data-stagger="120">
         {work.map((w) => (
-          <a href={withBase(`/it/progetti/${w.data.slug}/`)} class:list={['case-row', 'reveal', { 'case-row--no-thumb': !w.data.logo }]}>
-            {w.data.logo && (
-              <div class="case-row__thumb">
-                <img src={withBase(w.data.logo)} alt={w.data.client} loading="lazy" decoding="async" width="140" height="140" />
-              </div>
-            )}
+          <a href={withBase(`/it/progetti/${w.data.slug}/`)} class="case-row reveal">
             <div class="case-row__main">
               <span class="case-row__sector">{w.data.sector}</span>
-              <h2 class="case-row__client">{w.data.client}</h2>
+              <div class="case-row__name">
+                {w.data.logo && (
+                  <img class="case-row__logo" src={withBase(w.data.logo)} alt="" loading="lazy" decoding="async" width="28" height="28" />
+                )}
+                <h2 class="case-row__client">{w.data.client}</h2>
+              </div>
               <p class="case-row__desc">{w.data.excerpt}</p>
             </div>
             <div class="case-row__side">
@@ -75,37 +75,21 @@ const work = order
 
   .case-row {
     display: grid;
-    grid-template-columns: 180px 1.1fr 1fr;
-    gap: var(--space-8);
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--space-10);
     align-items: center;
     padding-block: var(--space-8);
     border-top: 1px solid var(--color-gray-light);
     color: inherit;
   }
-  .case-row--no-thumb { grid-template-columns: 1.3fr 1fr; gap: var(--space-10); }
   .cases-list a:last-of-type { border-bottom: 1px solid var(--color-gray-light); }
 
-  .case-row__thumb {
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    border-radius: var(--radius-sm);
-    background: var(--color-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-4);
-  }
-  .case-row__thumb img {
-    max-width: 60%;
-    max-height: 60%;
-    object-fit: contain;
-    display: block;
-    transition: transform 0.3s var(--ease-out-expo);
-  }
-  .case-row:hover .case-row__thumb img { transform: scale(1.08); }
-
   .case-row__sector { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-orange); }
-  .case-row__client { font-family: var(--font-display); font-size: clamp(var(--text-3xl), 4vw, var(--text-4xl)); font-weight: 700; color: var(--color-dark); margin-top: var(--space-2); }
+
+  .case-row__name { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-2); }
+  .case-row__logo { width: 28px; height: 28px; object-fit: contain; flex-shrink: 0; }
+
+  .case-row__client { font-family: var(--font-display); font-size: clamp(var(--text-3xl), 4vw, var(--text-4xl)); font-weight: 700; color: var(--color-dark); }
   .case-row:hover .case-row__client { color: var(--color-orange); }
   .case-row__desc { margin-top: var(--space-3); font-size: var(--text-base); color: var(--color-gray-mid); line-height: 1.6; max-width: 520px; }
 
@@ -116,8 +100,7 @@ const work = order
   .cta-block__inner { text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-6); }
 
   @media (max-width: 768px) {
-    .case-row, .case-row--no-thumb { grid-template-columns: 1fr; gap: var(--space-4); }
-    .case-row__thumb { aspect-ratio: 16 / 9; }
+    .case-row { grid-template-columns: 1fr; gap: var(--space-4); }
     .case-row__side { align-items: flex-start; text-align: left; }
   }
 </style>

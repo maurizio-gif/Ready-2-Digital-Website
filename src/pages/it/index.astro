@@ -111,14 +111,14 @@ const solutions = [
       <div class="work__grid" data-stagger="100">
         {work.map((w, i) => (
           <a href={withBase(`/it/progetti/${w.data.slug}/`)} class:list={['work-card', 'reveal', { 'work-card--lg': i === 0, 'work-card--md': i > 0 && i < 4 }]}>
-            {w.data.logo && (
-              <div class="work-card__media">
-                <img src={withBase(w.data.logo)} alt={w.data.client} loading="lazy" decoding="async" width="160" height="160" />
-              </div>
-            )}
             <div class="work-card__body">
               <span class="work-card__sector">{w.data.sector}</span>
-              <h3 class="work-card__client">{w.data.client}</h3>
+              <div class="work-card__name">
+                {w.data.logo && (
+                  <img class="work-card__logo" src={withBase(w.data.logo)} alt="" loading="lazy" decoding="async" width="32" height="32" />
+                )}
+                <h3 class="work-card__client">{w.data.client}</h3>
+              </div>
               <p class="work-card__excerpt">{w.data.excerpt}</p>
               <span class="work-card__link">Scopri il progetto →</span>
             </div>
@@ -335,24 +335,6 @@ const solutions = [
     overflow: hidden;
   }
 
-  .work-card__media {
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    background: var(--color-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-6);
-  }
-  .work-card__media img {
-    max-width: min(120px, 55%);
-    max-height: min(120px, 55%);
-    object-fit: contain;
-    display: block;
-    transition: transform 0.3s var(--ease-out-expo);
-  }
-  .work-card:hover .work-card__media img { transform: scale(1.08); }
-
   .work-card__body {
     display: flex;
     flex-direction: column;
@@ -362,11 +344,14 @@ const solutions = [
   }
 
   .work-card--lg { grid-column: span 2; grid-row: span 2; background: var(--color-dark); color: var(--color-white); border-color: var(--color-dark); }
-  .work-card--lg .work-card__media { aspect-ratio: unset; flex: 1; min-height: 260px; }
-  .work-card--lg .work-card__body { flex: 0 0 auto; padding: var(--space-8); }
+  .work-card--lg .work-card__body { padding: var(--space-8); }
   .work-card--lg .work-card__sector { color: rgba(255,255,255,0.55); }
   .work-card--lg .work-card__client { color: var(--color-white); font-size: var(--text-3xl); }
   .work-card--lg .work-card__excerpt { color: rgba(255,255,255,0.75); }
+  /* Logo marks are flat dark strokes on transparent — on the dark card
+     they'd vanish, so they're rendered as a plain white silhouette instead
+     of trying to preserve each client's original mark colour. */
+  .work-card--lg .work-card__logo { filter: brightness(0) invert(1); }
 
   .work-card--md { grid-column: span 2; }
 
@@ -376,6 +361,19 @@ const solutions = [
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--color-gray-mid);
+  }
+
+  .work-card__name {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .work-card__logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    flex-shrink: 0;
   }
 
   .work-card__client {
