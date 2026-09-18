@@ -19,6 +19,15 @@ const nav = [
   { label: strings.nav.technology, href: routeFor('technology', locale) },
   { label: strings.nav.about, href: routeFor('about', locale) },
 ];
+
+// Inline flag icons — no external image request, no illustration budget spent.
+const FLAGS: Record<Locale, string> = {
+  it: `<svg class="lang-flag" width="20" height="14" viewBox="0 0 3 2" aria-hidden="true"><rect width="1" height="2" fill="#009246"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ce2b37"/></svg>`,
+  en: `<svg class="lang-flag" width="20" height="14" viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#c8102e" stroke-width="4"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#c8102e" stroke-width="6"/></svg>`,
+};
+const LABELS: Record<Locale, string> = { it: 'Italiano', en: 'English' };
+const dropdownLabel = locale === 'it' ? 'Seleziona lingua' : 'Select language';
+const langButtonLabel = locale === 'it' ? 'Lingua' : 'Language';
 ---
 
 <header class="header" id="header">
@@ -42,9 +51,46 @@ const nav = [
     </nav>
 
     <div class="header__actions">
-      <a href={withBase(switchHref)} class="header__lang" hreflang={other} lang={other}>
-        {strings.lang.switchTo}
-      </a>
+      <div class="lang-switcher" id="lang-switcher">
+        <button
+          type="button"
+          class="lang-switcher__toggle"
+          id="lang-toggle"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-label={langButtonLabel}
+        >
+          <Fragment set:html={FLAGS[locale]} />
+          <span class="lang-switcher__label">{locale.toUpperCase()}</span>
+          <svg class="lang-switcher__chevron" width="8" height="5" viewBox="0 0 8 5" aria-hidden="true">
+            <path d="M1 1l3 3 3-3" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <ul class="lang-switcher__dropdown" role="listbox" aria-label={dropdownLabel}>
+          {(['it', 'en'] as const).map((code) => {
+            const isActive = code === locale;
+            const href = isActive ? '#' : withBase(switchHref);
+            return (
+              <li role="presentation">
+                <a
+                  role="option"
+                  aria-selected={isActive}
+                  aria-disabled={isActive}
+                  tabindex={isActive ? -1 : 0}
+                  class={`lang-switcher__option${isActive ? ' is-active' : ''}`}
+                  href={href}
+                  hreflang={code}
+                  lang={code}
+                >
+                  <Fragment set:html={FLAGS[code]} />
+                  <span class="lang-switcher__option-code">{code.toUpperCase()}</span>
+                  <span class="lang-switcher__option-label">{LABELS[code]}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
       <a href={withBase(routeFor('contact', locale))} class="btn btn-primary header__cta">
         {strings.cta.primary}
       </a>
@@ -62,7 +108,28 @@ const nav = [
         ))}
         <li class="header__mobile-divider"></li>
         <li><a href={withBase(routeFor('contact', locale))}>{strings.cta.primary}</a></li>
-        <li><a href={withBase(switchHref)} hreflang={other} lang={other}>{strings.lang.switchTo}</a></li>
+        <li class="header__mobile-lang">
+          {(['it', 'en'] as const).map((code, i) => {
+            const isActive = code === locale;
+            const href = isActive ? '#' : withBase(switchHref);
+            return (
+              <>
+                {i > 0 && <span class="header__mobile-lang-sep" aria-hidden="true">/</span>}
+                <a
+                  class={`header__mobile-lang-option${isActive ? ' is-active' : ''}`}
+                  href={href}
+                  hreflang={code}
+                  lang={code}
+                  aria-disabled={isActive}
+                  tabindex={isActive ? -1 : 0}
+                >
+                  <Fragment set:html={FLAGS[code]} />
+                  <span>{code.toUpperCase()}</span>
+                </a>
+              </>
+            );
+          })}
+        </li>
       </ul>
     </nav>
   </div>
@@ -118,20 +185,105 @@ const nav = [
     margin-left: auto;
   }
 
-  .header__lang {
+  /* Language switcher — flag + code, dropdown with both options */
+  .lang-switcher {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .lang-flag {
+    display: inline-block;
+    flex-shrink: 0;
+    border-radius: 1px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    width: 18px;
+    height: 13px;
+  }
+
+  .lang-switcher__toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     font-weight: 500;
     color: var(--color-gray-mid);
+    background: none;
     border: 1px solid var(--color-gray-light);
     border-radius: var(--radius-sm);
     padding: 0.3rem 0.55rem;
+    cursor: pointer;
     transition: color var(--transition-fast), border-color var(--transition-fast);
   }
 
-  .header__lang:hover {
+  .lang-switcher__toggle:hover { color: var(--color-orange); border-color: var(--color-orange); }
+  .lang-switcher.is-open .lang-switcher__toggle { color: var(--color-orange); border-color: var(--color-orange); }
+
+  .lang-switcher__label {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .lang-switcher__chevron {
+    transition: transform var(--transition-base);
+    flex-shrink: 0;
+  }
+  .lang-switcher.is-open .lang-switcher__chevron { transform: rotate(180deg); }
+
+  .lang-switcher__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    list-style: none;
+    min-width: 150px;
+    padding: var(--space-1) 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity var(--transition-base), transform var(--transition-base), visibility var(--transition-base);
+    z-index: 110;
+  }
+  .lang-switcher.is-open .lang-switcher__dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .lang-switcher__option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.55rem 0.8rem;
+    font-size: var(--text-sm);
+    color: var(--color-charcoal);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+  .lang-switcher__option:hover {
+    background: var(--color-light);
     color: var(--color-orange);
-    border-color: var(--color-orange);
+  }
+  .lang-switcher__option.is-active {
+    color: var(--color-orange);
+    pointer-events: none;
+  }
+
+  .lang-switcher__option-code {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .lang-switcher__option-label {
+    font-family: var(--font-body);
+    color: inherit;
+    opacity: 0.7;
   }
 
   .header__cta {
@@ -189,8 +341,39 @@ const nav = [
     margin-block: var(--space-2);
   }
 
+  .header__mobile-lang {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-2);
+  }
+
+  .header__mobile-lang-sep {
+    color: var(--color-gray-light);
+  }
+
+  .header__mobile-lang-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-gray-mid);
+  }
+
+  .header__mobile-lang-option.is-active {
+    color: var(--color-orange);
+    pointer-events: none;
+  }
+
   @media (max-width: 900px) {
-    .header__nav, .header__cta, .header__lang { display: none; }
+    .header__nav, .header__cta { display: none; }
+    .lang-switcher__label, .lang-switcher__chevron { display: none; }
+    .lang-switcher__toggle { padding: 0.3rem; }
     .header__hamburger { display: flex; }
   }
 </style>
@@ -208,5 +391,29 @@ const nav = [
     hamburger.classList.toggle('open', isOpen);
     hamburger.setAttribute('aria-expanded', String(!!isOpen));
     mobileMenu?.setAttribute('aria-hidden', String(!isOpen));
+  });
+
+  // ── Language dropdown ──
+  const langSwitcher = document.getElementById('lang-switcher');
+  const langToggle = document.getElementById('lang-toggle');
+
+  langToggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = langSwitcher?.classList.toggle('is-open');
+    langToggle.setAttribute('aria-expanded', String(!!open));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!langSwitcher?.contains(e.target as Node)) {
+      langSwitcher?.classList.remove('is-open');
+      langToggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      langSwitcher?.classList.remove('is-open');
+      langToggle?.setAttribute('aria-expanded', 'false');
+    }
   });
 </script>
