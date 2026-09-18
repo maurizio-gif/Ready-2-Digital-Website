@@ -1,5 +1,9 @@
 :root {
-  /* Brand Colors */
+  /* Brand Colors — theme-reactive. These six are the ones every page/
+     component reads for its default surface, text and border: light values
+     here, dark values in the [data-theme="dark"] block below. Anything that
+     must stay dark regardless of theme (the CTA bands, the feature card,
+     the footer) does NOT use these — see --ink / --ink-text underneath. */
   --color-orange:     #FF6000;
   --color-charcoal:   #3A3A3A;
   --color-dark:       #1A1A1A;
@@ -7,6 +11,14 @@
   --color-white:      #FFFFFF;
   --color-gray-mid:   #6B6B6B;
   --color-gray-light: #E8E8E6;
+
+  /* Fixed, non-reactive dark accent — same value in both themes. Used only
+     by sections that are dark by design (CTA bands, the Athlon feature
+     card, the case-study hero, the footer), never by the reactive
+     six above, so those bands don't invert when the page itself goes dark. */
+  --ink:      #1A1A1A;
+  --ink-alt:  #3A3A3A;
+  --ink-text: #FFFFFF;
 
   /* Signal colors — used only for the pipeline/flow motif, never decorative */
   --color-flow-idle:   rgba(255,255,255,0.16);
@@ -63,4 +75,16 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
+}
+
+/* Dark theme — redefines only the six reactive brand-color tokens above.
+   --ink / --ink-alt / --ink-text and --color-orange are deliberately absent
+   here: the sections that use them stay the same dark regardless of theme. */
+:root[data-theme="dark"] {
+  --color-charcoal:   #EDEDEA;
+  --color-dark:       #F5F5F3;
+  --color-light:      #1B1B1B;
+  --color-white:      #121212;
+  --color-gray-mid:   #9A9A97;
+  --color-gray-light: #2C2C2C;
 }

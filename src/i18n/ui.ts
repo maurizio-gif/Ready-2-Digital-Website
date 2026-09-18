@@ -38,6 +38,11 @@ export const ui = {
       switchTo: 'English',
       current: 'Italiano',
     },
+    themeToggle: {
+      label: 'Cambia tema',
+      toLight: 'Passa al tema chiaro',
+      toDark: 'Passa al tema scuro',
+    },
     misc: {
       skipToContent: 'Vai al contenuto',
       readingTime: 'min di lettura',
@@ -82,6 +87,11 @@ export const ui = {
     lang: {
       switchTo: 'Italiano',
       current: 'English',
+    },
+    themeToggle: {
+      label: 'Switch theme',
+      toLight: 'Switch to light theme',
+      toDark: 'Switch to dark theme',
     },
     misc: {
       skipToContent: 'Skip to content',

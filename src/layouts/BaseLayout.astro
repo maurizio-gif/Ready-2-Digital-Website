@@ -73,6 +73,21 @@ const breadcrumbJsonLd = breadcrumbs
   <head>
     <SEO title={title} description={description} locale={locale} path={path} alternatePath={alternatePath} ogImage={ogImage} noindex={noindex} />
 
+    <!-- Sets data-theme before the first paint, straight from a stored choice
+         or the OS preference — is:inline and this early so there's no flash
+         of the wrong theme once global.css's variables resolve. -->
+    <script is:inline>
+      (function () {
+        var KEY = 'r2d-theme';
+        var stored = null;
+        try { stored = localStorage.getItem(KEY); } catch (e) {}
+        var theme = stored === 'light' || stored === 'dark'
+          ? stored
+          : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+
     <!-- Fonts: preconnect + stylesheet (no @import — avoids the extra DNS/parse hop
          of a CSS-level import chain before the browser even discovers the font). -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -203,8 +218,8 @@ const breadcrumbJsonLd = breadcrumbs
     left: -9999px;
     top: 0;
     z-index: 300;
-    background: var(--color-dark);
-    color: var(--color-white);
+    background: var(--ink);
+    color: var(--ink-text);
     padding: var(--space-3) var(--space-5);
     font-size: var(--text-sm);
     font-weight: 600;

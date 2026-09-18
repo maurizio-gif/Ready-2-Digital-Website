@@ -7,6 +7,7 @@ title: "Dal lead alla gestione del cliente, in un unico sistema"
 excerpt: "Una rete di palestre multi-sede in apertura: dalla prevendita degli abbonamenti prima ancora che la sede fisica apra, alla gestione del cliente una volta iscritto."
 sector: "Palestre multi-sede"
 featured: true
+logo: "/images/work/logos/lume-mark.svg"
 cover: "/images/work/lume.jpg"
 coverAlt: "Il catalogo corsi del sito Lume Fitness"
 services: ["Digital Experience", "Business Systems", "Automation", "Integrations"]

@@ -11,12 +11,21 @@ const { number, title, description, isLast = false } = Astro.props;
 <div class:list={['process-step', 'reveal', { 'process-step--last': isLast }]}>
   <div class="process-step__header">
     <div class="process-step__number">{number}</div>
-    {!isLast && <div class="process-step__connector"></div>}
+    {!isLast && (
+      <svg class="process-step__connector process-step__connector--v" aria-hidden="true">
+        <line x1="1" y1="0" x2="1" y2="100%" pathLength="1" class="process-step__connector-line" />
+      </svg>
+    )}
   </div>
   <div class="process-step__content">
     <h3 class="process-step__title">{title}</h3>
     <p class="process-step__desc">{description}</p>
   </div>
+  {!isLast && (
+    <svg class="process-step__connector process-step__connector--h" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="1" x2="100%" y2="1" pathLength="1" class="process-step__connector-line" />
+    </svg>
+  )}
 </div>
 
 <style>
@@ -60,14 +69,29 @@ const { number, title, description, isLast = false } = Astro.props;
   .process-step__number::before { content: '['; opacity: 0.5; }
   .process-step__number::after  { content: ']'; opacity: 0.5; }
 
-  .process-step__connector {
+  /* The connector is a real line, not a decoration: it draws itself once,
+     left to right (or top to bottom on mobile), the same moment the step
+     it leads into reveals — a literal flow, not a static dashed rule. */
+  .process-step__connector-line {
+    stroke: var(--color-orange);
+    stroke-width: 2px;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.7s var(--ease-out-expo);
+    transition-delay: 0.15s;
+  }
+  .process-step.is-visible .process-step__connector-line {
+    stroke-dashoffset: 0;
+  }
+
+  .process-step__connector--v {
     width: 2px;
     height: var(--space-6);
-    background: repeating-linear-gradient(
-      to bottom,
-      var(--color-gray-light) 0 4px,
-      transparent 4px 8px
-    );
+    display: none;
+    overflow: visible;
+  }
+
+  .process-step__connector--h {
     display: none;
   }
 
@@ -93,18 +117,13 @@ const { number, title, description, isLast = false } = Astro.props;
 
   /* Horizontal connector on desktop */
   @media (min-width: 769px) {
-    .process-step:not(.process-step--last)::after {
-      content: '';
+    .process-step__connector--h {
+      display: block;
       position: absolute;
       top: 28px;
       left: calc(50% + 28px);
       right: calc(-50% + 28px);
       height: 2px;
-      background: repeating-linear-gradient(
-        to right,
-        var(--color-gray-light) 0 4px,
-        transparent 4px 8px
-      );
       z-index: 0;
     }
   }
@@ -115,7 +134,7 @@ const { number, title, description, isLast = false } = Astro.props;
       text-align: left;
       align-items: flex-start;
     }
-    .process-step__connector {
+    .process-step__connector--v {
       display: block;
     }
     .process-step__number {
@@ -125,5 +144,9 @@ const { number, title, description, isLast = false } = Astro.props;
       margin-inline: 0;
       max-width: none;
     }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .process-step__connector-line { transition: none; }
   }
 </style>

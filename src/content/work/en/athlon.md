@@ -7,6 +7,7 @@ title: "The company where it started"
 excerpt: "A sports club running since 1973, digitised from the inside out — not a regular client, but the place where the Ready2Digital method was born and is still tested every day."
 sector: "Multi-activity sports club · Rome"
 featured: true
+logo: "/images/work/logos/athlon-mark.svg"
 cover: "/images/work/athlon.jpg"
 coverAlt: "The entrance of Athlon Club 4.0"
 services: ["Digital Experience", "Business Systems", "Automation", "AI", "Integrations", "Physical Experience"]

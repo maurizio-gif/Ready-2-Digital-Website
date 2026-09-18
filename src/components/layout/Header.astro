@@ -34,7 +34,16 @@ const langButtonLabel = locale === 'it' ? 'Lingua' : 'Language';
   <div class="container header__inner">
     <a href={withBase(routeFor('home', locale))} class="header__logo" aria-label="Ready2Digital">
       <img
+        class="header__logo-img header__logo-img--light"
         src={withBase('/images/logo_ready2digital.png')}
+        alt="Ready2Digital"
+        width="180"
+        height="40"
+        loading="eager"
+      />
+      <img
+        class="header__logo-img header__logo-img--dark"
+        src={withBase('/images/logo_ready2digital_dark.png')}
         alt="Ready2Digital"
         width="180"
         height="40"
@@ -51,6 +60,22 @@ const langButtonLabel = locale === 'it' ? 'Lingua' : 'Language';
     </nav>
 
     <div class="header__actions">
+      <button
+        type="button"
+        class="theme-toggle"
+        id="theme-toggle"
+        aria-label={strings.themeToggle.label}
+        data-to-light={strings.themeToggle.toLight}
+        data-to-dark={strings.themeToggle.toDark}
+      >
+        <svg class="theme-toggle__icon theme-toggle__icon--sun" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" />
+          <path d="M12 2v2.5M12 19.5V22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12H22M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <svg class="theme-toggle__icon theme-toggle__icon--moon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20.5 14.7A8.5 8.5 0 1 1 9.3 3.5a7 7 0 0 0 11.2 11.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+        </svg>
+      </button>
       <div class="lang-switcher" id="lang-switcher">
         <button
           type="button"
@@ -108,6 +133,24 @@ const langButtonLabel = locale === 'it' ? 'Lingua' : 'Language';
         ))}
         <li class="header__mobile-divider"></li>
         <li><a href={withBase(routeFor('contact', locale))}>{strings.cta.primary}</a></li>
+        <li class="header__mobile-theme">
+          <button
+            type="button"
+            class="theme-toggle theme-toggle--mobile"
+            id="theme-toggle-mobile"
+            data-to-light={strings.themeToggle.toLight}
+            data-to-dark={strings.themeToggle.toDark}
+          >
+            <svg class="theme-toggle__icon theme-toggle__icon--sun" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" />
+              <path d="M12 2v2.5M12 19.5V22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12H22M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <svg class="theme-toggle__icon theme-toggle__icon--moon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M20.5 14.7A8.5 8.5 0 1 1 9.3 3.5a7 7 0 0 0 11.2 11.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+            </svg>
+            <span class="theme-toggle__mobile-label">{strings.themeToggle.label}</span>
+          </button>
+        </li>
         <li class="header__mobile-lang">
           {(['it', 'en'] as const).map((code, i) => {
             const isActive = code === locale;
@@ -151,10 +194,23 @@ const langButtonLabel = locale === 'it' ? 'Lingua' : 'Language';
     height: 72px;
   }
 
-  .header__logo img {
+  .header__logo-img {
     height: 34px;
     width: auto;
     object-fit: contain;
+  }
+
+  /* The wordmark's text is dark charcoal on a transparent PNG — on a dark
+     header that reads as dark-on-dark, so a second export with light text
+     (same orange mark) swaps in under the dark theme instead. */
+  .header__logo-img--dark {
+    display: none;
+  }
+  :global(:root[data-theme="dark"]) .header__logo-img--light {
+    display: none;
+  }
+  :global(:root[data-theme="dark"]) .header__logo-img--dark {
+    display: block;
   }
 
   .header__nav {
@@ -186,6 +242,48 @@ const langButtonLabel = locale === 'it' ? 'Lingua' : 'Language';
   }
 
   /* Language switcher — flag + code, dropdown with both options */
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    color: var(--color-charcoal);
+    flex-shrink: 0;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .theme-toggle:hover {
+    background: var(--color-light);
+  }
+
+  .theme-toggle__icon--moon {
+    display: none;
+  }
+
+  :global(:root[data-theme="dark"]) .theme-toggle__icon--sun {
+    display: none;
+  }
+  :global(:root[data-theme="dark"]) .theme-toggle__icon--moon {
+    display: block;
+  }
+
+  .theme-toggle--mobile {
+    width: 100%;
+    height: auto;
+    justify-content: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-2);
+    min-height: 48px;
+    font-size: var(--text-lg);
+    font-weight: 500;
+  }
+
+  .header__mobile-theme {
+    border-top: 1px solid var(--color-gray-light);
+  }
+
   .lang-switcher {
     position: relative;
     flex-shrink: 0;
@@ -383,6 +481,34 @@ const langButtonLabel = locale === 'it' ? 'Lingua' : 'Language';
   window.addEventListener('scroll', () => {
     header?.classList.toggle('scrolled', window.scrollY > 8);
   }, { passive: true });
+
+  // ── Theme toggle ──
+  // The initial data-theme is already set by the is:inline script in
+  // BaseLayout's <head> (before this module even loads); here we only need
+  // to flip it on click, persist the choice, and keep both buttons' labels
+  // in sync with whichever theme is currently active.
+  const THEME_KEY = 'r2d-theme';
+  const themeToggles = document.querySelectorAll<HTMLButtonElement>('#theme-toggle, #theme-toggle-mobile');
+
+  function syncThemeLabels() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    themeToggles.forEach((btn) => {
+      const label = isDark ? btn.dataset.toLight : btn.dataset.toDark;
+      if (label) btn.setAttribute('aria-label', label);
+      const mobileLabel = btn.querySelector('.theme-toggle__mobile-label');
+      if (mobileLabel && label) mobileLabel.textContent = label;
+    });
+  }
+  syncThemeLabels();
+
+  themeToggles.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+      syncThemeLabels();
+    });
+  });
 
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobile-menu');

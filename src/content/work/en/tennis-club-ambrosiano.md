@@ -7,6 +7,7 @@ title: "One customer record instead of disconnected systems"
 excerpt: "Enrolments, tennis school, summer camp and events: a front office running on disconnected tools, unified onto a single customer record instead of rebuilt by hand."
 sector: "Sports club"
 featured: true
+logo: "/images/work/logos/tca-mark.png"
 cover: "/images/work/tca.jpg"
 coverAlt: "The clay courts of Tennis Club Ambrosiano"
 services: ["Business Systems", "Digital Experience", "Integrations", "Automation"]

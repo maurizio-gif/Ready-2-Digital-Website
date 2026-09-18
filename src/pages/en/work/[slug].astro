@@ -92,16 +92,16 @@ const alternatePath = await getWorkAlternateUrl(data.caseId, 'en');
     </section>
   )}
 
-  <section class="section cta-block" style="background: var(--color-dark);">
+  <section class="section cta-block" style="background: var(--ink);">
     <div class="container cta-block__inner" data-stagger="120">
       {related ? (
         <>
           <span class="eyebrow" data-animate="fade-up">Next project</span>
-          <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">{related.data.client}</h2>
+          <h2 class="section-title" data-animate="clip-up" style="color: var(--ink-text);">{related.data.client}</h2>
           <p class="reveal" style="color: rgba(255,255,255,0.7); max-width: 560px;">{related.data.excerpt}</p>
         </>
       ) : (
-        <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">Could be your process.</h2>
+        <h2 class="section-title" data-animate="clip-up" style="color: var(--ink-text);">Could be your process.</h2>
       )}
       <div class="cta-block__ctas" data-animate="fade-up">
         {related && <a href={withBase(`/en/work/${related.data.slug}/`)} class="btn btn-primary">See the project</a>}
@@ -113,9 +113,9 @@ const alternatePath = await getWorkAlternateUrl(data.caseId, 'en');
 </BaseLayout>
 
 <style>
-  .case-hero { padding-block: clamp(var(--space-16), 10vw, var(--space-24)); background: var(--color-dark); color: var(--color-white); }
+  .case-hero { padding-block: clamp(var(--space-16), 10vw, var(--space-24)); background: var(--ink); color: var(--ink-text); }
   .case-hero__content { max-width: 780px; }
-  .case-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-4xl), 7vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; color: var(--color-white); margin-top: var(--space-4); }
+  .case-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-4xl), 7vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; color: var(--ink-text); margin-top: var(--space-4); }
   .case-hero__sub { margin-top: var(--space-6); font-size: var(--text-xl); color: rgba(255,255,255,0.72); max-width: 600px; line-height: 1.6; }
 
   .case-hero__meta {
@@ -127,7 +127,7 @@ const alternatePath = await getWorkAlternateUrl(data.caseId, 'en');
     border-top: 1px solid rgba(255,255,255,0.15);
   }
   .case-hero__meta dt { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.04em; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
-  .case-hero__meta dd { font-size: var(--text-base); color: var(--color-white); max-width: 320px; }
+  .case-hero__meta dd { font-size: var(--text-base); color: var(--ink-text); max-width: 320px; }
 
   .case-cover { aspect-ratio: 1600 / 840; overflow: hidden; background: var(--color-gray-light); }
   .case-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
