@@ -9,7 +9,7 @@ sector: "Amministrazione e fiscalizzazione"
 featured: false
 services: ["Automation", "Integrations"]
 metrics: []
-technologies: []
+technologies: ["n8n"]
 architecture: ["Transazione", "Corrispettivo", "Fiscalizzazione", "Dato amministrativo", "Contabilizzazione"]
 relatedCase: "athlon"
 seoTitle: "Aspresso — Case study Ready2Digital"
@@ -22,6 +22,6 @@ Non tutti i processi da digitalizzare stanno sul sito o nel CRM. Per Aspresso il
 
 ## Solution
 
-Il flusso segue la transazione dall'origine alla sua registrazione contabile: transazione → corrispettivo → fiscalizzazione → dato amministrativo → contabilizzazione. È il tipo di processo che normalmente si nota solo quando si rompe — l'obiettivo qui era che non si notasse affatto.
+Il flusso segue la transazione dall'origine alla sua registrazione contabile: transazione → corrispettivo → fiscalizzazione → dato amministrativo → contabilizzazione, orchestrato su n8n. È il tipo di processo che normalmente si nota solo quando si rompe — l'obiettivo qui era che non si notasse affatto.
 
 *Questa pagina resta volutamente sintetica: descrive il perimetro del progetto così come ci è stato affidato, senza aggiungere dettagli tecnici o normativi che non abbiamo ancora verificato per esteso.*
