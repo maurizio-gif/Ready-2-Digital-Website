@@ -25,10 +25,11 @@ const work = defineCollection({
     sector: z.string(),
     year: z.string().optional(),
     featured: z.boolean().default(false),
-    // No `image()` helper: none of these clients have a supplied cover
-    // photo yet, and the brief is explicit — no invented product shots.
-    // A real photo lands here as a plain path once someone supplies one.
+    // No `image()` helper: this is a plain path into public/images/work/,
+    // not an Astro-optimised asset. Optional and omitted (not a generic
+    // placeholder) for cases with no real screenshot to show yet.
     cover: z.string().optional(),
+    coverAlt: z.string().optional(),
     services: z.array(z.string()).default([]),
     metrics: z
       .array(

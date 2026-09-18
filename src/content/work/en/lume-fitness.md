@@ -7,6 +7,8 @@ title: "From lead to customer management, in one system"
 excerpt: "A multi-site gym network opening in stages: from pre-selling memberships before a location even exists, to managing the customer once they've joined."
 sector: "Multi-site gyms"
 featured: true
+cover: "/images/work/lume.jpg"
+coverAlt: "The class catalogue on the Lume Fitness site"
 services: ["Digital Experience", "Business Systems", "Automation", "Integrations"]
 metrics: []
 technologies: ["Astro", "React", "Supabase", "Stripe", "PerfectGym API", "n8n", "Airtable"]

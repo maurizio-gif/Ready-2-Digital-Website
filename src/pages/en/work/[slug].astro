@@ -48,6 +48,12 @@ const alternatePath = await getWorkAlternateUrl(data.caseId, 'en');
     </div>
   </section>
 
+  {data.cover && (
+    <div class="case-cover reveal">
+      <img src={withBase(data.cover)} alt={data.coverAlt ?? data.client} loading="lazy" decoding="async" width="1600" height="840" />
+    </div>
+  )}
+
   <section class="section case-body">
     <div class="container case-body__content prose">
       <Content />
@@ -122,6 +128,9 @@ const alternatePath = await getWorkAlternateUrl(data.caseId, 'en');
   }
   .case-hero__meta dt { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.04em; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
   .case-hero__meta dd { font-size: var(--text-base); color: var(--color-white); max-width: 320px; }
+
+  .case-cover { aspect-ratio: 1600 / 840; overflow: hidden; background: var(--color-gray-light); }
+  .case-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .case-body__content { max-width: 720px; }
   .prose :global(h2) { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 700; margin-top: var(--space-10); margin-bottom: var(--space-4); }
