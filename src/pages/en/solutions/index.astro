@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { withBase } from '../../../utils/url';
+import { routeFor } from '../../../i18n/routes';
+
+const categories = [
+  {
+    id: 'digital-experience',
+    index: '01',
+    title: 'Digital Experience',
+    lead: 'Websites and digital interfaces designed to do a specific job, not just to exist online.',
+    items: ['Generate contacts', 'Qualify leads', 'Sell services', 'Enable self-service', 'Connect to the rest of the infrastructure'],
+  },
+  {
+    id: 'business-systems',
+    index: '02',
+    title: 'Business Systems',
+    lead: 'The software the team uses every day to manage customers and operations — built around how they actually work.',
+    items: ['CRM', 'Custom management software', 'Customer database', 'Sales pipeline', 'Calendar', 'Customer record', 'Multi-site systems', 'Roles and permissions', 'Back office'],
+  },
+  {
+    id: 'automation',
+    index: '03',
+    title: 'Automation',
+    lead: 'The repetitive work someone used to do by hand, moved onto a workflow that never forgets.',
+    items: ['Lead routing', 'Workflow', 'Data sync', 'Notifications', 'Reminders', 'Administrative processes', 'Operational automation'],
+  },
+  {
+    id: 'ai',
+    index: '04',
+    title: 'AI',
+    lead: 'Not decoration: agents that read the business\'s real data and know when to hand off to a person.',
+    items: ['Customer assistants', 'AI agents', 'Company knowledge bases', 'Classification', 'Matching', 'Triage', 'Operator assistance', 'Request analysis', 'Hand-off to a human operator'],
+  },
+  {
+    id: 'integrations',
+    index: '05',
+    title: 'Integrations',
+    lead: 'The software the business already uses, connected to everything else instead of sitting on its own.',
+    items: ['Industry-vertical software', 'CRM', 'ERP', 'Payments', 'WhatsApp', 'Email', 'Databases', 'APIs', 'OData', 'Legacy systems'],
+  },
+  {
+    id: 'physical-experience',
+    index: '06',
+    title: 'Physical Experience',
+    lead: 'Software lives outside a phone screen too.',
+    items: ['Kiosks', 'Self-service terminals', 'Check-in', 'Displays', 'Schedules', 'Self-service', 'Touch interfaces'],
+  },
+];
+---
+
+<BaseLayout
+  title="Solutions — Ready2Digital"
+  description="Digital Experience, Business Systems, Automation, AI, Integrations, Physical Experience: the capabilities Ready2Digital combines into a single system."
+  locale="en"
+  path={routeFor('solutions', 'en')}
+  alternatePath={routeFor('solutions', 'it')}
+  breadcrumbs={[{ name: 'Home', path: routeFor('home', 'en') }, { name: 'Solutions', path: routeFor('solutions', 'en') }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-animate="fade-up">Solutions</span>
+      <h1 class="page-hero__title" data-animate="clip-up">A system, not a collection of tools</h1>
+      <p class="page-hero__sub" data-animate="fade-up">
+        We don't organise our work by technology. We organise it by what needs
+        to happen in your business — then we choose the technology that makes
+        it happen.
+      </p>
+    </div>
+  </section>
+
+  {categories.map((cat, i) => (
+    <section class="section category" id={cat.id} style={i % 2 === 1 ? 'background: var(--color-light);' : ''}>
+      <div class="container category__grid">
+        <div class="category__heading reveal">
+          <span class="category__index">{cat.index}</span>
+          <h2 class="section-title">{cat.title}</h2>
+          <p class="category__lead">{cat.lead}</p>
+        </div>
+        <ul class="category__items stagger-list">
+          {cat.items.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+  ))}
+
+  <section class="section cta-block" style="background: var(--color-dark);">
+    <div class="container cta-block__inner" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">The next system</span>
+      <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">Which of these do you need right now?</h2>
+      <a href={withBase('/en/contact/')} class="btn btn-primary" data-animate="fade-up">Tell us about your project</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(var(--space-16), 10vw, var(--space-20)); max-width: 760px; }
+  .page-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; margin-top: var(--space-4); }
+  .page-hero__sub { margin-top: var(--space-6); font-size: var(--text-xl); color: var(--color-gray-mid); line-height: 1.6; max-width: 620px; }
+
+  .category__grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: var(--space-16); }
+  .category__heading { max-width: 420px; }
+  .category__index { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-orange); }
+  .category__lead { margin-top: var(--space-4); font-size: var(--text-lg); color: var(--color-gray-mid); line-height: 1.65; }
+
+  .category__items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4) var(--space-8);
+    align-content: start;
+  }
+  .category__items li {
+    font-size: var(--text-base);
+    color: var(--color-dark);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-gray-light);
+  }
+
+  .cta-block__inner { text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-6); }
+
+  @media (max-width: 900px) {
+    .category__grid { grid-template-columns: 1fr; gap: var(--space-8); }
+    .category__items { grid-template-columns: 1fr; }
+  }
+</style>

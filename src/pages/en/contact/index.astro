@@ -1,0 +1,180 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { withBase } from '../../../utils/url';
+import { routeFor } from '../../../i18n/routes';
+import { CONTACT_ENDPOINT, CONTACT_EMAIL } from '../../../config/contact';
+
+const topics = [
+  'Digital transformation',
+  'CRM / Business systems',
+  'Automation',
+  'AI',
+  'Integrations',
+  'Website / Digital experience',
+  'Other',
+];
+
+const formAttrs = CONTACT_ENDPOINT
+  ? { id: 'contact-form' }
+  : { action: `mailto:${CONTACT_EMAIL}`, method: 'post' as const, enctype: 'text/plain' };
+---
+
+<BaseLayout
+  title="Contact — Ready2Digital"
+  description="Tell us what's taking too much time, too many steps or too many tools today. The technology comes after."
+  locale="en"
+  path={routeFor('contact', 'en')}
+  alternatePath={routeFor('contact', 'it')}
+  breadcrumbs={[{ name: 'Home', path: routeFor('home', 'en') }, { name: 'Contact', path: routeFor('contact', 'en') }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-animate="fade-up">Contact</span>
+      <h1 class="page-hero__title" data-animate="clip-up">Let's start from the problem,<br>not the solution.</h1>
+      <p class="page-hero__sub" data-animate="fade-up">
+        Tell us what's taking too much time, too many steps or too many tools
+        today. The technology comes after.
+      </p>
+    </div>
+  </section>
+
+  <section class="section contact-section">
+    <div class="container contact-grid">
+      <form class="contact-form" {...formAttrs} data-contact-endpoint={CONTACT_ENDPOINT || undefined}>
+        <div class="field">
+          <label for="name">Name *</label>
+          <input id="name" name="name" type="text" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="company">Company *</label>
+          <input id="company" name="company" type="text" required autocomplete="organization" />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="email">Email *</label>
+            <input id="email" name="email" type="email" required autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="website">Website</label>
+          <input id="website" name="website" type="url" placeholder="https://" />
+        </div>
+        <div class="field">
+          <label for="topic">What do you want to talk about? *</label>
+          <select id="topic" name="topic" required>
+            <option value="" disabled selected>Choose a topic</option>
+            {topics.map((tp) => <option value={tp}>{tp}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="message">Message *</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <div class="field field--checkbox">
+          <input id="consent" name="consent" type="checkbox" required />
+          <label for="consent">
+            I've read the <a href={withBase(routeFor('privacy', 'en'))}>privacy policy</a> and agree to have my data processed to be contacted back. *
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+        {!CONTACT_ENDPOINT && (
+          <p class="contact-form__note">This opens your email client with the message already filled in.</p>
+        )}
+      </form>
+
+      <aside class="contact-direct">
+        <div class="contact-channel">
+          <span class="contact-channel__label">Email</span>
+          <a href={`mailto:${CONTACT_EMAIL}`} class="contact-channel__value">{CONTACT_EMAIL}</a>
+        </div>
+        <div class="contact-channel">
+          <span class="contact-channel__label">Where we are</span>
+          <span class="contact-channel__value">Italy</span>
+          <span class="contact-channel__note">We work with clients across the country.</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(var(--space-16), 10vw, var(--space-20)); max-width: 760px; }
+  .page-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; margin-top: var(--space-4); }
+  .page-hero__sub { margin-top: var(--space-6); font-size: var(--text-xl); color: var(--color-gray-mid); line-height: 1.6; max-width: 560px; }
+
+  .contact-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--space-16); align-items: start; }
+
+  .contact-form { display: flex; flex-direction: column; gap: var(--space-5); }
+  .field { display: flex; flex-direction: column; gap: var(--space-2); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+  .field label { font-size: var(--text-sm); font-weight: 600; color: var(--color-charcoal); }
+
+  .field input,
+  .field select,
+  .field textarea {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    color: var(--color-dark);
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: 2px solid var(--color-orange);
+    outline-offset: 1px;
+    border-color: var(--color-orange);
+  }
+
+  .field--checkbox { flex-direction: row; align-items: flex-start; gap: var(--space-3); }
+  .field--checkbox input { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; }
+  .field--checkbox label { font-size: var(--text-sm); font-weight: 400; color: var(--color-gray-mid); }
+  .field--checkbox a { color: var(--color-orange); font-weight: 600; }
+
+  .contact-form button { align-self: flex-start; margin-top: var(--space-2); }
+  .contact-form__note { font-size: var(--text-xs); color: var(--color-gray-mid); }
+
+  .contact-direct { display: flex; flex-direction: column; gap: var(--space-8); padding-top: var(--space-2); }
+  .contact-channel { display: flex; flex-direction: column; gap: var(--space-2); padding-bottom: var(--space-6); border-bottom: 1px solid var(--color-gray-light); }
+  .contact-channel:last-child { border-bottom: none; }
+  .contact-channel__label { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-gray-mid); }
+  .contact-channel__value { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 700; color: var(--color-dark); }
+  .contact-channel__note { font-size: var(--text-sm); color: var(--color-gray-mid); }
+
+  @media (max-width: 900px) {
+    .contact-grid { grid-template-columns: 1fr; gap: var(--space-10); }
+    .field-row { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const endpoint = form?.dataset.contactEndpoint;
+  if (form && endpoint) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      submitBtn.disabled = true;
+      try {
+        const data = Object.fromEntries(new FormData(form).entries());
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error('Request failed');
+        form.innerHTML = '<p class="contact-form__success">Thanks — we\'ll get back to you shortly.</p>';
+      } catch {
+        submitBtn.disabled = false;
+        alert("We couldn't send your message. Please write to us directly at info@ready2digital.it.");
+      }
+    });
+  }
+</script>

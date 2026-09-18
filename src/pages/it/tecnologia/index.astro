@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import TagList from '../../../components/TagList.astro';
+import { withBase } from '../../../utils/url';
+import { routeFor } from '../../../i18n/routes';
+
+const stack = [
+  { title: 'Siti pubblici', tags: ['Astro', 'HTML', 'CSS', 'TinaCMS'] },
+  { title: 'Applicazioni e CRM', tags: ['Next.js', 'React', 'TypeScript'] },
+  { title: 'Database e backend', tags: ['Supabase', 'PostgreSQL', 'Row Level Security'] },
+  { title: 'Automazione', tags: ['n8n'] },
+  { title: 'Integrazioni', tags: ['REST API', 'OData', 'PerfectGym API'] },
+  { title: 'Pagamenti', tags: ['Stripe', 'GoCardless'] },
+  { title: 'Comunicazione', tags: ['WhatsApp Business', 'SendGrid', 'Web Push'] },
+  { title: 'AI', tags: ['LLM via API', 'Knowledge base', 'Retrieval', 'Agenti conversazionali'] },
+  { title: 'Infrastruttura', tags: ['Vercel', 'GitHub'] },
+];
+---
+
+<BaseLayout
+  title="Tecnologia — Ready2Digital"
+  description="Lo stack che usiamo davvero: Astro e Next.js sul frontend, Supabase come fonte unica dei dati, n8n per le automazioni. Scelto per il problema, non per la moda."
+  locale="it"
+  path={routeFor('technology', 'it')}
+  alternatePath={routeFor('technology', 'en')}
+  breadcrumbs={[{ name: 'Home', path: routeFor('home', 'it') }, { name: 'Tecnologia', path: routeFor('technology', 'it') }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-animate="fade-up">Tecnologia</span>
+      <h1 class="page-hero__title" data-animate="clip-up">Tecnologia moderna. Scelta per il problema, non per la moda.</h1>
+      <p class="page-hero__sub" data-animate="fade-up">
+        La tecnologia è una prova di credibilità, non il punto di partenza. Questo
+        è lo stack che usiamo davvero sui progetti in produzione — non un elenco
+        di parole chiave.
+      </p>
+    </div>
+  </section>
+
+  <section class="section stack-section">
+    <div class="container">
+      <div class="stack-grid" data-stagger="90">
+        {stack.map((s) => (
+          <div class="stack-item reveal">
+            <h2 class="stack-item__title">{s.title}</h2>
+            <TagList tags={s.tags} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section note-section" style="background: var(--color-light);">
+    <div class="container note-grid">
+      <div class="note reveal">
+        <span class="eyebrow">Su PerfectGym</span>
+        <p>Nel settore fitness integriamo spesso con PerfectGym perché è il gestionale che troviamo più spesso già in uso. Non è un vincolo: è uno dei sistemi con cui ci integriamo, non un requisito per lavorare con noi.</p>
+      </div>
+      <div class="note reveal">
+        <span class="eyebrow">Sui modelli AI</span>
+        <p>Usiamo modelli linguistici via API per compiti specifici — non legiamo il nostro modo di lavorare a un singolo fornitore. Il modello si sceglie in base al task, come qualunque altro strumento.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-block" style="background: var(--color-dark);">
+    <div class="container cta-block__inner" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">Il prossimo progetto</span>
+      <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">Parliamo di cosa serve al tuo</h2>
+      <a href={withBase('/it/contatti/')} class="btn btn-primary" data-animate="fade-up">Parliamo del tuo progetto</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(var(--space-16), 10vw, var(--space-20)); max-width: 800px; }
+  .page-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-top: var(--space-4); }
+  .page-hero__sub { margin-top: var(--space-6); font-size: var(--text-xl); color: var(--color-gray-mid); line-height: 1.6; max-width: 680px; }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-10) var(--space-8);
+  }
+  .stack-item__title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    margin-bottom: var(--space-4);
+  }
+
+  .note-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); }
+  .note p { margin-top: var(--space-4); font-size: var(--text-base); color: var(--color-gray-mid); line-height: 1.65; }
+
+  .cta-block__inner { text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-6); }
+
+  @media (max-width: 900px) {
+    .stack-grid { grid-template-columns: repeat(2, 1fr); }
+    .note-grid { grid-template-columns: 1fr; gap: var(--space-8); }
+  }
+  @media (max-width: 560px) {
+    .stack-grid { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { routeFor } from '../../../i18n/routes';
+---
+
+<BaseLayout
+  title="Privacy Policy — Ready2Digital"
+  description="How Ready2Digital handles data collected through this website."
+  locale="en"
+  path={routeFor('privacy', 'en')}
+  alternatePath={routeFor('privacy', 'it')}
+  noindex={true}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-animate="fade-up">Legal</span>
+      <h1 class="page-hero__title" data-animate="clip-up">Privacy Policy</h1>
+    </div>
+  </section>
+
+  <section class="section legal">
+    <div class="container legal__content">
+      <p class="legal__notice reveal">
+        This page describes exactly what the site collects today — it isn't a
+        generic template copied from elsewhere. It should still be reviewed by
+        legal counsel before final publication.
+      </p>
+
+      <h2>What we collect</h2>
+      <p>
+        This site has no backend that receives and stores data: the "Contact"
+        form opens your email client with a pre-filled message addressed to
+        info@ready2digital.it. What you type (name, company, email, phone,
+        website, message) stays in your own outbox and in our inbox — it never
+        passes through any database on the site.
+      </p>
+
+      <h2>Cookies and tracking</h2>
+      <p>
+        The site doesn't set analytics or marketing cookies. The only request
+        to an external service is loading fonts (Google Fonts), needed to
+        display the site's typography.
+      </p>
+
+      <h2>Data controller</h2>
+      <p>Ready2Digital — info@ready2digital.it</p>
+
+      <h2>Your rights</h2>
+      <p>
+        You can ask us to delete an email you sent us at any time by writing to
+        info@ready2digital.it.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(var(--space-16), 8vw, var(--space-20)); }
+  .page-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl)); font-weight: 800; margin-top: var(--space-4); }
+  .legal__content { max-width: 680px; }
+  .legal__notice { padding: var(--space-5); border: 1px dashed var(--color-gray-light); font-size: var(--text-sm); color: var(--color-gray-mid); margin-bottom: var(--space-10); }
+  .legal h2 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; margin-top: var(--space-8); margin-bottom: var(--space-3); }
+  .legal p { font-size: var(--text-base); color: var(--color-gray-mid); line-height: 1.7; }
+</style>

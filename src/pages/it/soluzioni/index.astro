@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { withBase } from '../../../utils/url';
+import { routeFor } from '../../../i18n/routes';
+
+const categories = [
+  {
+    id: 'digital-experience',
+    index: '01',
+    title: 'Digital Experience',
+    lead: 'Siti e interfacce digitali progettati per fare un lavoro preciso, non solo per essere online.',
+    items: ['Generare contatti', 'Qualificare i lead', 'Vendere servizi', 'Permettere il self-service', 'Connettersi con il resto dell\'infrastruttura'],
+  },
+  {
+    id: 'business-systems',
+    index: '02',
+    title: 'Business Systems',
+    lead: 'Il software che il team usa ogni giorno per gestire clienti e operazioni — costruito sui suoi processi, non su un modello generico.',
+    items: ['CRM', 'Gestionali custom', 'Database clienti', 'Pipeline commerciale', 'Agenda', 'Scheda cliente', 'Sistemi multi-sede', 'Ruoli e permessi', 'Backoffice'],
+  },
+  {
+    id: 'automation',
+    index: '03',
+    title: 'Automation',
+    lead: 'Il lavoro ripetitivo che qualcuno faceva a mano, spostato su un workflow che non se lo scorda.',
+    items: ['Lead routing', 'Workflow', 'Sincronizzazione dei dati', 'Notifiche', 'Reminder', 'Processi amministrativi', 'Automazioni operative'],
+  },
+  {
+    id: 'ai',
+    index: '04',
+    title: 'AI',
+    lead: 'Non decorazione: agenti che leggono i dati reali dell\'azienda e sanno quando passare la mano a una persona.',
+    items: ['Assistenti per i clienti', 'Agenti AI', 'Basi di conoscenza aziendali', 'Classificazione', 'Matching', 'Triage', 'Supporto agli operatori', 'Analisi delle richieste', 'Handoff verso un operatore umano'],
+  },
+  {
+    id: 'integrations',
+    index: '05',
+    title: 'Integrations',
+    lead: 'Il software che l\'azienda già usa, collegato al resto invece che isolato.',
+    items: ['Software verticali di settore', 'CRM', 'ERP', 'Pagamenti', 'WhatsApp', 'Email', 'Database', 'API', 'OData', 'Sistemi legacy'],
+  },
+  {
+    id: 'physical-experience',
+    index: '06',
+    title: 'Physical Experience',
+    lead: 'Il software vive anche fuori dallo schermo di un telefono.',
+    items: ['Totem', 'Kiosk', 'Check-in', 'Display', 'Palinsesti', 'Self-service', 'Interfacce touch'],
+  },
+];
+---
+
+<BaseLayout
+  title="Soluzioni — Ready2Digital"
+  description="Digital Experience, Business Systems, Automation, AI, Integrations, Physical Experience: le capability che Ready2Digital combina in un unico sistema."
+  locale="it"
+  path={routeFor('solutions', 'it')}
+  alternatePath={routeFor('solutions', 'en')}
+  breadcrumbs={[{ name: 'Home', path: routeFor('home', 'it') }, { name: 'Soluzioni', path: routeFor('solutions', 'it') }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-animate="fade-up">Soluzioni</span>
+      <h1 class="page-hero__title" data-animate="clip-up">Un sistema, non una collezione di strumenti</h1>
+      <p class="page-hero__sub" data-animate="fade-up">
+        Non organizziamo il lavoro per tecnologia. Lo organizziamo per quello che
+        deve succedere nella tua azienda — e poi scegliamo con che tecnologia
+        farlo succedere.
+      </p>
+    </div>
+  </section>
+
+  {categories.map((cat, i) => (
+    <section class="section category" id={cat.id} style={i % 2 === 1 ? 'background: var(--color-light);' : ''}>
+      <div class="container category__grid">
+        <div class="category__heading reveal">
+          <span class="category__index">{cat.index}</span>
+          <h2 class="section-title">{cat.title}</h2>
+          <p class="category__lead">{cat.lead}</p>
+        </div>
+        <ul class="category__items stagger-list">
+          {cat.items.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+  ))}
+
+  <section class="section cta-block" style="background: var(--color-dark);">
+    <div class="container cta-block__inner" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">Il prossimo sistema</span>
+      <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">Di quale di questi hai bisogno adesso?</h2>
+      <a href={withBase('/it/contatti/')} class="btn btn-primary" data-animate="fade-up">Parliamo del tuo progetto</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(var(--space-16), 10vw, var(--space-20)); max-width: 760px; }
+  .page-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; margin-top: var(--space-4); }
+  .page-hero__sub { margin-top: var(--space-6); font-size: var(--text-xl); color: var(--color-gray-mid); line-height: 1.6; max-width: 620px; }
+
+  .category__grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: var(--space-16); }
+  .category__heading { max-width: 420px; }
+  .category__index { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-orange); }
+  .category__lead { margin-top: var(--space-4); font-size: var(--text-lg); color: var(--color-gray-mid); line-height: 1.65; }
+
+  .category__items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4) var(--space-8);
+    align-content: start;
+  }
+  .category__items li {
+    font-size: var(--text-base);
+    color: var(--color-dark);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-gray-light);
+  }
+
+  .cta-block__inner { text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-6); }
+
+  @media (max-width: 900px) {
+    .category__grid { grid-template-columns: 1fr; gap: var(--space-8); }
+    .category__items { grid-template-columns: 1fr; }
+  }
+</style>

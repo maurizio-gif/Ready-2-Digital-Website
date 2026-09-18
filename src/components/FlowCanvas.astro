@@ -1,0 +1,153 @@
+---
+// The signature visual of the site: a literal diagram of the pipeline we
+// deliver — lead → sito → CRM → automazione → agente AI, with il gestionale
+// esterno agganciato al CRM. Not a decorative blob: it draws the same
+// architecture we describe in prose, so removing the copy around it should
+// still leave something legible.
+//
+// Structure is always gray/neutral — it represents the system standing
+// still. The only orange in the whole graphic is the pulse traveling
+// through it: that's the one thing "in motion" in the metaphor, so it's the
+// only place the accent color is allowed to appear.
+interface Props {
+  hideLabels?: boolean;
+  showLoop?: boolean;
+  align?: string;
+}
+const { hideLabels = false, showLoop = true, align = 'xMidYMid meet' } = Astro.props;
+
+const nodes = [
+  { id: 'lead', x: 90, y: 320, label: 'LEAD', labelPos: 'below' },
+  { id: 'sito', x: 330, y: 160, label: 'SITO / APP', labelPos: 'above' },
+  { id: 'crm', x: 600, y: 340, label: 'CRM', labelPos: 'below' },
+  { id: 'automazione', x: 870, y: 150, label: 'AUTOMAZIONE', labelPos: 'above' },
+  { id: 'ai', x: 1110, y: 320, label: 'AGENTE AI', labelPos: 'below' },
+  { id: 'gestionale', x: 600, y: 540, label: 'GESTIONALE ESTERNO', labelPos: 'below' },
+];
+
+const paths = [
+  { id: 'p-lead-sito', d: 'M90,320 C180,240 240,180 330,160', pulse: true, delay: '0s' },
+  { id: 'p-sito-crm', d: 'M330,160 C420,180 510,260 600,340', pulse: true, delay: '0.9s' },
+  { id: 'p-crm-auto', d: 'M600,340 C690,260 780,180 870,150', pulse: true, delay: '1.8s' },
+  { id: 'p-auto-ai', d: 'M870,150 C960,180 1040,240 1110,320', pulse: true, delay: '2.7s' },
+  { id: 'p-crm-gestionale', d: 'M600,340 C600,410 600,470 600,540', pulse: true, delay: '1.3s', bidirectional: true },
+];
+
+const loopPath = 'M1110,320 C1160,470 1040,560 600,560 C160,560 40,470 90,320';
+---
+
+<svg
+  class:list={['flow-canvas', { 'flow-canvas--no-labels': hideLabels }]}
+  viewBox="0 0 1200 600"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+  preserveAspectRatio={align}
+>
+  {showLoop && (
+    <path class="flow-loop" d={loopPath} stroke="var(--color-flow-idle)" stroke-width="1" stroke-dasharray="2 8" />
+  )}
+
+  <g class="flow-links">
+    {paths.map((p) => (
+      <path id={p.id} d={p.d} stroke="var(--color-flow-idle)" stroke-width="1.5" />
+    ))}
+  </g>
+
+  <g class="flow-pulses">
+    {paths.map((p) => (
+      <circle class="flow-pulse" r="4" fill="var(--color-flow-active)">
+        {/* Finite repeatCount, not "indefinite": the diagram settles into a
+            static state once it has shown the flow a few times, instead of
+            running as ambient wallpaper for as long as the tab is open. */}
+        <animateMotion dur="3.6s" begin={p.delay} repeatCount="3" rotate="auto">
+          <mpath href={`#${p.id}`} />
+        </animateMotion>
+      </circle>
+    ))}
+  </g>
+
+  <g class="flow-nodes">
+    {nodes.map((n) => (
+      <g class="flow-node" transform={`translate(${n.x}, ${n.y})`}>
+        <circle class="flow-node__ring" r="14" />
+        <circle class="flow-node__core" r="4" />
+        {!hideLabels && (
+          <text
+            class="flow-node__label"
+            x="0"
+            y={n.labelPos === 'above' ? -28 : 34}
+            text-anchor="middle"
+          >
+            {n.label}
+          </text>
+        )}
+      </g>
+    ))}
+  </g>
+</svg>
+
+<style>
+  .flow-canvas {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .flow-loop {
+    opacity: 0.35;
+  }
+
+  .flow-links path {
+    fill: none;
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+    animation: flow-draw 1.6s var(--ease-out-expo) forwards;
+    animation-delay: calc(var(--i, 0) * 120ms);
+  }
+
+  .flow-links path:nth-child(1) { --i: 0; }
+  .flow-links path:nth-child(2) { --i: 1; }
+  .flow-links path:nth-child(3) { --i: 2; }
+  .flow-links path:nth-child(4) { --i: 3; }
+  .flow-links path:nth-child(5) { --i: 4; }
+
+  @keyframes flow-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .flow-pulse {
+    filter: drop-shadow(0 0 4px rgba(255, 96, 0, 0.65));
+  }
+
+  .flow-node__ring {
+    fill: none;
+    stroke: var(--color-flow-idle);
+    stroke-width: 1.5;
+  }
+
+  .flow-node__core {
+    fill: var(--color-flow-idle);
+  }
+
+  .flow-node__label {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    fill: rgba(255, 255, 255, 0.5);
+  }
+
+  .flow-canvas--no-labels .flow-node__label {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flow-links path {
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+    .flow-pulses {
+      display: none;
+    }
+  }
+</style>

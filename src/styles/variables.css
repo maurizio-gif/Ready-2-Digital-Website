@@ -8,9 +8,14 @@
   --color-gray-mid:   #6B6B6B;
   --color-gray-light: #E8E8E6;
 
+  /* Signal colors — used only for the pipeline/flow motif, never decorative */
+  --color-flow-idle:   rgba(255,255,255,0.16);
+  --color-flow-active: var(--color-orange);
+
   /* Typography */
   --font-body:    'Inter', system-ui, sans-serif;
   --font-display: 'Barlow Condensed', 'DM Sans', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   --text-xs:   0.75rem;
   --text-sm:   0.875rem;

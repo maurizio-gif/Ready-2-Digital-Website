@@ -1,0 +1,77 @@
+---
+// A single bilingual 404: static hosting serves this same file for any
+// unmatched path regardless of whether the visitor was under /it/ or
+// /en/, so it can't assume a locale — it says both.
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { withBase } from '../utils/url';
+import { routeFor } from '../i18n/routes';
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <title>404 | Ready2Digital</title>
+  </head>
+  <body>
+    <Header locale="it" />
+    <main id="main-content">
+      <section class="not-found">
+        <div class="container">
+          <span class="not-found__code">404</span>
+          <h1>Pagina non trovata</h1>
+          <p>Il contenuto che cerchi non esiste o è stato spostato.</p>
+          <a href={withBase(routeFor('home', 'it'))} class="btn btn-primary">Torna alla home</a>
+          <hr />
+          <h1>Page not found</h1>
+          <p>The content you're looking for doesn't exist or has moved.</p>
+          <a href={withBase(routeFor('home', 'en'))} class="btn btn-outline-dark">Back to home (EN)</a>
+        </div>
+      </section>
+    </main>
+    <Footer locale="it" />
+  </body>
+</html>
+
+<style>
+  .not-found {
+    padding-block: clamp(var(--space-20), 14vw, var(--space-32));
+    text-align: center;
+  }
+  .not-found__code {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-orange);
+    letter-spacing: 0.1em;
+  }
+  .not-found h1 {
+    font-family: var(--font-display);
+    font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+    font-weight: 800;
+    margin-top: var(--space-4);
+  }
+  .not-found p {
+    margin-top: var(--space-4);
+    font-size: var(--text-lg);
+    color: var(--color-gray-mid);
+  }
+  .not-found .btn {
+    margin-top: var(--space-8);
+  }
+  .not-found hr {
+    margin-block: var(--space-16);
+    border: none;
+    border-top: 1px solid var(--color-gray-light);
+  }
+</style>

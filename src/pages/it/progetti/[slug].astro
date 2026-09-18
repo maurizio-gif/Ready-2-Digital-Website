@@ -1,0 +1,143 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import StatReadout from '../../../components/StatReadout.astro';
+import TagList from '../../../components/TagList.astro';
+import PipelineDiagram from '../../../components/PipelineDiagram.astro';
+import { withBase } from '../../../utils/url';
+import { routeFor } from '../../../i18n/routes';
+import { getWorkAlternateUrl } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('work', ({ data }) => data.locale === 'it');
+  return entries.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+
+const allWork = await getCollection('work', ({ data: d }) => d.locale === 'it');
+const related = data.relatedCase ? allWork.find((w) => w.data.caseId === data.relatedCase) : null;
+const alternatePath = await getWorkAlternateUrl(data.caseId, 'it');
+---
+
+<BaseLayout
+  title={data.seoTitle ?? `${data.client} — Ready2Digital`}
+  description={data.seoDescription ?? data.excerpt}
+  locale="it"
+  path={`${routeFor('work', 'it')}${data.slug}/`}
+  alternatePath={alternatePath}
+  breadcrumbs={[
+    { name: 'Home', path: routeFor('home', 'it') },
+    { name: 'Progetti', path: routeFor('work', 'it') },
+    { name: data.client, path: `${routeFor('work', 'it')}${data.slug}/` },
+  ]}
+>
+  <section class="case-hero">
+    <div class="container case-hero__content" data-stagger="120">
+      <span class="eyebrow" data-animate="fade-up">{data.sector}</span>
+      <h1 class="case-hero__title" data-animate="clip-up">{data.title}</h1>
+      <p class="case-hero__sub" data-animate="fade-up">{data.excerpt}</p>
+      <dl class="case-hero__meta" data-animate="fade-up">
+        <div><dt>Cliente</dt><dd>{data.client}</dd></div>
+        <div><dt>Settore</dt><dd>{data.sector}</dd></div>
+        {data.year && <div><dt>Anno</dt><dd>{data.year}</dd></div>}
+        <div><dt>Ambiti</dt><dd>{data.services.join(', ')}</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section case-body">
+    <div class="container case-body__content prose">
+      <Content />
+    </div>
+  </section>
+
+  {data.architecture && data.architecture.length > 0 && (
+    <section class="section architecture" style="background: var(--color-light);">
+      <div class="container">
+        <span class="eyebrow reveal">Architettura</span>
+        <h2 class="section-title reveal" style="margin-bottom: var(--space-10);">Come si collegano i pezzi</h2>
+        <PipelineDiagram steps={data.architecture.map((label) => ({ label }))} />
+      </div>
+    </section>
+  )}
+
+  {data.metrics.length > 0 && (
+    <section class="section stats-section">
+      <div class="container">
+        <span class="eyebrow reveal">Risultati</span>
+        <div class="stat-grid" data-stagger="130">
+          {data.metrics.map((m) => <StatReadout value={m.value} label={m.label} note={m.note} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {data.technologies.length > 0 && (
+    <section class="section tech-section" style="background: var(--color-light);">
+      <div class="container">
+        <span class="eyebrow reveal">Tecnologia</span>
+        <div class="reveal" style="margin-top: var(--space-6);">
+          <TagList tags={data.technologies} />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section cta-block" style="background: var(--color-dark);">
+    <div class="container cta-block__inner" data-stagger="120">
+      {related ? (
+        <>
+          <span class="eyebrow" data-animate="fade-up">Progetto successivo</span>
+          <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">{related.data.client}</h2>
+          <p class="reveal" style="color: rgba(255,255,255,0.7); max-width: 560px;">{related.data.excerpt}</p>
+        </>
+      ) : (
+        <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">Potrebbe essere il tuo processo.</h2>
+      )}
+      <div class="cta-block__ctas" data-animate="fade-up">
+        {related && <a href={withBase(`/it/progetti/${related.data.slug}/`)} class="btn btn-primary">Vedi il progetto</a>}
+        <a href={withBase('/it/progetti/')} class="link-arrow" style="color: rgba(255,255,255,0.7);">← Tutti i progetti</a>
+        <a href={withBase('/it/contatti/')} class="link-arrow" style="color: var(--color-orange);">Parliamo del tuo progetto →</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .case-hero { padding-block: clamp(var(--space-16), 10vw, var(--space-24)); background: var(--color-dark); color: var(--color-white); }
+  .case-hero__content { max-width: 780px; }
+  .case-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-4xl), 7vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; color: var(--color-white); margin-top: var(--space-4); }
+  .case-hero__sub { margin-top: var(--space-6); font-size: var(--text-xl); color: rgba(255,255,255,0.72); max-width: 600px; line-height: 1.6; }
+
+  .case-hero__meta {
+    margin-top: var(--space-10);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    padding-top: var(--space-8);
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .case-hero__meta dt { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.04em; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
+  .case-hero__meta dd { font-size: var(--text-base); color: var(--color-white); max-width: 320px; }
+
+  .case-body__content { max-width: 720px; }
+  .prose :global(h2) { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 700; margin-top: var(--space-10); margin-bottom: var(--space-4); }
+  .prose :global(h2:first-child) { margin-top: 0; }
+  .prose :global(p) { font-size: var(--text-lg); color: var(--color-gray-mid); line-height: 1.7; margin-bottom: var(--space-4); }
+  .prose :global(ul) { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-4); }
+  .prose :global(li) { font-size: var(--text-base); color: var(--color-dark); line-height: 1.55; padding-left: var(--space-5); position: relative; }
+  .prose :global(li::before) { content: '—'; position: absolute; left: 0; color: var(--color-orange); }
+  .prose :global(em) { color: var(--color-gray-mid); }
+
+  .stat-grid { margin-top: var(--space-8); display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-6); }
+
+  .cta-block__inner { text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-5); }
+  .cta-block__ctas { display: flex; gap: var(--space-8); align-items: center; flex-wrap: wrap; justify-content: center; margin-top: var(--space-3); }
+
+  @media (max-width: 640px) {
+    .case-hero__meta { gap: var(--space-5); }
+  }
+</style>

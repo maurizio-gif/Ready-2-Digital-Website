@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { routeFor } from '../../../i18n/routes';
+---
+
+<BaseLayout
+  title="Privacy Policy — Ready2Digital"
+  description="Come Ready2Digital tratta i dati raccolti tramite questo sito."
+  locale="it"
+  path={routeFor('privacy', 'it')}
+  alternatePath={routeFor('privacy', 'en')}
+  noindex={true}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-animate="fade-up">Legale</span>
+      <h1 class="page-hero__title" data-animate="clip-up">Privacy Policy</h1>
+    </div>
+  </section>
+
+  <section class="section legal">
+    <div class="container legal__content">
+      <p class="legal__notice reveal">
+        Questa pagina descrive esattamente cosa il sito raccoglie oggi — non è
+        un modello generico copiato da altrove. Va comunque letta e validata da
+        un consulente legale prima della pubblicazione definitiva.
+      </p>
+
+      <h2>Cosa raccogliamo</h2>
+      <p>
+        Questo sito non ha un backend che riceve e conserva dati: il modulo
+        "Contatti" apre il tuo programma di posta con un'email pre-compilata
+        indirizzata a info@ready2digital.it. I dati che scrivi (nome, azienda,
+        email, telefono, sito web, messaggio) restano nella tua posta in uscita
+        e nella nostra casella di ricezione — non passano da nessun database
+        del sito.
+      </p>
+
+      <h2>Cookie e tracciamento</h2>
+      <p>
+        Il sito non installa cookie di analisi o di marketing. L'unica
+        richiesta verso un servizio esterno è il caricamento dei font (Google
+        Fonts), necessaria per mostrare la tipografia del sito.
+      </p>
+
+      <h2>Titolare del trattamento</h2>
+      <p>Ready2Digital — info@ready2digital.it</p>
+
+      <h2>I tuoi diritti</h2>
+      <p>
+        Puoi chiedere in qualsiasi momento la cancellazione di un'email che ci
+        hai inviato scrivendo a info@ready2digital.it.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(var(--space-16), 8vw, var(--space-20)); }
+  .page-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl)); font-weight: 800; margin-top: var(--space-4); }
+  .legal__content { max-width: 680px; }
+  .legal__notice { padding: var(--space-5); border: 1px dashed var(--color-gray-light); font-size: var(--text-sm); color: var(--color-gray-mid); margin-bottom: var(--space-10); }
+  .legal h2 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; margin-top: var(--space-8); margin-bottom: var(--space-3); }
+  .legal p { font-size: var(--text-base); color: var(--color-gray-mid); line-height: 1.7; }
+</style>

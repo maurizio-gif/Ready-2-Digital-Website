@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { routeFor } from '../../../i18n/routes';
+---
+
+<BaseLayout
+  title="Cookie Policy — Ready2Digital"
+  description="Which cookies this site uses — and which it doesn't."
+  locale="en"
+  path={routeFor('cookiePolicy', 'en')}
+  alternatePath={routeFor('cookiePolicy', 'it')}
+  noindex={true}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-animate="fade-up">Legal</span>
+      <h1 class="page-hero__title" data-animate="clip-up">Cookie Policy</h1>
+    </div>
+  </section>
+
+  <section class="section legal">
+    <div class="container legal__content">
+      <p class="reveal">
+        This site doesn't set analytics, profiling or marketing cookies, and it
+        doesn't show a cookie banner because there's nothing to consent to.
+      </p>
+      <h2>The one request to a third party</h2>
+      <p>
+        The site loads fonts (Barlow Condensed, Inter, JetBrains Mono) from
+        Google Fonts, to display its typography correctly. That involves a
+        request to Google's service, but it doesn't set cookies on your
+        browser for this site.
+      </p>
+      <h2>If that changes</h2>
+      <p>
+        If we ever add analytics or marketing tools, this page — and a consent
+        banner — will be updated first, not after.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(var(--space-16), 8vw, var(--space-20)); }
+  .page-hero__title { font-family: var(--font-display); font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl)); font-weight: 800; margin-top: var(--space-4); }
+  .legal__content { max-width: 680px; }
+  .legal h2 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; margin-top: var(--space-8); margin-bottom: var(--space-3); }
+  .legal p { font-size: var(--text-base); color: var(--color-gray-mid); line-height: 1.7; }
+</style>

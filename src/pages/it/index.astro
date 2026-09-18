@@ -7,7 +7,7 @@ import SolutionRow from '../../components/SolutionRow.astro';
 import { withBase } from '../../utils/url';
 import { routeFor } from '../../i18n/routes';
 
-const allWork = await getCollection('work', ({ data }) => data.locale === 'en');
+const allWork = await getCollection('work', ({ data }) => data.locale === 'it');
 const order = ['athlon', 'lume', 'tca', 'aspresso', 'ronchiverdi', 'passion-fitness', 'body-energie', 'enjoy-club'];
 const work = order
   .map((id) => allWork.find((w) => w.data.caseId === id))
@@ -25,21 +25,21 @@ const clients = [
 ];
 
 const solutions = [
-  { index: '01', title: 'Digital Experience', description: 'Websites and interfaces that generate contacts, qualify leads, and connect to the rest of the infrastructure.', href: '/en/solutions/#digital-experience' },
-  { index: '02', title: 'Business Systems', description: 'CRM, custom management software, pipelines, calendars, permissions — built around how the team actually works.', href: '/en/solutions/#business-systems' },
-  { index: '03', title: 'Automation', description: 'Lead routing, data sync, reminders, automated administrative processes.', href: '/en/solutions/#automation' },
-  { index: '04', title: 'AI', description: 'Assistants that answer from a verified knowledge base, classification, matching, hand-off to a human.', href: '/en/solutions/#ai' },
-  { index: '05', title: 'Integrations', description: 'Connections between vertical management software, CRM, payments, WhatsApp, email, legacy systems.', href: '/en/solutions/#integrations' },
-  { index: '06', title: 'Physical Experience', description: 'Kiosks, check-in, displays, schedules — software lives outside the screen too.', href: '/en/solutions/#physical-experience' },
+  { index: '01', title: 'Digital Experience', description: 'Siti e interfacce che generano contatti, qualificano lead e si collegano al resto dell\'infrastruttura.', href: '/it/soluzioni/#digital-experience' },
+  { index: '02', title: 'Business Systems', description: 'CRM, gestionali custom, pipeline, agenda, permessi — costruiti attorno ai processi reali del team.', href: '/it/soluzioni/#business-systems' },
+  { index: '03', title: 'Automation', description: 'Smistamento dei lead, sincronizzazione dei dati, promemoria, processi amministrativi automatizzati.', href: '/it/soluzioni/#automation' },
+  { index: '04', title: 'AI', description: 'Assistenti che rispondono su una base di conoscenza verificata, classificazione, matching, passaggio a un operatore.', href: '/it/soluzioni/#ai' },
+  { index: '05', title: 'Integrations', description: 'Collegamenti fra gestionali verticali, CRM, pagamenti, WhatsApp, email, sistemi legacy.', href: '/it/soluzioni/#integrations' },
+  { index: '06', title: 'Physical Experience', description: 'Totem, check-in, display, palinsesti — il software vive anche fuori dallo schermo.', href: '/it/soluzioni/#physical-experience' },
 ];
 ---
 
 <BaseLayout
-  title="Ready2Digital — Digital systems built around real processes"
-  description="Ready2Digital designs custom digital systems: websites, CRM, operations software, automation, integrations and AI, built around how your business actually works."
-  locale="en"
-  path={routeFor('home', 'en')}
-  alternatePath={routeFor('home', 'it')}
+  title="Ready2Digital — Sistemi digitali costruiti sui processi reali"
+  description="Ready2Digital progetta sistemi digitali su misura: siti, CRM, software gestionali, automazioni, integrazioni e AI costruiti intorno ai processi reali della tua azienda."
+  locale="it"
+  path={routeFor('home', 'it')}
+  alternatePath={routeFor('home', 'en')}
 >
 
   <!-- HERO — typographic, no illustration -->
@@ -47,22 +47,22 @@ const solutions = [
     <div class="container hero__content">
       <span class="eyebrow" data-animate="fade-up">Ready2Digital</span>
       <h1 class="hero__headline reveal-lines">
-        <span class="line"><span style="--reveal-delay: 80ms">Technology should</span></span>
-        <span class="line"><span style="--reveal-delay: 200ms">fit your business.</span></span>
-        <span class="line"><span class="hero__headline-accent" style="--reveal-delay: 320ms">Not the other way around.</span></span>
+        <span class="line"><span style="--reveal-delay: 80ms">La tecnologia deve</span></span>
+        <span class="line"><span style="--reveal-delay: 200ms">adattarsi all'azienda.</span></span>
+        <span class="line"><span class="hero__headline-accent" style="--reveal-delay: 320ms">Non il contrario.</span></span>
       </h1>
       <p class="hero__sub" data-animate="fade-up" data-delay="480">
-        We design digital systems around the way your business actually works —
-        from websites and CRM to operations software, automation, integrations
-        and AI.
+        Progettiamo sistemi digitali su misura: siti, CRM, software gestionali,
+        automazioni, integrazioni e AI costruiti intorno ai processi reali della
+        tua azienda.
       </p>
       <p class="hero__note" data-animate="fade-up" data-delay="560">
-        Ready2Digital was started by someone who runs a business every day. That's
-        why we start from processes, not from software.
+        Ready2Digital nasce dall'esperienza di chi un'azienda la gestisce ogni
+        giorno. Per questo partiamo dai processi, non dal software.
       </p>
       <div class="hero__ctas" data-animate="fade-up" data-delay="640">
-        <a href={withBase('/en/contact/')} class="btn btn-primary">Tell us about your project</a>
-        <a href={withBase('/en/method/')} class="hero__link-secondary">See how we work →</a>
+        <a href={withBase('/it/contatti/')} class="btn btn-primary">Parliamo del tuo progetto</a>
+        <a href={withBase('/it/metodo/')} class="hero__link-secondary">Scopri come lavoriamo →</a>
       </div>
     </div>
   </section>
@@ -70,7 +70,7 @@ const solutions = [
   <!-- CLIENT PROOF -->
   <section class="proof">
     <div class="container">
-      <p class="proof__caption reveal">Technology already running real businesses.</p>
+      <p class="proof__caption reveal">Tecnologia che lavora già in aziende reali.</p>
       <ul class="proof__list stagger-list">
         {clients.map((c) => <li>{c}</li>)}
       </ul>
@@ -81,22 +81,22 @@ const solutions = [
   <section class="section problem">
     <div class="container">
       <div class="problem__intro" data-stagger="130">
-        <span class="eyebrow" data-animate="fade-up">The problem</span>
+        <span class="eyebrow" data-animate="fade-up">Il problema</span>
         <h2 class="section-title" data-animate="clip-up">
-          The problem isn't having too little software.<br>It's having systems that don't work together.
+          Il problema non è avere pochi software.<br>È averne troppi che non lavorano insieme.
         </h2>
       </div>
       <div class="problem__diagram">
         <SystemsProblem
-          systems={['Website', 'CRM', 'Management software', 'WhatsApp', 'Payments', 'Email', 'Spreadsheets', 'Team']}
-          labels={{ before: 'Fragmented systems', middle: 'READY2DIGITAL', after: 'Connected operations' }}
+          systems={['Sito', 'CRM', 'Gestionale', 'WhatsApp', 'Pagamenti', 'Email', 'Excel', 'Team']}
+          labels={{ before: 'Sistemi scollegati', middle: 'READY2DIGITAL', after: 'Operazioni connesse' }}
         />
       </div>
       <p class="problem__note reveal">
-        When these stay disconnected, data gets duplicated, people re-type
-        information by hand, leads fall through the cracks, customers have to
-        repeat themselves, and nobody has a full view of what's actually
-        happening.
+        Quando questi elementi restano scollegati, i dati si duplicano, le persone
+        ricopiano informazioni a mano, i lead si perdono, il cliente deve ripetere
+        le stesse cose due volte, e nessuno ha una vista completa di cosa sta
+        succedendo davvero.
       </p>
     </div>
   </section>
@@ -105,21 +105,21 @@ const solutions = [
   <section class="section work" id="work">
     <div class="container">
       <div class="work__intro" data-stagger="130">
-        <span class="eyebrow" data-animate="fade-up">Work</span>
-        <h2 class="section-title" data-animate="clip-up">Technology already in production</h2>
+        <span class="eyebrow" data-animate="fade-up">Progetti</span>
+        <h2 class="section-title" data-animate="clip-up">Tecnologia già in produzione</h2>
       </div>
       <div class="work__grid" data-stagger="100">
         {work.map((w, i) => (
-          <a href={withBase(`/en/work/${w.data.slug}/`)} class:list={['work-card', 'reveal', { 'work-card--lg': i === 0, 'work-card--md': i > 0 && i < 4 }]}>
+          <a href={withBase(`/it/progetti/${w.data.slug}/`)} class:list={['work-card', 'reveal', { 'work-card--lg': i === 0, 'work-card--md': i > 0 && i < 4 }]}>
             <span class="work-card__sector">{w.data.sector}</span>
             <h3 class="work-card__client">{w.data.client}</h3>
             <p class="work-card__excerpt">{w.data.excerpt}</p>
-            <span class="work-card__link">See the project →</span>
+            <span class="work-card__link">Scopri il progetto →</span>
           </a>
         ))}
       </div>
       <div class="work__cta reveal">
-        <a href={withBase('/en/work/')} class="link-arrow">All projects →</a>
+        <a href={withBase('/it/progetti/')} class="link-arrow">Tutti i progetti →</a>
       </div>
     </div>
   </section>
@@ -128,19 +128,19 @@ const solutions = [
   <section class="section method" style="background: var(--color-light);">
     <div class="container">
       <div class="method__intro" data-stagger="130">
-        <span class="eyebrow" data-animate="fade-up">The method</span>
+        <span class="eyebrow" data-animate="fade-up">Il metodo</span>
         <h2 class="section-title" data-animate="clip-up">
-          We first understand how the business works.<br>Then we choose the technology.
+          Prima capiamo come funziona l'azienda.<br>Poi scegliamo la tecnologia.
         </h2>
       </div>
       <div class="process-grid" data-stagger="130">
-        <ProcessStep number="01" title="Audit" description="We observe the processes that actually happen every day — not the theoretical ones." />
-        <ProcessStep number="02" title="Gap Analysis" description="We measure the distance between the current process and the desired one." />
-        <ProcessStep number="03" title="Build" description="We build only what's needed: a website, a CRM, an integration, automation, an AI agent." />
-        <ProcessStep number="04" title="Measure" description="We measure the effect on the business. Not impressions: metrics." isLast />
+        <ProcessStep number="01" title="Audit" description="Osserviamo i processi che succedono davvero ogni giorno — non quelli teorici." />
+        <ProcessStep number="02" title="Gap Analysis" description="Misuriamo la distanza tra il processo attuale e quello desiderato." />
+        <ProcessStep number="03" title="Build" description="Costruiamo solo ciò che serve: sito, CRM, integrazione, automazione, agente AI." />
+        <ProcessStep number="04" title="Measure" description="Misuriamo l'effetto sul business. Non impressioni: metriche." isLast />
       </div>
       <div class="method__cta reveal">
-        <a href={withBase('/en/method/')} class="link-arrow">The full method →</a>
+        <a href={withBase('/it/metodo/')} class="link-arrow">Il metodo per intero →</a>
       </div>
     </div>
   </section>
@@ -149,8 +149,8 @@ const solutions = [
   <section class="section solutions-preview">
     <div class="container">
       <div class="solutions-preview__intro" data-stagger="130">
-        <span class="eyebrow" data-animate="fade-up">What we build</span>
-        <h2 class="section-title" data-animate="clip-up">A system, not a collection of tools</h2>
+        <span class="eyebrow" data-animate="fade-up">Cosa costruiamo</span>
+        <h2 class="section-title" data-animate="clip-up">Un sistema, non una collezione di strumenti</h2>
       </div>
       <div class="solutions-list" data-stagger="70">
         {solutions.map((s) => <SolutionRow {...s} />)}
@@ -162,21 +162,21 @@ const solutions = [
   <section class="section build-vs-buy" style="background: var(--color-dark); color: var(--color-white);">
     <div class="container">
       <div class="bvb__intro" data-stagger="130">
-        <span class="eyebrow" data-animate="fade-up">How we decide</span>
-        <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">We don't start from the software we'd like to sell</h2>
+        <span class="eyebrow" data-animate="fade-up">Come scegliamo</span>
+        <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">Non partiamo dal software da vendere</h2>
       </div>
       <div class="bvb__grid" data-stagger="120">
         <div class="bvb__item reveal">
-          <span class="bvb__label">We use</span>
-          <p>Existing software when it already does its job well.</p>
+          <span class="bvb__label">Usiamo</span>
+          <p>Software esistenti quando fanno bene il loro lavoro.</p>
         </div>
         <div class="bvb__item reveal">
-          <span class="bvb__label">We integrate</span>
-          <p>What already works, when it's just missing a connection.</p>
+          <span class="bvb__label">Integriamo</span>
+          <p>Quello che già funziona, quando manca solo una connessione.</p>
         </div>
         <div class="bvb__item reveal">
-          <span class="bvb__label">We build</span>
-          <p>Only when the process needs something the market doesn't offer.</p>
+          <span class="bvb__label">Costruiamo</span>
+          <p>Solo quando il processo richiede qualcosa che il mercato non offre.</p>
         </div>
       </div>
     </div>
@@ -186,14 +186,14 @@ const solutions = [
   <section class="section tech-preview">
     <div class="container tech-preview__inner">
       <div data-stagger="120">
-        <span class="eyebrow" data-animate="fade-up">Technology</span>
-        <h2 class="section-title" data-animate="clip-up">Chosen for the problem, not for the trend</h2>
+        <span class="eyebrow" data-animate="fade-up">Tecnologia</span>
+        <h2 class="section-title" data-animate="clip-up">Scelta per il problema, non per la moda</h2>
         <p class="tech-preview__body reveal">
-          Astro and Next.js on the frontend, Supabase as the single source of data,
-          n8n orchestrating automation, direct integrations with industry
-          management software. No single vendor to depend on.
+          Astro e Next.js per il frontend, Supabase come fonte unica dei dati, n8n
+          per orchestrare le automazioni, integrazioni dirette con i gestionali di
+          settore. Nessun vendor unico da cui dipendere.
         </p>
-        <a href={withBase('/en/technology/')} class="link-arrow reveal">The full stack →</a>
+        <a href={withBase('/it/tecnologia/')} class="link-arrow reveal">Lo stack per intero →</a>
       </div>
     </div>
   </section>
@@ -201,25 +201,25 @@ const solutions = [
   <!-- ABOUT PREVIEW -->
   <section class="section about-preview" style="background: var(--color-light);">
     <div class="container about-preview__inner" data-stagger="120">
-      <span class="eyebrow" data-animate="fade-up">About</span>
-      <h2 class="section-title" data-animate="clip-up">We didn't learn operations from a brief. We lived them.</h2>
+      <span class="eyebrow" data-animate="fade-up">Chi siamo</span>
+      <h2 class="section-title" data-animate="clip-up">Non abbiamo imparato i processi da un brief. Li abbiamo vissuti.</h2>
       <p class="reveal">
-        Ready2Digital grew out of running Athlon Club, a long-standing sports
-        business in Rome. That method is now applied to other businesses with
-        real processes to digitise.
+        Ready2Digital nasce dall'esperienza diretta nella gestione di Athlon Club,
+        storica realtà sportiva romana. Quel metodo è oggi applicato ad altre
+        aziende con processi reali da digitalizzare.
       </p>
-      <a href={withBase('/en/about/')} class="link-arrow reveal">Our story →</a>
+      <a href={withBase('/it/chi-siamo/')} class="link-arrow reveal">La nostra storia →</a>
     </div>
   </section>
 
   <!-- FINAL CTA -->
   <section class="section final-cta" style="background: var(--color-dark);">
     <div class="container final-cta__inner" data-stagger="120">
-      <span class="eyebrow" data-animate="fade-up">Let's start</span>
+      <span class="eyebrow" data-animate="fade-up">Iniziamo</span>
       <h2 class="section-title" data-animate="clip-up" style="color: var(--color-white);">
-        Processes first.<br>Software second.
+        Prima i processi.<br>Poi il software.
       </h2>
-      <a href={withBase('/en/contact/')} class="btn btn-primary" data-animate="fade-up">Tell us about your project</a>
+      <a href={withBase('/it/contatti/')} class="btn btn-primary" data-animate="fade-up">Parliamo del tuo progetto</a>
     </div>
   </section>
 

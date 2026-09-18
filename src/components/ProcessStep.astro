@@ -37,15 +37,19 @@ const { number, title, description, isLast = false } = Astro.props;
     width: 100%;
   }
 
+  /* Bracket numeral instead of a colored circle badge — reads like a step
+     index in a spec, not a decorative UI chip. Keeps the original 56px box
+     so the connector-line math below (top: 28px, left/right: calc(50% ±
+     28px)) still lines up — only the fill changes. */
   .process-step__number {
     width: 56px;
     height: 56px;
-    border-radius: 50%;
-    background: var(--color-orange);
-    color: var(--color-white);
-    font-family: var(--font-display);
-    font-size: var(--text-xl);
-    font-weight: 800;
+    border-radius: 0;
+    background: none;
+    color: var(--color-orange);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xl);
+    font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,10 +57,17 @@ const { number, title, description, isLast = false } = Astro.props;
     z-index: 1;
   }
 
+  .process-step__number::before { content: '['; opacity: 0.5; }
+  .process-step__number::after  { content: ']'; opacity: 0.5; }
+
   .process-step__connector {
     width: 2px;
     height: var(--space-6);
-    background: var(--color-gray-light);
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--color-gray-light) 0 4px,
+      transparent 4px 8px
+    );
     display: none;
   }
 
@@ -89,7 +100,11 @@ const { number, title, description, isLast = false } = Astro.props;
       left: calc(50% + 28px);
       right: calc(-50% + 28px);
       height: 2px;
-      background: var(--color-gray-light);
+      background: repeating-linear-gradient(
+        to right,
+        var(--color-gray-light) 0 4px,
+        transparent 4px 8px
+      );
       z-index: 0;
     }
   }
