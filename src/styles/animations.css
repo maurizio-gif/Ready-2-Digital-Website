@@ -41,8 +41,10 @@
 }
 
 /* --- Line-by-line headline reveal --- */
+/* Block, not inline-block: an inline-block headline shares a line box with a
+   preceding inline-block eyebrow and ends up beside it instead of below. */
 .reveal-lines {
-  display: inline-block;
+  display: block;
 }
 .reveal-lines .line {
   display: block;
