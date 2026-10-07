@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Demo con dati di esempio di un cruscotto di controllo per un centro sportivo.">
+<title>Cruscotto Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+/* Stile del sito del club: fondo crema, verde bosco per i pannelli scuri, verde brillante per le azioni,
+   pulsanti a pillola, schede molto arrotondate, Poppins. Layout: pannello di apertura scuro,
+   schede a pillola, riquadri numerici prima del dettaglio, grafici a barre impilate. */
+:root {
+  --bg: #faf8f4;
+  --surface: #ffffff;
+  --surface-2: #f3efe7;
+  --ink: #13392b;
+  --body: #3f4e46;
+  --muted: #66746c;
+  --line: #e6e1d6;
+  --forest: #14372b;
+  --forest-line: #2c5646;
+  --on-forest: #f4f1ea;
+  --on-forest-muted: #b8cbc0;
+  --accent: #3dae6d;
+  --accent-ink: #0f3a2a;
+  --pick-bg: #14372b;
+  --pick-ink: #f4f1ea;
+  --series: #1f9d63;
+  --series-soft: #d6efe0;
+  --g1: #1baf7a; --g2: #eb6834; --g3: #2a78d6; --g4: #eda100; --g5: #e87ba4; --g6: #4a3aa7;
+  --good: #1e7f4f;
+  --bad: #c8402f;
+  --warn-bg: #fff1d6;
+  --warn-ink: #7a5200;
+  --shadow: 0 10px 30px rgba(19, 57, 43, .07);
+  --font: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: var(--font);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1712; --surface: #12211a; --surface-2: #182b22; --ink: #eaf4ee; --body: #c9d8cf; --muted: #98aaa0;
+    --line: #24382e; --forest: #14372b; --forest-line: #2c5646; --accent: #4cbf7c; --accent-ink: #0c2a1d; --pick-bg: #4cbf7c; --pick-ink: #0c2a1d;
+    --series: #3fbf80; --series-soft: #1d4a37;
+    --g1: #199e70; --g2: #d95926; --g3: #3987e5; --g4: #c98500; --g5: #d55181; --g6: #9085e9;
+    --good: #4fc58b; --bad: #f0715f; --warn-bg: #3a2f12; --warn-ink: #f0cf84;
+    --shadow: none; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1712; --surface: #12211a; --surface-2: #182b22; --ink: #eaf4ee; --body: #c9d8cf; --muted: #98aaa0;
+  --line: #24382e; --forest: #14372b; --forest-line: #2c5646; --accent: #4cbf7c; --accent-ink: #0c2a1d; --pick-bg: #4cbf7c; --pick-ink: #0c2a1d;
+  --series: #3fbf80; --series-soft: #1d4a37;
+  --g1: #199e70; --g2: #d95926; --g3: #3987e5; --g4: #c98500; --g5: #d55181; --g6: #9085e9;
+  --good: #4fc58b; --bad: #f0715f; --warn-bg: #3a2f12; --warn-ink: #f0cf84;
+  --shadow: none; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--body); font-family: var(--font); font-weight: 300; font-size: 15px; line-height: 1.55; padding-inline: 16px; padding-block: 20px 56px; }
+.wrap { max-width: 1180px; margin-inline: auto; display: flex; flex-direction: column; gap: 20px; }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; font-weight: 500; }
+b, strong { font-weight: 600; color: var(--ink); }
+
+/* pannello di apertura */
+.hero { background: var(--forest); color: var(--on-forest); border-radius: 32px; padding: 30px 34px; display: flex; flex-wrap: wrap; gap: 18px 32px; align-items: flex-end; justify-content: space-between; }
+.hero-main { display: flex; flex-direction: column; gap: 12px; min-width: 0; flex: 1 1 420px; }
+.eyebrow-l { margin: 0; display: flex; align-items: center; gap: 12px; font-size: 12px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+.eyebrow-l i { width: 32px; height: 1px; background: var(--accent); display: inline-block; }
+h1 { margin: 0; font-size: clamp(26px, 4vw, 40px); font-weight: 600; line-height: 1.12; letter-spacing: -.02em; color: var(--on-forest); text-wrap: balance; }
+h1 .acc { color: var(--accent); }
+.hero-lead { margin: 0; max-width: 62ch; color: var(--on-forest-muted); font-size: 14.5px; }
+.sync { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; font-size: 13px; color: var(--on-forest-muted); }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); display: inline-block; }
+.dot.on { animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+.tag { font-size: 11.5px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--forest-line); color: var(--on-forest); white-space: nowrap; }
+.ghost { background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; cursor: pointer; font-size: 13px; font-weight: 400; color: var(--ink); }
+.hero .ghost { border-color: var(--forest-line); color: var(--on-forest); }
+.ghost:hover:not(:disabled) { border-color: var(--accent); }
+.ghost:disabled { opacity: .4; cursor: default; }
+
+/* schede a pillola */
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tab { background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 9px 22px; cursor: pointer; font-weight: 500; color: var(--ink); font-size: 14.5px; }
+.tab[aria-selected="true"] { background: var(--pick-bg); border-color: var(--pick-bg); color: var(--pick-ink); }
+.tab:hover:not([aria-selected="true"]) { border-color: var(--accent); }
+.page-head { display: flex; flex-direction: column; gap: 6px; }
+.eyebrow { font-size: 12px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--series); margin: 0; display: flex; align-items: center; gap: 10px; }
+.eyebrow::before { content: ''; width: 24px; height: 1px; background: currentColor; }
+.page-head h2 { margin: 0; font-size: 26px; font-weight: 600; color: var(--ink); letter-spacing: -.01em; }
+.muted { color: var(--muted); font-size: 13.5px; margin: 0; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 28px; box-shadow: var(--shadow); padding: 24px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.card-head { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; justify-content: space-between; }
+.card h3 { margin: 0; font-size: 18px; font-weight: 600; color: var(--ink); }
+.subt { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .14em; margin: 0; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 12px; }
+.stat { background: var(--surface-2); border: 1px solid var(--line); border-radius: 20px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.stat .l { font-size: 11.5px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; }
+.stat .v { font-size: 30px; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; color: var(--ink); }
+.stat .n { font-size: 12px; color: var(--muted); }
+.stat .cmp { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; align-items: baseline; }
+.stat .cmp span:first-child { color: var(--muted); }
+.d { font-weight: 600; white-space: nowrap; }
+.d.good { color: var(--good); } .d.bad { color: var(--bad); } .d.flat { color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 6px 16px; font-size: 13px; font-weight: 400; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; color: var(--ink); }
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--pick-bg); color: var(--pick-ink); border-color: var(--pick-bg); }
+.sw { width: 10px; height: 10px; border-radius: 3px; display: inline-block; flex: none; }
+
+.chartbox { position: relative; overflow-x: auto; }
+.chartbox svg { display: block; min-width: 640px; width: 100%; height: auto; }
+.ax { fill: var(--muted); font-family: var(--font); font-size: 10.5px; }
+.ax-yr { fill: var(--muted); font-family: var(--font); font-size: 10px; opacity: .8; }
+.grid { stroke: var(--line); stroke-width: 1; }
+.bar { transform-box: fill-box; transform-origin: 50% 100%; }
+.anim .bar { animation: up .6s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i) * 16ms); }
+@keyframes up { from { transform: scaleY(0); } }
+.hit { fill: transparent; }
+.hit:hover, .hit:focus { outline: none; fill: color-mix(in srgb, var(--ink) 7%, transparent); }
+.tip { position: absolute; pointer-events: none; background: var(--forest); color: var(--on-forest); border-radius: 16px; padding: 12px 14px; font-size: 12.5px; min-width: 210px; z-index: 5; box-shadow: 0 10px 28px rgba(0,0,0,.28); top: 8px; }
+.tip b { display: block; margin-bottom: 6px; font-size: 13px; color: var(--on-forest); }
+.tip div { display: flex; justify-content: space-between; gap: 14px; align-items: center; }
+.tip .k { display: inline-flex; gap: 6px; align-items: center; }
+.tip .tot { border-top: 1px solid var(--forest-line); margin-top: 6px; padding-top: 6px; font-weight: 600; }
+.legend { display: flex; gap: 6px 18px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+
+.hb { display: grid; grid-template-columns: minmax(110px, 170px) 1fr auto; gap: 12px; align-items: center; font-size: 13.5px; padding: 6px 0; }
+.hb .tr { background: var(--surface-2); border-radius: 999px; height: 14px; overflow: hidden; }
+.hb .fl { height: 100%; border-radius: 0 999px 999px 0; min-width: 2px; transform-origin: 0 50%; }
+.anim .hb .fl { animation: wid .8s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes wid { from { transform: scaleX(0); } }
+.prog { background: var(--surface-2); border-radius: 999px; height: 14px; overflow: hidden; border: 1px solid var(--line); }
+.prog i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transform-origin: 0 50%; }
+.anim .prog i { animation: wid .9s cubic-bezier(.2, .7, .2, 1) both; }
+
+.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tbl th { text-align: left; font-weight: 500; font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; padding: 10px 12px; background: var(--surface-2); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.tbl th:first-child { border-radius: 14px 0 0 14px; } .tbl th:last-child { border-radius: 0 14px 14px 0; }
+.tbl th.r, .tbl td.r { text-align: right; }
+.tbl td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tbl td:first-child { white-space: nowrap; }
+.tbl tbody tr:hover td { background: var(--surface-2); }
+.tbl tr.tot td { font-weight: 600; background: var(--surface-2); color: var(--ink); }
+.tbl .sub { display: block; font-size: 12px; color: var(--muted); font-weight: 300; }
+.scroll { overflow-x: auto; }
+.neg { color: var(--bad); }
+.badge { font-size: 12px; font-weight: 500; padding: 3px 12px; border-radius: 999px; white-space: nowrap; background: var(--surface-2); border: 1px solid var(--line); }
+.badge.ok { color: var(--good); } .badge.ko { color: var(--bad); } .badge.warn { color: var(--warn-ink); background: var(--warn-bg); border-color: transparent; }
+.mnav { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.mnav strong { min-width: 160px; text-align: center; text-transform: capitalize; font-size: 17px; }
+.callout { background: var(--warn-bg); color: var(--warn-ink); border-radius: 20px; padding: 14px 18px; font-size: 13.5px; }
+.callout b { color: inherit; }
+.callout ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: 16px; }
+
+.feed { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.feed li { background: var(--surface-2); border: 1px solid var(--line); border-radius: 20px; padding: 12px 16px; display: grid; grid-template-columns: auto 1fr auto; gap: 4px 10px; align-items: baseline; font-size: 13.5px; }
+.feed .t { font-size: 12px; color: var(--muted); }
+.feed .c { grid-column: 2 / 4; font-size: 12px; color: var(--muted); }
+.feed li.nuova { animation: flash 2.6s ease-out; }
+@keyframes flash { from { background: var(--series-soft); transform: translateY(-6px); } to { background: var(--surface-2); transform: none; } }
+@media (prefers-reduced-motion: reduce) { .feed li.nuova, .dot.on, .anim .bar, .anim .hb .fl, .anim .prog i { animation: none; } }
+.heat { display: grid; grid-template-columns: 64px repeat(8, 1fr); gap: 4px; min-width: 640px; }
+.hc { border-radius: 12px; padding: 10px 4px; text-align: center; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.hc.hh, .hc.hd { font-size: 11.5px; font-weight: 500; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; padding: 8px 2px; }
+.hc.hd { text-align: left; padding-left: 4px; }
+.mb { display: inline-block; width: 72px; height: 8px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; vertical-align: middle; margin-right: 6px; }
+.mb i { display: block; height: 100%; border-radius: 999px; }
+footer { color: var(--muted); font-size: 12.5px; }
+</style>
+<style>[hidden]{display:none!important} body{margin:0} img{max-width:100%}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-main">
+      <p class="eyebrow-l"><i></i>Cruscotto Club</p>
+      <h1>I numeri del club, <span class="acc">sempre aggiornati.</span></h1>
+      <p class="hero-lead">Direzione, abbonamenti, incassato e tutti i dati del gestionale: vendite, accessi, soci e operatori. In produzione i dati si aggiornano ogni 5 minuti. Qui la sincronizzazione è accelerata: una vendita nuova arriva ogni pochi secondi e i numeri si muovono.</p>
+    </div>
+    <div class="sync">
+      <span class="tag">Dati di esempio</span>
+      <span class="dot on" id="dot" aria-hidden="true"></span>
+      <span id="syncTxt">Ultimo aggiornamento</span>
+      <button class="ghost" id="autoBtn" type="button" aria-pressed="true">Sospendi simulazione</button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sezioni del cruscotto">
+    <button class="tab" role="tab" id="t-direzione" data-tab="direzione" aria-selected="true">Direzione</button>
+    <button class="tab" role="tab" id="t-abbonamenti" data-tab="abbonamenti" aria-selected="false">Abbonamenti</button>
+    <button class="tab" role="tab" id="t-incassato" data-tab="incassato" aria-selected="false">Incassato</button>
+    <button class="tab" role="tab" id="t-vendite" data-tab="vendite" aria-selected="false">Vendite</button>
+    <button class="tab" role="tab" id="t-accessi" data-tab="accessi" aria-selected="false">Accessi</button>
+    <button class="tab" role="tab" id="t-soci" data-tab="soci" aria-selected="false">Soci</button>
+    <button class="tab" role="tab" id="t-operatori" data-tab="operatori" aria-selected="false">Operatori</button>
+  </nav>
+
+  <section id="v-direzione" role="tabpanel" aria-labelledby="t-direzione"></section>
+  <section id="v-abbonamenti" role="tabpanel" aria-labelledby="t-abbonamenti" hidden></section>
+  <section id="v-incassato" role="tabpanel" aria-labelledby="t-incassato" hidden></section>
+  <section id="v-vendite" role="tabpanel" aria-labelledby="t-vendite" hidden></section>
+  <section id="v-accessi" role="tabpanel" aria-labelledby="t-accessi" hidden></section>
+  <section id="v-soci" role="tabpanel" aria-labelledby="t-soci" hidden></section>
+  <section id="v-operatori" role="tabpanel" aria-labelledby="t-operatori" hidden></section>
+
+  <footer>Demo con dati di esempio generati per la presentazione. Nessun dato reale di alcun club.</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- utilità ---------- */
+  var IT = 'it-IT';
+  var nEur = new Intl.NumberFormat(IT, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  var nInt = new Intl.NumberFormat(IT, { maximumFractionDigits: 0 });
+  var nDec = new Intl.NumberFormat(IT, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  var fTime = new Intl.DateTimeFormat(IT, { hour: '2-digit', minute: '2-digit' });
+  var fTimeS = new Intl.DateTimeFormat(IT, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  var fMonS = new Intl.DateTimeFormat(IT, { month: 'short' });
+  var fMonL = new Intl.DateTimeFormat(IT, { month: 'long', year: 'numeric' });
+  var F = {
+    int: function (n) { return nInt.format(Math.round(n)); },
+    eur: function (n) { return nEur.format(Math.round(n)); },
+    pct: function (n) { return nDec.format(n) + '%'; },
+    dec: function (n) { return nDec.format(n); }
+  };
+  function sgn(n, t) { return (n > 0 ? '+' : n < 0 ? '−' : '') + t; }
+  function el(id) { return document.getElementById(id); }
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function rng(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { /* ignora */ }
+
+  /* ---------- catalogo di esempio ---------- */
+  var GR = ['Fitness', 'Piscina e nuoto', 'Corsi', 'Tennis e padel', 'Beach e calcetto', 'Pass e ingressi'];
+  // [id, nome, prezzo, base mensile, durata in mesi, stagione, gruppo (null = non è un abbonamento), tipo di servizio, quota "nuovi"]
+  var CAT = [
+    ['fit12', 'Fitness annuale', 540, 22, 12, 'inv', 'Fitness', 'Abbonamenti', .58],
+    ['fit6', 'Fitness semestrale', 330, 18, 6, 'inv', 'Fitness', 'Abbonamenti', .58],
+    ['fit1', 'Fitness mensile', 62, 70, 1, 'inv', 'Fitness', 'Abbonamenti', .45],
+    ['fitm', 'Fitness open mattina', 420, 10, 12, 'inv', 'Fitness', 'Abbonamenti', .58],
+    ['pis12', 'Piscina annuale', 480, 16, 12, 'inv', 'Piscina e nuoto', 'Abbonamenti', .55],
+    ['pis3', 'Piscina trimestrale', 190, 28, 3, 'inv', 'Piscina e nuoto', 'Abbonamenti', .5],
+    ['nuobam', 'Nuoto bambini quadrimestre', 210, 30, 4, 'inv', 'Piscina e nuoto', 'Abbonamenti', .5],
+    ['acqua', 'Acquagym 3 mesi', 165, 20, 3, 'inv', 'Piscina e nuoto', 'Abbonamenti', .5],
+    ['yoga', 'Yoga e pilates 3 mesi', 150, 24, 3, 'inv', 'Corsi', 'Abbonamenti', .5],
+    ['danza', 'Danza annuale', 360, 9, 12, 'inv', 'Corsi', 'Abbonamenti', .6],
+    ['ten', 'Tennis scuola annuale', 690, 7, 12, 'out', 'Tennis e padel', 'Abbonamenti', .55],
+    ['padc', 'Padel corso 8 lezioni', 160, 12, 0, 'out', 'Tennis e padel', 'Corsi e lezioni', .7],
+    ['cals', 'Calcetto abbonamento stagione', 900, 3, 4, 'out', 'Beach e calcetto', 'Abbonamenti', .5],
+    ['beach', 'Beach tennis corso', 140, 10, 0, 'out', 'Beach e calcetto', 'Corsi e lezioni', .7],
+    ['day', 'Daily pass', 12, 160, 0, 'flat', 'Pass e ingressi', 'Ingressi e pass', .9],
+    ['car10', 'Carnet 10 ingressi', 95, 25, 0, 'flat', 'Pass e ingressi', 'Ingressi e pass', .8],
+    ['pass7', 'Pass settimanale', 25, 45, 0, 'flat', 'Pass e ingressi', 'Ingressi e pass', .95],
+    ['pt10', 'Personal training 10 sedute', 420, 9, 0, 'inv', null, 'Corsi e lezioni', .6],
+    ['refo', 'Pilates reformer 12 lezioni', 240, 18, 0, 'inv', null, 'Corsi e lezioni', .6],
+    ['camp', 'Summer camp settimana', 175, 25, 0, 'camp', null, 'Corsi e lezioni', .8],
+    ['med', 'Visita medico-sportiva', 40, 35, 0, 'flat', null, 'Servizi e shop', .8],
+    ['shop', 'Shop accessori', 28, 120, 0, 'flat', null, 'Servizi e shop', 1],
+    ['quota', 'Quota iscrizione annuale', 30, 140, 0, 'flat', null, 'Servizi e shop', .5]
+  ];
+  var SEAS = {
+    inv: [1.5, 1.1, 1.0, .9, .8, .7, .55, .5, 1.6, 1.3, .9, .7],
+    out: [.4, .5, .9, 1.4, 1.6, 1.5, 1.1, .7, 1.0, .8, .5, .4],
+    camp: [0, 0, 0, 0, .15, 1.3, 2.0, 1.4, .15, 0, 0, 0],
+    flat: [1, 1, 1.05, 1.05, 1.05, 1.0, .9, .85, 1.05, 1.05, 1.0, .95]
+  };
+  var TIPI = ['Abbonamenti', 'Corsi e lezioni', 'Ingressi e pass', 'Servizi e shop'];
+  var METODI = ['Carta e POS', 'Contanti', 'Bonifico', 'Addebito SEPA', 'Finanziamento', 'Da definire'];
+  var METODO_CASSA = ['Sì', 'Sì', 'No', 'No', 'No', '—'];
+
+  /* ---------- generazione dei dati: 5 anni di storico ---------- */
+  var NM = 60, CUR = NM - 1;
+  var now = new Date();
+  var dim = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  var FRAC = Math.min(1, Math.max(0.05, now.getDate() / dim));
+  function mdate(i) { return new Date(now.getFullYear(), now.getMonth() - (NM - 1 - i), 1); }
+  function zeros() { var a = []; for (var i = 0; i < NM; i++) a.push(0); return a; }
+
+  var P = CAT.map(function (c, k) {
+    var r = rng(1000 + k * 77), units = [], rev = [];
+    for (var i = 0; i < NM; i++) {
+      var trend = Math.pow(1.07, (i - CUR) / 12);
+      var u = Math.round(c[3] * SEAS[c[5]][mdate(i).getMonth()] * trend * (0.88 + r() * 0.24));
+      units.push(u);
+      rev.push(u * c[2] * (c[2] ? 0.93 + r() * 0.07 : 0));
+    }
+    return { id: c[0], nome: c[1], prezzo: c[2], durata: c[4], g: c[6], tipo: c[7], nsh: c[8], units: units, rev: rev };
+  });
+  var G = {};
+  GR.forEach(function (g) { G[g] = { A: zeros(), N: zeros(), S: zeros(), R: zeros(), U: zeros() }; });
+  var Rall = zeros(), Uall = zeros(), Rabb = zeros(), RT = {};
+  TIPI.forEach(function (t) { RT[t] = zeros(); });
+  P.forEach(function (p) {
+    for (var i = 0; i < NM; i++) {
+      Rall[i] += p.rev[i]; Uall[i] += p.units[i]; RT[p.tipo][i] += p.rev[i];
+      if (!p.g) continue;
+      var o = G[p.g];
+      o.R[i] += p.rev[i]; o.U[i] += p.units[i]; o.N[i] += p.units[i] * p.nsh; Rabb[i] += p.rev[i];
+      if (p.durata > 0) {
+        var a = 0;
+        for (var k = 0; k < p.durata && i - k >= 0; k++) a += p.units[i - k];
+        o.A[i] += a;
+        if (i - p.durata >= 0) o.S[i] += p.units[i - p.durata];
+      }
+    }
+  });
+  var RR = [], CONV = [];
+  (function () {
+    var r = rng(31337);
+    for (var i = 0; i < NM; i++) { RR.push(0.56 + (i / NM) * 0.05 + r() * 0.07); CONV.push(0.27 + (i / NM) * 0.03 + r() * 0.06); }
+  })();
+
+  var live = { fatAll: 0, fat: 0, byG: {} };
+  GR.forEach(function (g) { live.byG[g] = { vend: 0, fat: 0, att: 0, nuovi: 0 }; });
+
+  /* ---------- stato ---------- */
+  var state = { tab: 'direzione', groups: [], animate: true, auto: true, mi: CUR, view: 'riepilogo', metodo: '', stato: 'anomale', vg: 'mese', af: '30' };
+  var shown = {};
+  var TIPS = {};
+  var hovering = false;
+  function sel() { return state.groups.length ? state.groups : GR; }
+  function gS(field, i, groups) { var s = 0; groups.forEach(function (g) { s += G[g][field][i]; }); return s; }
+  function lv(f, groups) { var s = 0; groups.forEach(function (g) { s += live.byG[g][f]; }); return s; }
+  function w(i) { return i === CUR ? FRAC : 1; }
+
+  /* ---------- numeri ---------- */
+  function vendPeriod(kind, prior, groups) {
+    var off = prior ? 12 : 0, cur = CUR - off, first = kind === 'mtd' ? cur : CUR - now.getMonth() - off, v = 0, f = 0;
+    for (var i = first; i <= cur; i++) { var x = i === cur ? FRAC : 1; v += gS('U', i, groups) * x; f += gS('R', i, groups) * x; }
+    if (!prior) { v += lv('vend', groups); f += lv('fat', groups); }
+    return { v: v, f: f };
+  }
+  function attiviOn(kind, groups) {
+    var base = kind === 'oggi' ? CUR : kind === 'mese' ? CUR - 1 : CUR - 12;
+    var a1 = gS('A', base - 1, groups), a2 = gS('A', base, groups), v = a1 + (a2 - a1) * FRAC;
+    return kind === 'oggi' ? v + lv('att', groups) : v;
+  }
+  function delta(cur, prev, goodUp) {
+    if (goodUp === undefined) goodUp = true;
+    if (!prev) return '<span class="d flat">—</span>';
+    var r = Math.round((cur - prev) / Math.abs(prev) * 1000) / 10;
+    if (Math.abs(r) < 0.05) return '<span class="d flat num">▬ 0,0%</span>';
+    var up = r > 0;
+    return '<span class="d ' + (up === goodUp ? 'good' : 'bad') + ' num">' + (up ? '▲ ' : '▼ ') + sgn(r, nDec.format(Math.abs(r)) + '%') + '</span>';
+  }
+  function N(key, val, f) { return '<span class="cnt num" data-k="' + key + '" data-to="' + val + '" data-f="' + f + '">' + F[f](val) + '</span>'; }
+  function stat(label, big, note, rows) {
+    return '<article class="stat"><span class="l">' + label + '</span><span class="v">' + big + '</span>' + (note ? '<span class="n">' + note + '</span>' : '') +
+      (rows || []).map(function (r) { return '<div class="cmp"><span>' + r[0] + '</span>' + r[1] + '</div>'; }).join('') + '</article>';
+  }
+  function runCounts(root) {
+    root.querySelectorAll('.cnt').forEach(function (e) {
+      var k = e.dataset.k, to = +e.dataset.to, f = F[e.dataset.f];
+      var from = (k in shown) ? shown[k] : (state.animate ? 0 : to);
+      shown[k] = to;
+      if (reduce || from === to) { e.textContent = f(to); return; }
+      var t0 = null;
+      (function step(ts) {
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / 750), q = 1 - Math.pow(1 - p, 3);
+        e.textContent = f(from + (to - from) * q);
+        if (p < 1 && e.isConnected) requestAnimationFrame(step);
+      })(performance.now());
+    });
+  }
+
+  /* ---------- grafico a barre impilate ---------- */
+  function niceMax(max) {
+    if (max <= 0) return { hi: 1, step: 1 };
+    var step = Math.pow(10, Math.floor(Math.log10(max / 4))), m = max / 4 / step;
+    step *= m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10;
+    return { hi: Math.ceil(max / step) * step, step: step };
+  }
+  function compact(n) { return Math.abs(n) >= 1000 ? (Math.abs(n) >= 10000 ? nInt.format(n / 1000) : nDec.format(n / 1000)) + 'k' : nInt.format(n); }
+  // cfg: id, labels [{s, y, t, partial}], series [{name, color, vals}], fmt, euro
+  function stack(cfg) {
+    var n = cfg.labels.length, W = 760, H = 262, L = 52, Rm = 10, T = 12, B = 40;
+    var tot = cfg.labels.map(function (_, k) { return cfg.series.reduce(function (a, s) { return a + s.vals[k]; }, 0); });
+    var sc = niceMax(Math.max.apply(null, tot)), pw = W - L - Rm, ph = H - T - B, band = pw / n, bw = Math.min(26, band * 0.66);
+    function y(v) { return T + ph - v / sc.hi * ph; }
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + cfg.aria + '">';
+    for (var t = 0; t <= sc.hi + sc.step / 2; t += sc.step) {
+      s += '<line class="grid" x1="' + L + '" x2="' + (W - Rm) + '" y1="' + y(t) + '" y2="' + y(t) + '"/><text class="ax" x="' + (L - 8) + '" y="' + (y(t) + 3.5) + '" text-anchor="end">' + (cfg.euro ? '€' : '') + compact(t) + '</text>';
+    }
+    cfg.labels.forEach(function (lb, k) {
+      var cx = L + band * k + band / 2, base = 0;
+      cfg.series.forEach(function (se, j) {
+        var v = se.vals[k]; if (v <= 0) return;
+        var y1 = y(base + v), y0 = y(base);
+        s += '<rect class="bar" style="--i:' + k + '" x="' + (cx - bw / 2) + '" y="' + y1 + '" width="' + bw + '" height="' + Math.max(0.5, y0 - y1 - 1.5) + '" rx="2" fill="' + se.color + '"' + (lb.partial ? ' fill-opacity=".6"' : '') + ' stroke="var(--surface)" stroke-width="1"/>';
+        base += v;
+      });
+      s += '<text class="ax" x="' + cx + '" y="' + (H - B + 15) + '" text-anchor="middle">' + lb.s + '</text>';
+      if (lb.y) s += '<text class="ax-yr" x="' + cx + '" y="' + (H - B + 28) + '" text-anchor="middle">' + lb.y + '</text>';
+      s += '<rect class="hit" tabindex="0" data-k="' + k + '" x="' + (L + band * k) + '" y="' + T + '" width="' + band + '" height="' + ph + '" aria-label="' + lb.t + ': ' + cfg.fmt(tot[k]) + '"/>';
+    });
+    s += '</svg><div class="tip" hidden></div>';
+    TIPS[cfg.id] = cfg.labels.map(function (lb, k) {
+      var h = '<b>' + lb.t + (lb.partial ? (cfg.partialTitle || ' · in corso') : '') + '</b>';
+      cfg.series.slice().reverse().forEach(function (se) {
+        var v = se.vals[k];
+        h += '<div><span class="k"><i class="sw" style="background:' + se.color + '"></i>' + se.name + '</span><span class="num">' + cfg.fmt(v) + (cfg.series.length > 1 && tot[k] ? ' · ' + Math.round(v / tot[k] * 100) + '%' : '') + '</span></div>';
+      });
+      if (cfg.series.length > 1) h += '<div class="tot"><span>Totale</span><span class="num">' + cfg.fmt(tot[k]) + '</span></div>';
+      return h;
+    });
+    var leg = cfg.series.length > 1 ? '<div class="legend">' + cfg.series.map(function (se) { return '<span><i class="sw" style="background:' + se.color + '"></i>' + se.name + '</span>'; }).join('') + (cfg.partialNote ? '<span>' + (cfg.partialText || 'Colonna chiara: mese in corso') + '</span>' : '') + '</div>' : (cfg.partialNote ? '<div class="legend"><span>' + (cfg.partialText || 'Colonna chiara: mese in corso') + '</span></div>' : '');
+    return '<div class="chartbox' + (state.animate ? ' anim' : '') + '" id="' + cfg.id + '">' + s + '</div>' + leg;
+  }
+  function bindTips(root) {
+    root.querySelectorAll('.chartbox').forEach(function (box) {
+      var tip = box.querySelector('.tip'), tips = TIPS[box.id];
+      if (!tips) return;
+      box.querySelectorAll('.hit').forEach(function (h) {
+        function show() {
+          hovering = true; tip.innerHTML = tips[+h.dataset.k]; tip.hidden = false;
+          var bx = box.getBoundingClientRect(), hr = h.getBoundingClientRect();
+          var left = hr.left - bx.left + box.scrollLeft + hr.width + 6;
+          if (left + 215 > box.scrollLeft + bx.width) left = hr.left - bx.left + box.scrollLeft - 215;
+          tip.style.left = Math.max(box.scrollLeft + 2, left) + 'px';
+        }
+        function hide() { hovering = false; tip.hidden = true; }
+        h.addEventListener('mouseenter', show); h.addEventListener('focus', show);
+        h.addEventListener('mouseleave', hide); h.addEventListener('blur', hide);
+      });
+    });
+  }
+  function monthLabels(from, to, partialLast) {
+    var out = [];
+    for (var i = from; i <= to; i++) {
+      var d = mdate(i);
+      out.push({ s: fMonS.format(d).replace('.', ''), y: (d.getMonth() === 0 || i === from) ? String(d.getFullYear()) : '', t: fMonL.format(d), partial: partialLast && i === CUR });
+    }
+    return out;
+  }
+  function hbars(items, fmt) {
+    var max = Math.max.apply(null, items.map(function (x) { return x.val; })) || 1;
+    return '<div class="' + (state.animate ? 'anim' : '') + '">' + items.map(function (x) {
+      return '<div class="hb"><span><i class="sw" style="background:' + x.color + ';margin-right:6px"></i>' + x.name + '</span><div class="tr"><div class="fl" style="width:' + (x.val / max * 100).toFixed(1) + '%;background:' + x.color + '"></div></div><span class="num">' + fmt(x.val) + '</span></div>';
+    }).join('') + '</div>';
+  }
+  function tbl(heads, rows, extra) {
+    return '<div class="scroll"><table class="tbl"><thead><tr>' + heads.map(function (h) { return '<th' + (h[1] ? ' class="' + h[1] + '"' : '') + '>' + h[0] + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.join('') + '</tbody></table></div>' + (extra || '');
+  }
+  function tr(cells, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '>' + cells.join('') + '</tr>'; }
+  function chipsGruppi() {
+    return '<div class="chips" role="group" aria-label="Filtra per gruppo prodotto"><button type="button" class="chip" data-g="" aria-pressed="' + (state.groups.length === 0) + '">Tutti i gruppi</button>' +
+      GR.map(function (g, i) { return '<button type="button" class="chip" data-g="' + g + '" aria-pressed="' + (state.groups.indexOf(g) >= 0) + '"><i class="sw" style="background:var(--g' + (i + 1) + ')"></i>' + g + '</button>'; }).join('') + '</div>';
+  }
+  function seriesGroups(from, to, fn, groups) {
+    return groups.map(function (g) { var i = GR.indexOf(g); return { name: g, color: 'var(--g' + (i + 1) + ')', vals: (function () { var a = []; for (var k = from; k <= to; k++) a.push(fn(g, k)); return a; })() }; });
+  }
+
+  /* ---------- vendite in diretta ---------- */
+  var feed = [];
+  (function () {
+    var r = rng(77), t = now.getTime(), pool = P.filter(function (p) { return p.prezzo > 0 && p.prezzo < 300; });
+    for (var i = 0; i < 6; i++) {
+      t -= (5 + Math.floor(r() * 30)) * 60000;
+      var p = pool[Math.floor(r() * pool.length)];
+      feed.push({ t: t, p: p, amt: Math.round(p.prezzo * (0.9 + r() * 0.1)), nuova: false });
+    }
+  })();
+  function renderFeed() {
+    return '<ul class="feed" aria-live="polite">' + feed.slice(0, 4).map(function (f) {
+      var a = f.amt;
+      var li = '<li' + (f.nuova ? ' class="nuova"' : '') + '><span class="t">' + fTime.format(f.t) + '</span><span>' + f.p.nome + '</span><span class="num">' + F.eur(a) + '</span><span class="c">' + (f.p.g || f.p.tipo) + '</span></li>';
+      return li;
+    }).join('') + '</ul>';
+  }
+
+  /* ================== DIREZIONE ================== */
+  function viewDirezione() {
+    var gs = sel(), oggi = now.getDate() + ' ' + fMonS.format(now).replace('.', '');
+    var m = vendPeriod('mtd', false, gs), m0 = vendPeriod('mtd', true, gs), y = vendPeriod('ytd', false, gs), y0 = vendPeriod('ytd', true, gs);
+    var s0 = attiviOn('oggi', gs), s1 = attiviOn('mese', gs), s2 = attiviOn('anno', gs);
+    var yr = now.getFullYear();
+    var h = '<div class="page-head"><p class="eyebrow">Direzione</p><h2>Dashboard direzionale</h2><p class="muted">Aggiornata a oggi, ' + oggi + ': da inizio mese e da inizio anno, confrontati a parità di giorni con il ' + (yr - 1) + '.</p></div>';
+    h += '<div class="card"><div class="card-head"><h3>Vendite in arrivo dal gestionale</h3><span class="muted">le ultime quattro, aggiornate ogni pochi secondi nella demo</span></div>' + renderFeed() + '</div>';
+    h += '<div class="card"><p class="subt">Gruppo prodotto (selezione multipla)</p>' + chipsGruppi() + '</div>';
+    h += '<div class="card"><div class="card-head"><h3>Abbonamenti venduti</h3><span class="muted">vendite, non costi</span></div><div class="stats">' +
+      stat('Vendite da inizio mese', N('vm', m.v, 'int'), 'confronto a pari giorni', [[(yr - 1) + '', '<span class="num">' + F.int(m0.v) + '</span>'], ['Variazione', delta(m.v, m0.v)]]) +
+      stat('Fatturato da inizio mese', N('fm', m.f, 'eur'), 'confronto a pari giorni', [[(yr - 1) + '', '<span class="num">' + F.eur(m0.f) + '</span>'], ['Variazione', delta(m.f, m0.f)]]) +
+      stat('Vendite da inizio anno', N('vy', y.v, 'int'), 'dal 1 gennaio', [[(yr - 1) + '', '<span class="num">' + F.int(y0.v) + '</span>'], ['Variazione', delta(y.v, y0.v)]]) +
+      stat('Fatturato da inizio anno', N('fy', y.f, 'eur'), 'dal 1 gennaio', [[(yr - 1) + '', '<span class="num">' + F.eur(y0.f) + '</span>'], ['Variazione', delta(y.f, y0.f)]]) + '</div></div>';
+    h += '<div class="card"><div class="card-head"><h3>Soci attivi</h3><span class="muted">persone con almeno un abbonamento in corso, non scaduto</span></div><div class="stats">' +
+      stat('Oggi', N('s0', s0, 'int'), oggi, []) +
+      stat('Un mese fa', N('s1', s1, 'int'), 'stesso giorno', [['Rispetto a oggi', delta(s0, s1)]]) +
+      stat('Un anno fa', N('s2', s2, 'int'), 'stesso giorno', [['Rispetto a oggi', delta(s0, s2)]]) + '</div></div>';
+    var from = CUR - 11;
+    h += '<div class="card"><div class="card-head"><h3>Fatturato mensile per gruppo</h3><span class="muted">ultimi 12 mesi</span></div>' +
+      stack({ id: 'c-fat', aria: 'Fatturato per gruppo, ultimi 12 mesi', labels: monthLabels(from, CUR, true), euro: true, fmt: F.eur, partialNote: true,
+        series: seriesGroups(from, CUR, function (g, k) { return G[g].R[k] * w(k) + (k === CUR ? live.byG[g].fat : 0); }, gs) }) + '</div>';
+    h += '<div class="card"><div class="card-head"><h3>Numero soci attivi per mese</h3><span class="muted">a fine mese, per gruppo</span></div>' +
+      stack({ id: 'c-att', aria: 'Soci attivi per gruppo, a fine mese, ultimi 12 mesi', labels: monthLabels(from, CUR, true), fmt: F.int, partialNote: true,
+        series: seriesGroups(from, CUR, function (g, k) { return k === CUR ? attiviOn('oggi', [g]) : G[g].A[k]; }, gs.filter(function (g) { return g !== 'Pass e ingressi'; })) }) + '</div>';
+    return h;
+  }
+
+  /* ================== ABBONAMENTI ================== */
+  function scadF(k, groups) {
+    var s = 0;
+    P.forEach(function (p) { if (p.g && groups.indexOf(p.g) >= 0 && p.durata > 0) { var idx = k - p.durata; if (idx > CUR) idx = CUR; s += p.units[idx]; } });
+    return s;
+  }
+  function viewAbbonamenti() {
+    var gs = sel(), yr = now.getFullYear(), oggiN = now.getDate();
+    var h = '<div class="page-head"><p class="eyebrow">Vendite</p><h2>Abbonamenti</h2><p class="muted">Le vendite di abbonamenti lette dal gestionale, con reportistica giornaliera e mensile.</p></div>';
+    h += '<div class="card"><p class="subt">Gruppo prodotto (selezione multipla)</p>' + chipsGruppi() + '</div>';
+    // 1 attivi per gruppo
+    var gAtt = gs.filter(function (g) { return g !== 'Pass e ingressi'; });
+    h += '<div class="card"><p class="subt">Soci attivi per gruppo, a oggi</p><p class="muted">Persone con almeno un abbonamento in corso, non scaduto. Non conta le vendite.</p>' +
+      hbars(gAtt.map(function (g) { return { name: g, color: 'var(--g' + (GR.indexOf(g) + 1) + ')', val: attiviOn('oggi', [g]) }; }).sort(function (a, b) { return b.val - a.val; }), F.int) + '</div>';
+    // 2 scadenze prossime
+    var rows = [];
+    for (var j = 0; j < 4; j++) {
+      var k = CUR + j, sc = scadF(k, gs), pr = j === 0 ? RR[CUR] * FRAC : [0, .14, .05, .015][j];
+      var rin = j === 0 ? sc * pr : sc * pr, da = sc - rin, d = new Date(now.getFullYear(), now.getMonth() + j, 1);
+      rows.push({ name: fMonL.format(d), tot: sc, rin: rin, da: da });
+    }
+    var maxS = Math.max.apply(null, rows.map(function (r) { return r.tot; })) || 1;
+    h += '<div class="card"><p class="subt">Abbonamenti in scadenza</p><p class="muted">Mese corrente e i tre successivi: quanti sono già rinnovati e quanti restano da rinnovare.</p><div class="' + (state.animate ? 'anim' : '') + '">' +
+      rows.map(function (r) {
+        return '<div class="hb" style="grid-template-columns:minmax(110px,170px) 1fr auto"><span style="text-transform:capitalize">' + r.name + '</span><div class="tr" style="display:flex;height:16px"><div class="fl" style="width:' + (r.rin / maxS * 100).toFixed(1) + '%;background:var(--g1)"></div><div class="fl" style="width:' + (r.da / maxS * 100).toFixed(1) + '%;background:var(--g2);border-radius:0 3px 3px 0"></div></div><span class="num">' + F.int(r.tot) + ' <span class="muted">(' + F.int(r.rin) + ' rinnovati)</span></span></div>';
+      }).join('') + '</div><div class="legend"><span><i class="sw" style="background:var(--g1)"></i>Già rinnovati</span><span><i class="sw" style="background:var(--g2)"></i>Da rinnovare</span></div></div>';
+    // 3 rinnovi 24 mesi
+    var f24 = CUR - 23, rinS = [], nonS = [], totR = 0, totS = 0;
+    for (var i = f24; i <= CUR; i++) {
+      var S = gS('S', i, gs), rr = S * RR[i] * (i === CUR ? 0.8 : 1);
+      rinS.push(rr); nonS.push(S - rr); totR += rr; totS += S;
+    }
+    h += '<div class="card"><p class="subt">Andamento rinnovi, ultimi 24 mesi</p><p class="muted">Abbonamenti scaduti ogni mese, rinnovati o no entro 30 giorni dalla scadenza (stesso gruppo prodotto). Il mese più recente può risultare sottostimato: la finestra di rinnovo non si è ancora chiusa.</p>' +
+      '<div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))">' + stat('Tasso di rinnovo, 24 mesi', N('tr', totS ? totR / totS * 100 : 0, 'pct'), F.int(totR) + ' rinnovati su ' + F.int(totS) + ' scaduti', []) + '</div>' +
+      stack({ id: 'c-rin', aria: 'Rinnovi e non rinnovi, ultimi 24 mesi', labels: monthLabels(f24, CUR, true), fmt: F.int, partialNote: true,
+        series: [{ name: 'Non rinnovati', color: 'var(--g2)', vals: nonS }, { name: 'Rinnovati', color: 'var(--g1)', vals: rinS }] }) + '</div>';
+    // 4 confronto a pari giorni
+    var trs = [], tots = [];
+    for (var a = 2; a >= 0; a--) {
+      var ii = CUR - 12 * a, isCur = a === 0, nu = gS('N', ii, gs) * FRAC + (isCur ? lv('nuovi', gs) : 0), vt = gS('U', ii, gs) * FRAC + (isCur ? lv('vend', gs) : 0), fa = gS('R', ii, gs) * FRAC + (isCur ? lv('fat', gs) : 0);
+      tots.push(vt);
+      trs.push({ y: yr - a, nu: nu, ri: vt - nu, vt: vt, fa: fa });
+    }
+    var rowsH = trs.map(function (r, idx) {
+      var dl = idx > 0 ? delta(r.vt, trs[idx - 1].vt) : '<span class="d flat">—</span>';
+      return tr(['<td><b>' + r.y + '</b></td>', '<td class="r num">' + F.int(r.nu) + '</td>', '<td class="r num">' + F.int(r.ri) + '</td>', '<td class="r num"><b>' + F.int(r.vt) + '</b></td>', '<td class="r num">' + F.eur(r.fa) + '</td>', '<td class="r">' + dl + '</td>']);
+    });
+    var goal = Math.round(trs[1].vt / FRAC * 1.06 / 10) * 10, cur = trs[2].vt, proj = cur / FRAC, pc = Math.min(100, cur / goal * 100);
+    h += '<div class="card"><p class="subt">Dal 1 al ' + oggiN + ' ' + new Intl.DateTimeFormat(IT, { month: 'long' }).format(now) + ': confronto a parità di giorni</p><p class="muted">Rinnovo: la persona aveva già un abbonamento nello stesso gruppo, scaduto entro 30 giorni prima dell’inizio di questo. Nuovo: tutto il resto.</p>' +
+      tbl([['Anno'], ['Nuovi', 'r'], ['Rinnovi', 'r'], ['Vendite', 'r'], ['Fatturato', 'r'], ['Rispetto all’anno prima', 'r']], rowsH) +
+      '<div><p class="subt" style="margin-bottom:6px">Obiettivo del mese</p><div class="prog" role="img" aria-label="Obiettivo del mese raggiunto al ' + Math.round(pc) + '%"><i style="width:' + pc.toFixed(1) + '%"></i></div><p class="muted" style="margin-top:6px"><span class="num">' + F.int(cur) + '</span> vendite su <span class="num">' + F.int(goal) + '</span> (' + Math.round(pc) + '%). A questo ritmo il mese chiude a circa <span class="num">' + F.int(proj) + '</span>.</p></div></div>';
+    // 5 venduto 24 mesi nuovo/rinnovo
+    var nuV = [], riV = [];
+    for (var q = f24; q <= CUR; q++) {
+      var Rg = gS('R', q, gs) * w(q) + (q === CUR ? lv('fat', gs) : 0), U = gS('U', q, gs), sh = U ? gS('N', q, gs) / U : .6;
+      nuV.push(Rg * sh); riV.push(Rg * (1 - sh));
+    }
+    h += '<div class="card"><p class="subt">Andamento venduto, ultimi 24 mesi</p><p class="muted">Fatturato delle vendite del mese, diviso fra nuovo e rinnovo. Passa il mouse su una barra per il dettaglio.</p>' +
+      stack({ id: 'c-ven', aria: 'Venduto nuovo e rinnovo, ultimi 24 mesi', labels: monthLabels(f24, CUR, true), euro: true, fmt: F.eur, partialNote: true,
+        series: [{ name: 'Rinnovo', color: 'var(--g3)', vals: riV }, { name: 'Nuovo', color: 'var(--g1)', vals: nuV }] }) + '</div>';
+    // 7 pass
+    var pS = [], pC = [], tpS = 0, tpC = 0, pp = P.filter(function (x) { return x.id === 'pass7'; })[0];
+    for (var z = f24; z <= CUR; z++) { var sc2 = pp.units[z] * (z === CUR ? FRAC : 1), cv = sc2 * CONV[z]; pS.push(sc2 - cv); pC.push(cv); tpS += sc2; tpC += cv; }
+    h += '<div class="card"><p class="subt">Pass, ultimi 24 mesi</p><p class="muted">Pass in scadenza ogni mese e abbonamenti sottoscritti a seguito: la persona ha aperto un abbonamento entro 30 giorni dalla scadenza del pass.</p>' +
+      '<div class="stats">' + stat('Conversione pass → abbonamento', N('cp', tpS ? tpC / tpS * 100 : 0, 'pct'), F.int(tpC) + ' abbonamenti su ' + F.int(tpS) + ' pass scaduti', []) + '</div>' +
+      stack({ id: 'c-pass', aria: 'Pass scaduti e abbonamenti sottoscritti, ultimi 24 mesi', labels: monthLabels(f24, CUR, true), fmt: F.int, partialNote: true,
+        series: [{ name: 'Pass non convertiti', color: 'var(--g4)', vals: pS }, { name: 'Abbonamenti sottoscritti a seguito', color: 'var(--g1)', vals: pC }] }) + '</div>';
+    return h;
+  }
+
+  /* ================== INCASSATO ================== */
+  function incM(i) {
+    var r = rng(900 + i), cur = i === CUR, x = w(i);
+    var ven = Rall[i] * x + (cur ? live.fatAll : 0), vAbb = Rabb[i] * x + (cur ? live.fat : 0);
+    var prevR = Rall[Math.max(0, i - 1)];
+    var same = ven * (0.74 + r() * 0.05), prev = prevR * (0.13 + r() * 0.04) * x, fut = Rall[i] * (0.04 + r() * 0.02) * x;
+    var elim = -ven * (0.008 + r() * 0.008), rimb = -ven * (0.006 + r() * 0.006);
+    var entr = same + prev + fut, usc = elim + rimb, net = entr + usc;
+    var sh = [.46, .13, .10, .25, .04, .02].map(function (v) { return v * (0.9 + r() * 0.2); }), ss = sh.reduce(function (a, b) { return a + b; }, 0);
+    sh = sh.map(function (v) { return v / ss; });
+    var us = [.5, .3, .1, .05, .03, .02];
+    var wt = TIPI.map(function (t) { return RT[t][i] * x + (cur && t === 'Abbonamenti' ? live.fat : 0); });
+    return { ven: ven, vAbb: vAbb, same: same, prev: prev, fut: fut, elim: elim, rimb: rimb, entr: entr, usc: usc, net: net, abbNet: ven ? net * vAbb / ven : 0, sh: sh, us: us, wt: wt, r: r };
+  }
+  function money(v) { return '<span class="num' + (v < 0 ? ' neg' : '') + '">' + (v === 0 ? '—' : F.eur(v)) + '</span>'; }
+  function dstr(d) { return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + String(d.getFullYear()).slice(2); }
+
+  function viewIncassato() {
+    var i = state.mi, m = incM(i), d = mdate(i);
+    var h = '<div class="page-head"><p class="eyebrow">Amministrazione</p><h2>Incassato</h2><p class="muted">I movimenti di cassa del gestionale, per controllare i flussi finanziari e riconciliarli con le vendite. A differenza del venduto, qui contano i soldi entrati e usciti davvero. Dati dei últimi cinque anni.</p></div>';
+    h += '<div class="mnav"><button class="ghost" type="button" data-act="prev"' + (i <= 0 ? ' disabled' : '') + '>← Mese prec.</button><strong>' + fMonL.format(d) + '</strong><button class="ghost" type="button" data-act="next"' + (i >= CUR ? ' disabled' : '') + '>Mese succ. →</button></div>';
+    var VIEWS = [['riepilogo', 'Riepilogo e riconciliazione'], ['giornaliero', 'Chiusura giornaliera'], ['movimenti', 'Elenco movimenti'], ['vendite', 'Venduto e incassato'], ['rate', 'Rate insolute']];
+    h += '<div class="chips" role="group" aria-label="Vista">' + VIEWS.map(function (v) { return '<button type="button" class="chip" data-v="' + v[0] + '" aria-pressed="' + (state.view === v[0]) + '">' + v[1] + '</button>'; }).join('') + '</div>';
+    if (state.view === 'riepilogo') h += incRiepilogo(i, m);
+    else if (state.view === 'giornaliero') h += incGiornaliero(i, m);
+    else if (state.view === 'movimenti') h += incMovimenti(i, m);
+    else if (state.view === 'vendite') h += incVendite(i, m);
+    else h += incRate();
+    return h;
+  }
+  function incRiepilogo(i, m) {
+    var k = 'i' + i, h = '<div class="stats">' +
+      stat('Incassato netto', N(k + 'n', m.net, 'eur'), F.eur(m.entr) + ' in entrata, ' + F.eur(-m.usc) + ' in uscita', []) +
+      stat('di cui abbonamenti', N(k + 'a', m.abbNet, 'eur'), 'movimenti di tipo Abbonamenti', []) +
+      stat('Venduto del mese', N(k + 'v', m.ven, 'eur'), 'vendite registrate nel mese', []) +
+      stat('Incassato meno venduto', N(k + 'd', m.abbNet - m.vAbb, 'eur'), 'abbonamenti incassati contro venduti: la differenza è spiegata sotto', []) + '</div>';
+    var rows = [
+      tr(['<td>Vendite dello stesso mese<span class="sub">incasso immediato e acconti del mese</span></td>', '<td class="r">' + money(m.same) + '</td>', '<td class="r">—</td>', '<td class="r">' + money(m.same) + '</td>']),
+      tr(['<td>Rate e saldi di vendite precedenti<span class="sub">vendite dei mesi scorsi pagate in questo mese</span></td>', '<td class="r">' + money(m.prev) + '</td>', '<td class="r">—</td>', '<td class="r">' + money(m.prev) + '</td>']),
+      tr(['<td>Acconti di vendite dei mesi successivi<span class="sub">incassati prima della vendita</span></td>', '<td class="r">' + money(m.fut) + '</td>', '<td class="r">—</td>', '<td class="r">' + money(m.fut) + '</td>']),
+      tr(['<td>Eliminazioni di vendita<span class="sub">la vendita sparisce e l’incasso originale viene compensato</span></td>', '<td class="r">—</td>', '<td class="r">' + money(m.elim) + '</td>', '<td class="r">' + money(m.elim) + '</td>']),
+      tr(['<td>Rimborsi<span class="sub">restituzioni ai soci</span></td>', '<td class="r">—</td>', '<td class="r">' + money(m.rimb) + '</td>', '<td class="r">' + money(m.rimb) + '</td>']),
+      tr(['<td>Totale</td>', '<td class="r">' + money(m.entr) + '</td>', '<td class="r">' + money(m.usc) + '</td>', '<td class="r">' + money(m.net) + '</td>'], 'tot')
+    ];
+    h += '<div class="card"><p class="subt">Come si passa dal venduto all’incassato</p><p class="muted">L’incassato di un mese non coincide col venduto: include rate e saldi di vendite precedenti, acconti di vendite successive e toglie le eliminazioni.</p>' + tbl([['Voce'], ['Entrate', 'r'], ['Uscite', 'r'], ['Netto', 'r']], rows) + '</div>';
+    var mr = METODI.map(function (nm, j) { var e = m.entr * m.sh[j], u = m.usc * m.us[j]; return tr(['<td>' + nm + '</td>', '<td>' + METODO_CASSA[j] + '</td>', '<td class="r num">' + F.int(e / 55) + '</td>', '<td class="r">' + money(e) + '</td>', '<td class="r">' + money(u) + '</td>', '<td class="r"><b>' + money(e + u) + '</b></td>', '<td class="r num">' + nDec.format((e + u) / m.net * 100) + '%</td>']); });
+    h += '<div class="two"><div class="card"><p class="subt">Per metodo di pagamento</p><p class="muted">«Passa dalla cassa» è il flag del gestionale: i bonifici non passano dal cassetto ma sono incassi veri.</p>' + tbl([['Metodo'], ['Cassa'], ['Mov.', 'r'], ['Entrate', 'r'], ['Uscite', 'r'], ['Netto', 'r'], ['%', 'r']], mr) + '</div>';
+    var tw = m.wt, tn = ['Abbonamenti', 'Corsi e lezioni', 'Ingressi e pass', 'Servizi e shop'], ts = tw.reduce(function (a, b) { return a + b; }, 0);
+    var tr2 = tw.map(function (v, j) { var nn = m.net * v / ts; return tr(['<td>' + tn[j] + '</td>', '<td class="r num">' + F.int((m.entr * v / ts) / 55) + '</td>', '<td class="r"><b>' + money(nn) + '</b></td>', '<td class="r num">' + nDec.format(v / ts * 100) + '%</td>']); });
+    h += '<div class="card"><p class="subt">Per tipo di servizio</p>' + tbl([['Tipo'], ['Mov.', 'r'], ['Netto', 'r'], ['%', 'r']], tr2) + '</div></div>';
+    var r = m.r, nSenza = 2 + Math.floor(r() * 6), nStorni = 1 + Math.floor(r() * 5), nElim = 1 + Math.floor(r() * 4);
+    h += '<div class="card"><p class="subt">Da controllare</p><div class="callout"><ul><li><b>' + nSenza + (nSenza === 1 ? ' movimento' : ' movimenti') + '</b> senza metodo di pagamento («Da definire»): incassati, ma non si sa come. Da correggere nel gestionale.</li><li><b>' + nStorni + (nStorni === 1 ? ' movimento di storno' : ' movimenti di storno') + '</b> nel mese.</li><li><b>' + nElim + (nElim === 1 ? ' eliminazione di vendita' : ' eliminazioni di vendita') + '</b>: la vendita sparisce dal gestionale e l’incasso originale viene compensato qui.</li><li>Nessun movimento con data nel futuro.</li></ul></div></div>';
+    return h;
+  }
+  function daysOf(i) { var d = mdate(i), n = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(); return i === CUR ? Math.min(n, now.getDate()) : n; }
+  function incGiornaliero(i, m) {
+    var d0 = mdate(i), n = daysOf(i), r = rng(1500 + i), wts = [], sum = 0;
+    for (var x = 1; x <= n; x++) { var dow = new Date(d0.getFullYear(), d0.getMonth(), x).getDay(), b = dow === 0 ? 0.3 : dow === 6 ? 0.7 : 1; var v = b * (0.8 + r() * 0.4); wts.push(v); sum += v; }
+    var daily = wts.map(function (v) { return m.net * v / sum; });
+    var labels = [];
+    for (var y = 1; y <= n; y++) labels.push({ s: String(y), y: '', t: y + ' ' + fMonL.format(d0), partial: false });
+    var rows = [], totM = METODI.map(function () { return 0; });
+    daily.forEach(function (v, di) {
+      var cells = METODI.map(function (_, j) { var val = v * m.sh[j] * (0.94 + ((di * 7 + j * 3) % 10) / 80); return val; });
+      var csum = cells.reduce(function (a, b) { return a + b; }, 0), k = v / csum;
+      cells = cells.map(function (c) { return c * k; });
+      cells.forEach(function (c, j) { totM[j] += c; });
+      rows.push(tr(['<td>' + pad(di + 1) + '/' + pad(d0.getMonth() + 1) + '</td>'].concat(cells.map(function (c) { return '<td class="r">' + money(c) + '</td>'; })).concat(['<td class="r"><b>' + money(v) + '</b></td>']), (i === CUR && di + 1 === now.getDate()) ? 'tot' : ''));
+    });
+    rows.push(tr(['<td>Totale</td>'].concat(totM.map(function (c) { return '<td class="r">' + money(c) + '</td>'; })).concat(['<td class="r">' + money(m.net) + '</td>']), 'tot'));
+    return '<div class="card"><p class="subt">Incassato netto per giorno</p>' +
+      stack({ id: 'c-day', aria: 'Incassato netto per giorno', labels: labels, euro: true, fmt: F.eur, series: [{ name: 'Incassato netto', color: 'var(--g1)', vals: daily }] }) + '</div>' +
+      '<div class="card"><p class="subt">Netto per giorno e metodo di pagamento</p><p class="muted">Entrate meno uscite di ogni giorno, tutti i tipi di servizio. L’ultima colonna è la chiusura del giorno.</p>' + tbl([['Giorno']].concat(METODI.map(function (x) { return [x, 'r']; })).concat([['Totale', 'r']]), rows) + '</div>';
+  }
+  function incMovimenti(i, m) {
+    var d0 = mdate(i), n = daysOf(i), r = rng(2100 + i), rows = [], pool = P.filter(function (p) { return p.prezzo > 0; });
+    var all = [];
+    for (var k = 0; k < 28; k++) {
+      var day = 1 + Math.floor(r() * n), p = pool[Math.floor(r() * pool.length)], met = (function () { var x = r(), c = 0; for (var j = 0; j < 6; j++) { c += m.sh[j]; if (x <= c) return j; } return 0; })();
+      var neg = r() < 0.07, amt = Math.round(p.prezzo * (0.5 + r() * 0.5)) * (neg ? -1 : 1);
+      all.push({ t: new Date(d0.getFullYear(), d0.getMonth(), day, 9 + Math.floor(r() * 11), Math.floor(r() * 60)), soc: 1000 + Math.floor(r() * 8900), p: p, met: met, amt: amt, op: 1 + Math.floor(r() * 4), neg: neg });
+    }
+    all.sort(function (a, b) { return b.t - a.t; });
+    var vis = all.filter(function (x) { return state.metodo === '' || METODI[x.met] === state.metodo; });
+    vis.slice(0, 22).forEach(function (x) {
+      rows.push(tr(['<td class="num" style="white-space:nowrap">' + dstr(x.t) + ' ' + pad(x.t.getHours()) + ':' + pad(x.t.getMinutes()) + '</td>', '<td>Socio ' + x.soc + '</td>', '<td>' + x.p.tipo + '</td>', '<td>' + x.p.nome + (x.neg ? ' <span class="badge warn">storno</span>' : '') + '</td>', '<td>' + METODI[x.met] + '</td>', '<td class="r">' + money(x.amt) + '</td>', '<td>' + (x.p.tipo === 'Abbonamenti' ? 'Venduto ' + dstr(new Date(x.t.getFullYear(), x.t.getMonth(), Math.max(1, x.t.getDate() - 1))) : '—') + '</td>', '<td>Operatore ' + x.op + '</td>']));
+    });
+    var chips = '<div class="chips" role="group" aria-label="Metodo di pagamento"><button type="button" class="chip" data-m="" aria-pressed="' + (state.metodo === '') + '">Tutti i metodi</button>' + METODI.map(function (x) { return '<button type="button" class="chip" data-m="' + x + '" aria-pressed="' + (state.metodo === x) + '">' + x + '</button>'; }).join('') + '</div>';
+    return '<div class="card"><p class="subt">Filtri</p>' + chips + '<p class="muted">Primi ' + Math.min(22, vis.length) + ' movimenti di ' + F.int(m.entr / 55) + ' nel mese. I soci sono indicati con un numero: nessun nome nei dati di esempio.</p>' +
+      tbl([['Data'], ['Persona'], ['Tipo'], ['Causale'], ['Metodo'], ['Importo', 'r'], ['Abbonamento collegato'], ['Operatore']], rows) + '</div>';
+  }
+  function incVendite(i, m) {
+    var n = Math.round(Uall[i] * w(i)), parts = [['completa', 'Completa', .78, .70, 1], ['rateale', 'In corso (rateale)', .14, .20, .45], ['insoluta', 'Insoluta', .035, .05, .2], ['non_spiegata', 'Non spiegata', .025, .03, .5], ['eccesso', 'Incasso oltre il venduto', .02, .02, 1.15]];
+    var rows = parts.map(function (p) { var v = m.ven * p[3]; return tr(['<td>' + p[1] + '</td>', '<td class="r num">' + F.int(n * p[2]) + '</td>', '<td class="r">' + money(v) + '</td>', '<td class="r">' + money(v * p[4]) + '</td>']); });
+    var r = rng(3300 + i), d0 = mdate(i), list = [], abb = P.filter(function (p) { return p.durata > 0; });
+    for (var k = 0; k < 10; k++) {
+      var p = abb[Math.floor(r() * abb.length)], st = parts[1 + Math.floor(r() * 4)], v = p.prezzo, inc = Math.round(v * st[4] * (0.9 + r() * 0.2)), rt = 3 + Math.floor(r() * 9), pg = Math.max(0, Math.round(rt * st[4] * 0.6));
+      list.push({ d: new Date(d0.getFullYear(), d0.getMonth(), 1 + Math.floor(r() * daysOf(i))), soc: 1000 + Math.floor(r() * 8900), p: p, v: v, inc: inc, st: st, rt: rt, pg: pg, ins: st[0] === 'insoluta' ? 1 + Math.floor(r() * 2) : 0 });
+    }
+    list.sort(function (a, b) { return b.d - a.d; });
+    var lr = list.map(function (x) {
+      var cls = x.st[0] === 'rateale' ? 'ok' : x.st[0] === 'eccesso' ? 'warn' : 'ko';
+      return tr(['<td class="num" style="white-space:nowrap">' + dstr(x.d) + '</td>', '<td>Socio ' + x.soc + '</td>', '<td>' + x.p.nome + '</td>', '<td class="r">' + money(x.v) + '</td>', '<td class="r">' + money(x.inc) + '</td>', '<td class="r">' + money(x.v - x.inc) + '</td>', '<td class="num" style="white-space:nowrap">' + x.pg + '/' + x.rt + (x.ins ? ' <span class="sub">' + x.ins + ' scadute</span>' : '') + '</td>', '<td><span class="badge ' + cls + '">' + x.st[1] + '</span></td>']);
+    });
+    return '<div class="stats">' + stat('Vendite del mese', N('vn' + i, n, 'int'), 'per ' + F.eur(m.ven) + ' di venduto', []) +
+      stat('Incassato finora su queste vendite', N('vi' + i, m.same, 'eur'), 'movimenti collegati, fino a oggi', []) +
+      stat('Ancora da incassare', N('vd' + i, m.ven - m.same, 'eur'), 'rate in corso, rate scadute e differenze non spiegate', []) + '</div>' +
+      '<div class="card"><p class="subt">Stato dell’incasso delle vendite di ' + fMonL.format(d0) + '</p>' + tbl([['Stato'], ['Vendite', 'r'], ['Venduto', 'r'], ['Incassato', 'r']], rows) + '<p class="muted">Una vendita con differenza da incassare è <b>in corso</b> se coperta da rate non ancora scadute, <b>insoluta</b> se ha rate scadute e non pagate, <b>non spiegata</b> se nessuna rata la giustifica: è questa la lista da controllare.</p></div>' +
+      '<div class="card"><p class="subt">Da verificare</p>' + tbl([['Venduto il'], ['Persona'], ['Abbonamento'], ['Venduto', 'r'], ['Incassato', 'r'], ['Da incassare', 'r'], ['Rate'], ['Stato']], lr) + '</div>';
+  }
+  function incRate() {
+    var r = rng(4400), fasce = [['Fino a 30 giorni', 38, 74], ['31–90 giorni', 44, 71], ['91–180 giorni', 27, 69], ['Oltre 180 giorni', 17, 66]], totN = 0, totI = 0;
+    var rows = fasce.map(function (f) { var v = f[1] * f[2]; totN += f[1]; totI += v; return tr(['<td>' + f[0] + '</td>', '<td class="r num">' + f[1] + '</td>', '<td class="r">' + money(v) + '</td>']); });
+    var motivi = ['Fondi insufficienti', 'Conto estinto', 'Mandato revocato', 'Carta scaduta', 'Addebito rifiutato dalla banca'], abb = P.filter(function (p) { return p.durata > 0; }), list = [];
+    for (var k = 0; k < 12; k++) {
+      var gg = 8 + Math.floor(r() * 240), p = abb[Math.floor(r() * abb.length)];
+      list.push({ gg: gg, d: new Date(now.getTime() - gg * 86400000), soc: 1000 + Math.floor(r() * 8900), p: p, imp: Math.round(p.prezzo / (p.durata > 1 ? Math.min(p.durata, 12) : 1) / 5) * 5 || 62, met: r() < .7 ? 'Addebito SEPA' : 'Carta', mot: motivi[Math.floor(r() * motivi.length)] });
+    }
+    list.sort(function (a, b) { return b.gg - a.gg; });
+    var lr = list.map(function (x) { return tr(['<td class="num" style="white-space:nowrap">' + dstr(x.d) + '</td>', '<td class="r num">' + x.gg + ' gg</td>', '<td>Socio ' + x.soc + '</td>', '<td>' + x.p.nome + '</td>', '<td class="r">' + money(x.imp) + '</td>', '<td>' + x.met + '</td>', '<td>' + x.mot + '</td>']); });
+    return '<div class="stats">' + stat('Rate scadute non pagate', N('rn', totN, 'int'), 'per ' + F.eur(totI), []) + stat('Con addebito rifiutato', N('rr', Math.round(totN * .62), 'int'), F.eur(totI * .6) + ': la banca ha respinto l’addebito automatico', []) + '</div>' +
+      '<div class="card"><p class="subt">Per anzianità</p>' + tbl([['Ritardo'], ['Rate', 'r'], ['Importo', 'r']], rows) + '<p class="muted">Una rata è «insoluta» se la scadenza è passata e nel gestionale non risulta pagata. Un’anzianità molto alta spesso non è un credito vero: rate di vendite poi eliminate o regolate fuori dal piano.</p></div>' +
+      '<div class="card"><p class="subt">Le più vecchie</p>' + tbl([['Scadenza'], ['Ritardo', 'r'], ['Persona'], ['Abbonamento'], ['Rata', 'r'], ['Metodo'], ['Esito addebito']], lr) + '</div>';
+  }
+
+  /* ================== SEZIONI SUI DATI DEL GESTIONALE ================== */
+  var OPS = ['Operatore 1', 'Operatore 2', 'Operatore 3', 'Operatore 4', 'Operatore 5'];
+  var OPW = [.30, .26, .20, .14, .10];
+  var DOW = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+  var SLOTS = ['7–9', '9–11', '11–13', '13–15', '15–17', '17–19', '19–21', '21–23'];
+  function mi12() { return Math.max(12, state.mi); }
+  function monthNav(i, min) {
+    return '<div class="mnav"><button class="ghost" type="button" data-act="prev"' + (i <= min ? ' disabled' : '') + '>← Mese prec.</button><strong>' + fMonL.format(mdate(i)) + '</strong><button class="ghost" type="button" data-act="next"' + (i >= CUR ? ' disabled' : '') + '>Mese succ. →</button></div>';
+  }
+  function dailyWeights(i, seed) {
+    var d0 = mdate(i), n = daysOf(i), r = rng(seed + i), wts = [], sum = 0;
+    for (var x = 1; x <= n; x++) { var dow = new Date(d0.getFullYear(), d0.getMonth(), x).getDay(), b = dow === 0 ? 0.3 : dow === 6 ? 0.7 : 1, v = b * (0.8 + r() * 0.4); wts.push(v); sum += v; }
+    return wts.map(function (v) { return v / sum; });
+  }
+  function dayLabels(i) {
+    var d0 = mdate(i), n = daysOf(i), out = [];
+    for (var y = 1; y <= n; y++) out.push({ s: String(y), y: '', t: y + ' ' + fMonL.format(d0), partial: false });
+    return out;
+  }
+  function bar1(color, mark) { return '<span class="mb"><i style="width:' + Math.max(2, Math.min(100, mark)).toFixed(0) + '%;background:' + color + '"></i></span>'; }
+  function disM(i) { return gS('S', i, GR) * (1 - RR[i]) * 0.27; }
+
+  /* ---------- VENDITE ---------- */
+  function viewVendite() {
+    var i = mi12(), x = w(i), r = rng(5500 + i);
+    var pr = P.map(function (p) { return { p: p, u: p.units[i] * x, r: p.rev[i] * x, u0: p.units[i - 12] * x, r0: p.rev[i - 12] * x }; });
+    var tot = 0, tot0 = 0, un = 0, un0 = 0;
+    pr.forEach(function (q) { tot += q.r; tot0 += q.r0; un += q.u; un0 += q.u0; });
+    if (i === CUR) { tot += live.fatAll; un += Object.keys(live.byG).reduce(function (a, g) { return a + live.byG[g].vend; }, 0); }
+    var scPct = 0.045 + r() * 0.025, sconti = tot * scPct / (1 - scPct), sconti0 = tot0 * (0.045 + r() * 0.02) / 0.95;
+    var dis = Math.round(disM(i) * x), dis0 = Math.round(disM(i - 12) * x);
+    var h = '<div class="page-head"><p class="eyebrow">Vendite</p><h2>Vendite</h2><p class="muted">Tutto quello che vendete: per prodotto, categoria, mese e giorno, con il confronto tra periodi, le vendite per operatore, gli sconti e le disdette.</p></div>';
+    h += monthNav(i, 12);
+    h += '<div class="stats">' +
+      stat('Venduto', N('vv' + i, tot, 'eur'), 'tutte le vendite del mese', [['Anno prima', '<span class="num">' + F.eur(tot0) + '</span>'], ['Variazione', delta(tot, tot0)]]) +
+      stat('Vendite', N('vn' + i, un, 'int'), 'numero di vendite', [['Anno prima', '<span class="num">' + F.int(un0) + '</span>'], ['Variazione', delta(un, un0)]]) +
+      stat('Sconti applicati', N('vs' + i, sconti, 'eur'), nDec.format(scPct * 100) + '% del listino', [['Anno prima', '<span class="num">' + F.eur(sconti0) + '</span>'], ['Variazione', delta(sconti, sconti0, false)]]) +
+      stat('Disdette', N('vd' + i, dis, 'int'), 'nel mese', [['Anno prima', '<span class="num">' + F.int(dis0) + '</span>'], ['Variazione', delta(dis, dis0, false)]]) + '</div>';
+    // andamento per mese o per giorno
+    var gran = state.vg;
+    var tc = ['var(--g1)', 'var(--g2)', 'var(--g3)', 'var(--g4)'], series;
+    if (gran === 'mese') {
+      series = TIPI.map(function (t, j) { var a = []; for (var k = CUR - 11; k <= CUR; k++) a.push(RT[t][k] * w(k) + (k === CUR && t === 'Abbonamenti' ? live.fat : 0)); return { name: t, color: tc[j], vals: a }; });
+    } else {
+      var dw = dailyWeights(i, 1500);
+      series = TIPI.map(function (t, j) { var base = RT[t][i] * x + (i === CUR && t === 'Abbonamenti' ? live.fat : 0); return { name: t, color: tc[j], vals: dw.map(function (v) { return base * v; }) }; });
+    }
+    h += '<div class="card"><div class="card-head"><h3>Andamento del venduto</h3><div class="chips" role="group" aria-label="Granularità"><button type="button" class="chip" data-vg="mese" aria-pressed="' + (gran === 'mese') + '">Per mese</button><button type="button" class="chip" data-vg="giorno" aria-pressed="' + (gran === 'giorno') + '">Per giorno</button></div></div>' +
+      stack({ id: 'c-vend', aria: 'Venduto per categoria', labels: gran === 'mese' ? monthLabels(CUR - 11, CUR, true) : dayLabels(i), euro: true, fmt: F.eur, partialNote: gran === 'mese', series: series }) + '</div>';
+    // per categoria
+    var cat = TIPI.map(function (t) {
+      var rr = 0, r0 = 0, uu = 0; pr.forEach(function (q) { if (q.p.tipo === t) { rr += q.r; r0 += q.r0; uu += q.u; } });
+      return { t: t, r: rr, r0: r0, u: uu };
+    });
+    h += '<div class="two"><div class="card"><p class="subt">Per categoria</p>' + tbl([['Categoria'], ['Vendite', 'r'], ['Fatturato', 'r'], ['Anno prima', 'r'], ['Quota', 'r']],
+      cat.map(function (c) { return tr(['<td>' + c.t + '</td>', '<td class="r num">' + F.int(c.u) + '</td>', '<td class="r"><b>' + money(c.r) + '</b></td>', '<td class="r">' + delta(c.r, c.r0) + '</td>', '<td class="r num">' + nDec.format(c.r / (tot - (i === CUR ? live.fatAll : 0)) * 100) + '%</td>']); })) + '</div>';
+    // per operatore
+    var sh = OPW.map(function (v) { return v * (0.9 + r() * 0.2); }), ss = sh.reduce(function (a, b) { return a + b; }, 0);
+    var orows = OPS.map(function (o, j) {
+      var s = sh[j] / ss, f = tot * s, v = un * s, sc = scPct * 100 * (0.7 + r() * 0.7);
+      return tr(['<td>' + o + '</td>', '<td class="r num">' + F.int(v) + '</td>', '<td class="r"><b>' + money(f) + '</b></td>', '<td class="r num">' + F.eur(v ? f / v : 0) + '</td>', '<td class="r num">' + nDec.format(sc) + '%</td>']);
+    });
+    h += '<div class="card"><p class="subt">Chi vende cosa: per operatore</p>' + tbl([['Operatore'], ['Vendite', 'r'], ['Fatturato', 'r'], ['Scontrino', 'r'], ['Sconto', 'r']], orows) + '</div></div>';
+    // per prodotto
+    var top = pr.filter(function (q) { return q.r > 0; }).sort(function (a, b) { return b.r - a.r; }).slice(0, 14);
+    var totNoLive = tot - (i === CUR ? live.fatAll : 0);
+    h += '<div class="card"><p class="subt">Per prodotto: i primi 14 del mese</p>' + tbl([['Prodotto'], ['Categoria'], ['Venduti', 'r'], ['Fatturato', 'r'], ['Rispetto all’anno prima', 'r'], ['Quota', 'r']],
+      top.map(function (q) { return tr(['<td>' + q.p.nome + '</td>', '<td>' + q.p.tipo + '</td>', '<td class="r num">' + F.int(q.u) + '</td>', '<td class="r"><b>' + money(q.r) + '</b></td>', '<td class="r">' + delta(q.r, q.r0) + '</td>', '<td class="r num">' + nDec.format(q.r / totNoLive * 100) + '%</td>']); })) + '</div>';
+    // sconti e disdette
+    var sct = [['Promozioni e campagne', .38], ['Convenzioni aziendali', .27], ['Sconto dell’operatore', .20], ['Omaggi e prove', .15]];
+    var dl = []; for (var k = CUR - 11; k <= CUR; k++) dl.push(Math.round(disM(k) * w(k)));
+    h += '<div class="two"><div class="card"><p class="subt">Sconti applicati, per tipo</p>' + tbl([['Tipo di sconto'], ['Vendite', 'r'], ['Importo', 'r'], ['Quota', 'r']],
+      sct.map(function (s) { return tr(['<td>' + s[0] + '</td>', '<td class="r num">' + F.int(un * scPct * 2.2 * s[1]) + '</td>', '<td class="r">' + money(sconti * s[1]) + '</td>', '<td class="r num">' + Math.round(s[1] * 100) + '%</td>']); })) + '</div></div>' +
+      '<div class="card"><p class="subt">Disdette, ultimi 12 mesi</p>' + stack({ id: 'c-dis', aria: 'Disdette per mese', labels: monthLabels(CUR - 11, CUR, true), fmt: F.int, partialNote: true, series: [{ name: 'Disdette', color: 'var(--g2)', vals: dl }] }) + '</div>';
+    return h;
+  }
+
+  /* ---------- ACCESSI E FREQUENZA ---------- */
+  var MEM = null;
+  function members() {
+    if (MEM) return MEM;
+    var r = rng(777), abb = P.filter(function (p) { return p.durata > 0; }); MEM = [];
+    for (var k = 0; k < 1200; k++) {
+      var p = abb[Math.floor(r() * abb.length)], x = r(), ult;
+      if (x < .70) ult = Math.floor(r() * 8); else if (x < .85) ult = 8 + Math.floor(r() * 23); else if (x < .94) ult = 31 + Math.floor(r() * 30); else ult = 61 + Math.floor(r() * 90);
+      var v30 = ult > 30 ? 0 : 1 + Math.floor(r() * 15), v90 = v30 + (ult > 60 ? Math.floor(r() * 3) : Math.floor(r() * 28));
+      MEM.push({ id: 1000 + ((k * 37) % 8900), p: p, ult: ult, v30: v30, v90: v90, tg: p.g === 'Fitness' ? 10 : p.g === 'Piscina e nuoto' ? 6 : p.g === 'Corsi' ? 5 : 4 });
+    }
+    return MEM;
+  }
+  function heatMatrix() {
+    var r = rng(2468), wk = [55, 78, 42, 34, 52, 118, 128, 36], sat = [14, 58, 74, 40, 28, 22, 12, 4], sun = [6, 30, 38, 18, 14, 12, 8, 2], dayF = [1, 1.04, .96, 1, .88], m = [];
+    for (var d = 0; d < 7; d++) { var b = d < 5 ? wk : d === 5 ? sat : sun, row = []; for (var s = 0; s < 8; s++) row.push(b[s] * (d < 5 ? dayF[d] : 1) * (0.92 + r() * 0.16)); m.push(row); }
+    return m;
+  }
+  function viewAccessi() {
+    var mem = members(), m = heatMatrix(), max = 0, imax = [0, 0], imin = [0, 0], min = 1e9;
+    m.forEach(function (row, d) { row.forEach(function (v, s) { if (v > max) { max = v; imax = [d, s]; } if (s >= 1 && s <= 6 && v < min) { min = v; imin = [d, s]; } }); });
+    var rowSum = m.map(function (row) { return row.reduce(function (a, b) { return a + b; }, 0); });
+    // ultimi 30 giorni
+    var r = rng(8642), days = [], today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var hourFrac = Math.min(1, Math.max(0.05, (now.getHours() + now.getMinutes() / 60 - 7) / 16));
+    for (var k = 29; k >= 0; k--) { var dd = new Date(today.getTime() - k * 86400000), dow = (dd.getDay() + 6) % 7, v = rowSum[dow] * (0.9 + r() * 0.2) * (k === 0 ? hourFrac : 1); days.push({ d: dd, v: v }); }
+    var last7 = 0, prev7 = 0; days.slice(23).forEach(function (x) { last7 += x.v; }); days.slice(16, 23).forEach(function (x) { prev7 += x.v; });
+    var fermi30 = mem.filter(function (q) { return q.ult > 30; }).length, fermi60 = mem.filter(function (q) { return q.ult > 60; }).length;
+    var attivi = mem.filter(function (q) { return q.ult <= 30; }), media = attivi.reduce(function (a, q) { return a + q.v30; }, 0) / attivi.length;
+    var h = '<div class="page-head"><p class="eyebrow">Frequenza</p><h2>Accessi e frequenza dei soci</h2><p class="muted">Il dato che racconta come viene vissuto il club: quando la struttura è piena, chi viene e chi ha smesso di venire.</p></div>';
+    h += '<div class="stats">' +
+      stat('Accessi, ultimi 7 giorni', N('a7', last7, 'int'), 'ingressi registrati dai tornelli', [['7 giorni prima', '<span class="num">' + F.int(prev7) + '</span>'], ['Variazione', delta(last7, prev7)]]) +
+      stat('Accessi di oggi', N('a1', days[29].v, 'int'), 'fino a ora', []) +
+      stat('Visite al mese per socio', N('af', media, 'dec'), 'media dei soci che frequentano', []) +
+      stat('Soci fermi da oltre 30 giorni', N('a30', fermi30, 'int'), F.int(fermi60) + ' fermi da oltre 60 giorni', []) + '</div>';
+    // heatmap
+    var cells = '<div class="hc hh"></div>' + SLOTS.map(function (s) { return '<div class="hc hh">' + s + '</div>'; }).join('');
+    m.forEach(function (row, d) {
+      cells += '<div class="hc hd">' + DOW[d].slice(0, 3) + '</div>';
+      row.forEach(function (v) { var p = Math.round(6 + 80 * v / max); cells += '<div class="hc" style="background:color-mix(in srgb, var(--series) ' + p + '%, var(--surface));color:' + (p > 52 ? '#fff' : 'var(--ink)') + '">' + F.int(v) + '</div>'; });
+    });
+    h += '<div class="card"><div class="card-head"><h3>Affluenza per giorno e fascia oraria</h3><span class="muted">media degli ultimi 90 giorni, accessi per fascia</span></div><div class="scroll"><div class="heat' + (state.animate ? ' anim' : '') + '">' + cells + '</div></div>' +
+      '<div class="stats"><div class="stat"><span class="l">Fascia più piena</span><span class="v" style="font-size:22px">' + DOW[imax[0]] + ', ' + SLOTS[imax[1]] + '</span><span class="n">circa ' + F.int(max) + ' accessi</span></div><div class="stat"><span class="l">Fascia più vuota (7–23)</span><span class="v" style="font-size:22px">' + DOW[imin[0]] + ', ' + SLOTS[imin[1]] + '</span><span class="n">circa ' + F.int(min) + ' accessi: spazio per corsi e promozioni</span></div></div></div>';
+    // andamento
+    var labs = days.map(function (x, j) { return { s: String(x.d.getDate()), y: (j === 0 || x.d.getDate() === 1) ? fMonS.format(x.d).replace('.', '') : '', t: x.d.getDate() + ' ' + fMonL.format(x.d), partial: j === 29 }; });
+    h += '<div class="card"><p class="subt">Accessi giornalieri, ultimi 30 giorni</p>' + stack({ id: 'c-acc', aria: 'Accessi giornalieri, ultimi 30 giorni', labels: labs, fmt: F.int, partialNote: true, partialText: 'Colonna chiara: giorno in corso', partialTitle: ' \u00B7 fino a ora', series: [{ name: 'Accessi', color: 'var(--g1)', vals: days.map(function (x) { return x.v; }) }] }) + '</div>';
+    // frequenza per socio
+    var FL = [['30', 'Fermi da oltre 30 giorni'], ['60', 'Fermi da oltre 60 giorni'], ['poco', 'Poco utilizzo'], ['tutti', 'I più assidui']];
+    var list = mem.filter(function (q) { return state.af === '30' ? q.ult > 30 : state.af === '60' ? q.ult > 60 : state.af === 'poco' ? (q.ult <= 30 && q.v30 / q.tg < 0.25) : q.ult <= 7; });
+    list.sort(function (a, b) { return state.af === 'poco' ? a.v30 - b.v30 : state.af === 'tutti' ? b.v30 - a.v30 : b.ult - a.ult; });
+    var rows = list.slice(0, 14).map(function (q) {
+      var d = new Date(today.getTime() - q.ult * 86400000), ut = Math.min(100, q.v30 / q.tg * 100);
+      return tr(['<td class="num">Socio ' + q.id + '</td>', '<td>' + q.p.nome + '</td>', '<td class="num" style="white-space:nowrap">' + dstr(d) + '<span class="sub">' + (q.ult === 0 ? 'oggi' : q.ult + ' giorni fa') + '</span></td>', '<td class="r num">' + q.v30 + '</td>', '<td class="r num">' + q.v90 + '</td>', '<td>' + bar1('var(--g1)', ut) + ' <span class="num">' + Math.round(ut) + '%</span></td>', '<td>' + (q.ult > 30 ? '<span class="badge warn">Fermo da ' + q.ult + ' gg</span>' : q.v30 / q.tg < 0.25 ? '<span class="badge warn">Poco utilizzo</span>' : '<span class="badge ok">Attivo</span>') + '</td>']);
+    });
+    h += '<div class="card"><div class="card-head"><h3>Frequenza di ogni socio</h3><span class="muted">la lista su cui intervenire prima che disdicano</span></div>' +
+      '<div class="chips" role="group" aria-label="Filtro frequenza">' + FL.map(function (f) { return '<button type="button" class="chip" data-af="' + f[0] + '" aria-pressed="' + (state.af === f[0]) + '">' + f[1] + '</button>'; }).join('') + '</div>' +
+      '<p class="muted">' + F.int(list.length) + ' soci in questo elenco, in ordine di priorità. I soci sono indicati con un numero: nessun nome nei dati di esempio.</p>' +
+      tbl([['Socio'], ['Abbonamento'], ['Ultimo accesso'], ['Visite 30 gg', 'r'], ['Visite 90 gg', 'r'], ['Utilizzo'], ['Segnale']], rows) + '</div>';
+    // utilizzo vs pagato
+    var by = {}; mem.forEach(function (q) { var b = by[q.p.id] || (by[q.p.id] = { p: q.p, n: 0, v: 0, tg: q.tg }); b.n++; b.v += q.v30; });
+    var urows = Object.keys(by).map(function (k) { return by[k]; }).sort(function (a, b) { return b.n - a.n; }).slice(0, 10).map(function (b) {
+      var avg = b.v / b.n, mese = b.p.prezzo / Math.max(1, b.p.durata), ut = avg / b.tg * 100;
+      return tr(['<td>' + b.p.nome + '</td>', '<td class="r num">' + b.n + '</td>', '<td class="r num">' + F.eur(mese) + '</td>', '<td class="r num">' + nDec.format(avg) + '</td>', '<td class="r num">' + F.eur(avg ? mese / avg : 0) + '</td>', '<td>' + bar1('var(--g3)', ut) + ' <span class="num">' + Math.round(ut) + '%</span></td>']);
+    });
+    h += '<div class="card"><p class="subt">Quanto viene utilizzato ogni abbonamento rispetto a quanto è stato pagato</p><p class="muted">Utilizzo: visite del mese rispetto a quelle attese per quel tipo di abbonamento.</p>' +
+      tbl([['Abbonamento'], ['Soci', 'r'], ['Costo al mese', 'r'], ['Visite al mese', 'r'], ['Costo per accesso', 'r'], ['Utilizzo']], urows) + '</div>';
+    return h;
+  }
+
+  /* ---------- SOCI: ANAGRAFICA ANONIMA ---------- */
+  function viewSoci() {
+    var tot = attiviOn('oggi', GR), r = rng(9100);
+    var eta = [['0–5 anni', .03], ['6–11 anni', .22], ['12–17 anni', .11], ['18–29 anni', .14], ['30–44 anni', .24], ['45–59 anni', .18], ['60 anni e oltre', .08]];
+    var sesso = [['Donne', .52], ['Uomini', .47], ['Non indicato', .01]];
+    var zone = [['Rimini', .62], ['Riccione', .09], ['Santarcangelo', .07], ['Bellaria-Igea Marina', .05], ['Coriano', .05], ['Cattolica', .03], ['Altri comuni della Romagna', .06], ['Fuori regione', .03]];
+    var anz = [['Meno di 1 anno', .28], ['Da 1 a 2 anni', .21], ['Da 2 a 5 anni', .30], ['Da 5 a 10 anni', .15], ['Oltre 10 anni', .06]];
+    var from = CUR - 23, ni = []; for (var k = from; k <= CUR; k++) ni.push(Math.round(gS('N', k, GR) * 0.78 * w(k)));
+    var ni12 = ni.slice(12).reduce(function (a, b) { return a + b; }, 0), ni0 = ni.slice(0, 12).reduce(function (a, b) { return a + b; }, 0);
+    var h = '<div class="page-head"><p class="eyebrow">Anagrafica</p><h2>Soci, in forma anonima</h2><p class="muted">Chi frequenta il club per fascia d’età, sesso e zona di provenienza, senza nomi né recapiti. Nomi e recapiti entrano nell’archivio solo se lo decidete voi.</p></div>';
+    h += '<div class="stats">' +
+      stat('Soci attivi', N('sa', tot, 'int'), 'con un abbonamento in corso', []) +
+      stat('Età media', N('se', 31.8 + r() * 0.4, 'dec') + ' anni', 'dei soci attivi', []) +
+      stat('Nuovi iscritti, 12 mesi', N('sn', ni12, 'int'), 'anno prima: ' + F.int(ni0), [['Variazione', delta(ni12, ni0)]]) +
+      stat('Anzianità media', '3,4 anni', 'dalla prima iscrizione', []) + '</div>';
+    function items(arr, col) { return arr.map(function (a) { return { name: a[0], color: col, val: tot * a[1] }; }); }
+    h += '<div class="two"><div class="card"><p class="subt">Per fascia d’età</p>' + hbars(items(eta, 'var(--g1)'), F.int) + '</div>' +
+      '<div class="card"><p class="subt">Per sesso</p>' + hbars(items(sesso, 'var(--g2)'), F.int) + '<p class="subt" style="margin-top:8px">Per anzianità di iscrizione</p>' + hbars(items(anz, 'var(--g3)'), F.int) + '</div></div>';
+    h += '<div class="card"><p class="subt">Per zona di provenienza</p>' + tbl([['Zona'], ['Soci', 'r'], ['Quota', 'r'], ['']], zone.map(function (z) { return tr(['<td>' + z[0] + '</td>', '<td class="r num">' + F.int(tot * z[1]) + '</td>', '<td class="r num">' + Math.round(z[1] * 100) + '%</td>', '<td style="width:40%">' + bar1('var(--g4)', z[1] / .62 * 100) + '</td>']); })) + '</div>';
+    h += '<div class="card"><p class="subt">Nuovi iscritti nel tempo, ultimi 24 mesi</p>' + stack({ id: 'c-ni', aria: 'Nuovi iscritti per mese, ultimi 24 mesi', labels: monthLabels(from, CUR, true), fmt: F.int, partialNote: true, series: [{ name: 'Nuovi iscritti', color: 'var(--g1)', vals: ni }] }) + '</div>';
+    return h;
+  }
+
+  /* ---------- ATTIVITÀ DEGLI OPERATORI ---------- */
+  var ATT = ['Vendite', 'Incassi e rate', 'Rinnovi e modifiche', 'Accessi manuali', 'Sospensioni e disdette', 'Altro'];
+  var ATW = [.28, .24, .16, .14, .08, .10];
+  function viewOperatori() {
+    var i = mi12(), x = w(i), r = rng(9900 + i), n = daysOf(i);
+    var total = Math.round((Uall[i] * 3.2 + 1200) * x), total0 = Math.round((Uall[i - 12] * 3.2 + 1200) * x);
+    var sh = OPW.map(function (v) { return v * (0.9 + r() * 0.2); }), ss = sh.reduce(function (a, b) { return a + b; }, 0); sh = sh.map(function (v) { return v / ss; });
+    var d0 = mdate(i), lav = 0; for (var d = 1; d <= n; d++) if (new Date(d0.getFullYear(), d0.getMonth(), d).getDay() !== 0) lav++;
+    var best = sh.indexOf(Math.max.apply(null, sh));
+    var h = '<div class="page-head"><p class="eyebrow">Segreteria</p><h2>Attività degli operatori</h2><p class="muted">Quante operazioni svolge ciascun operatore, per giorno e per tipo di attività: un’idea chiara del carico di lavoro della segreteria.</p></div>';
+    h += monthNav(i, 12);
+    h += '<div class="stats">' +
+      stat('Operazioni del mese', N('oo' + i, total, 'int'), 'tutte le attività registrate', [['Anno prima', '<span class="num">' + F.int(total0) + '</span>'], ['Variazione', delta(total, total0)]]) +
+      stat('Per giorno di apertura', N('og' + i, total / Math.max(1, lav), 'int'), lav + ' giorni di apertura', []) +
+      stat('Operatore più carico', OPS[best], F.int(total * sh[best]) + ' operazioni', []) +
+      stat('Attività più frequente', ATT[0], nDec.format(ATW[0] * 100) + '% delle operazioni', []) + '</div>';
+    var dw = dailyWeights(i, 3100);
+    var series = OPS.map(function (o, j) { return { name: o, color: 'var(--g' + (j + 1) + ')', vals: dw.map(function (v, k) { return total * sh[j] * v * (0.9 + ((k * 13 + j * 7) % 10) / 50); }) }; });
+    h += '<div class="card"><p class="subt">Operazioni per giorno e per operatore</p>' + stack({ id: 'c-op', aria: 'Operazioni per giorno e per operatore', labels: dayLabels(i), fmt: F.int, series: series }) + '</div>';
+    var rows = OPS.map(function (o, j) {
+      var cells = ATT.map(function (a, t) { return '<td class="r num">' + F.int(total * sh[j] * ATW[t] * (0.9 + r() * 0.2)) + '</td>'; });
+      return tr(['<td>' + o + '</td>'].concat(cells).concat(['<td class="r"><b class="num">' + F.int(total * sh[j]) + '</b></td>', '<td class="r num">' + Math.round(sh[j] * 100) + '%</td>']));
+    });
+    var trow = ATT.map(function (a, t) { return '<td class="r num">' + F.int(total * ATW[t]) + '</td>'; });
+    rows.push(tr(['<td>Totale</td>'].concat(trow).concat(['<td class="r num">' + F.int(total) + '</td>', '<td class="r num">100%</td>']), 'tot'));
+    h += '<div class="card"><p class="subt">Per operatore e tipo di attività</p>' + tbl([['Operatore']].concat(ATT.map(function (a) { return [a, 'r']; })).concat([['Totale', 'r'], ['Quota', 'r']]), rows) + '</div>';
+    return h;
+  }
+
+  /* ---------- schede, render, eventi ---------- */
+  var VIEWMAP = { direzione: viewDirezione, abbonamenti: viewAbbonamenti, incassato: viewIncassato, vendite: viewVendite, accessi: viewAccessi, soci: viewSoci, operatori: viewOperatori };
+  function render() {
+    var root = el('v-' + state.tab);
+    root.innerHTML = '<div style="display:flex;flex-direction:column;gap:16px">' + VIEWMAP[state.tab]() + '</div>';
+    bindTips(root); runCounts(root);
+    state.animate = false;
+  }
+  function setTab(t) {
+    if (!VIEWMAP[t]) t = 'direzione';
+    state.tab = t; state.animate = true; shown = {}; hovering = false;
+    Object.keys(VIEWMAP).forEach(function (k) {
+      var on = k === t, s = el('v-' + k);
+      s.hidden = !on;
+      el('t-' + k).setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    render();
+  }
+  function tick() {
+    var pool = P.filter(function (p) { return p.prezzo > 0; });
+    var wts = pool.map(function (p) { return p.units[CUR] + 1; }), sum = wts.reduce(function (a, b) { return a + b; }, 0), x = Math.random() * sum, p = pool[0];
+    for (var i = 0; i < pool.length; i++) { x -= wts[i]; if (x <= 0) { p = pool[i]; break; } }
+    var amt = Math.round(p.prezzo * (0.9 + Math.random() * 0.1));
+    feed.unshift({ t: Date.now(), p: p, amt: amt, nuova: true });
+    live.fatAll += amt;
+    if (p.g) {
+      var o = live.byG[p.g]; o.vend += 1; o.fat += amt; live.fat += amt;
+      if (Math.random() < p.nsh) o.nuovi += 1;
+      if (p.durata > 0) o.att += 1;
+    }
+    el('syncTxt').textContent = 'Ultimo aggiornamento ' + fTimeS.format(new Date()) + ' · sync ogni 5 min';
+    if (!hovering) render();
+  }
+  var timer = null;
+  function setAuto(on) {
+    state.auto = on;
+    el('autoBtn').setAttribute('aria-pressed', on ? 'true' : 'false');
+    el('autoBtn').textContent = on ? 'Sospendi simulazione' : 'Riprendi simulazione';
+    el('dot').className = 'dot' + (on ? ' on' : '');
+    clearInterval(timer);
+    if (on) timer = setInterval(tick, 6000);
+  }
+  document.addEventListener('click', function (e) {
+    var b;
+    if ((b = e.target.closest('[data-tab]'))) { setTab(b.dataset.tab); try { history.replaceState(null, '', '#' + b.dataset.tab); } catch (x) { /* ignora */ } return; }
+    if ((b = e.target.closest('[data-g]'))) {
+      var g = b.dataset.g;
+      if (g === '') state.groups = [];
+      else { var ix = state.groups.indexOf(g); if (ix >= 0) state.groups.splice(ix, 1); else state.groups.push(g); }
+      state.animate = true; render(); return;
+    }
+    if ((b = e.target.closest('[data-v]'))) { state.view = b.dataset.v; state.animate = true; render(); return; }
+    if ((b = e.target.closest('[data-vg]'))) { state.vg = b.dataset.vg; state.animate = true; render(); return; }
+    if ((b = e.target.closest('[data-af]'))) { state.af = b.dataset.af; render(); return; }
+    if ((b = e.target.closest('[data-m]'))) { state.metodo = b.dataset.m; render(); return; }
+    if ((b = e.target.closest('[data-act]'))) {
+      state.mi = Math.max(0, Math.min(CUR, state.mi + (b.dataset.act === 'next' ? 1 : -1)));
+      shown = {}; state.animate = true; render(); return;
+    }
+    if (e.target.id === 'autoBtn') setAuto(!state.auto);
+  });
+  window.addEventListener('hashchange', function () { setTab(location.hash.slice(1)); });
+  el('syncTxt').textContent = 'Ultimo aggiornamento ' + fTimeS.format(new Date()) + ' · sync ogni 5 min';
+  setTab(location.hash.slice(1) || 'direzione');
+  setAuto(true);
+})();
+</script>
+</body>
+</html>
