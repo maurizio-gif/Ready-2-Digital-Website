@@ -2,8 +2,13 @@
 // animation when it scrolls into view, and loops gently while visible.
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { Extract } from '../cases';
 import { Mark } from './Mark';
+import { finePointer, isTouch, reducedMotion } from '../lib/env';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function useInView<T extends Element>(threshold = 0.35) {
   const ref = useRef<T>(null);
@@ -574,8 +579,31 @@ function Weight({ x, on }: { x: Extract & { kind: 'weight' }; on: boolean }) {
   );
 }
 
-export function ExtractView({ x, sample }: { x: Extract; sample: string }) {
+export function ExtractView({ x, sample, flip = false }: { x: Extract; sample: string; flip?: boolean }) {
   const [ref, on] = useInView<HTMLDivElement>();
+  const stage = useRef<HTMLDivElement>(null);
+
+  // The screen stands in space: it turns towards the reader as it scrolls into
+  // the middle of the viewport and turns away as it leaves, a little less on
+  // phones. Not when the system asks for less motion.
+  useEffect(() => {
+    const el = stage.current;
+    if (!el || reducedMotion()) return;
+    const touch = isTouch();
+    const side = flip ? -1 : 1;
+    const amp = touch ? 7 : 14;
+    gsap.set(el, { transformPerspective: 1400, transformOrigin: '50% 50%' });
+    const st = ScrollTrigger.create({
+      trigger: el,
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: (s) => {
+        const k = s.progress - 0.5;
+        gsap.set(el, { rotationY: side * k * -amp, rotationX: k * amp * 0.5, z: -Math.abs(k) * 80 });
+      },
+    });
+    return () => st.kill();
+  }, [flip]);
   let body: ReactNode = null;
   switch (x.kind) {
     case 'kpi':
@@ -619,8 +647,10 @@ export function ExtractView({ x, sample }: { x: Extract; sample: string }) {
       break;
   }
   return (
-    <div className={`mk mk--${x.kind}`} ref={ref}>
-      {body}
+    <div className="mk-stage" ref={stage}>
+      <div className={`mk mk--${x.kind}`} ref={ref} data-tilt={finePointer() ? '5' : undefined} data-lift="0">
+        {body}
+      </div>
     </div>
   );
 }

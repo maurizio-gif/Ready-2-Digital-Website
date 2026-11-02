@@ -13,12 +13,14 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { metaball } from '../lib/metaball';
 import { MARK, NECKS, NECK_OPTS, R, clamp, ease, lerp, range } from '../lib/mark';
+import { finePointer, isTouch, reducedMotion } from '../lib/env';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export type DotsVariant = 'gooey' | 'neural' | 'converge';
 
 const SVGNS = 'http://www.w3.org/2000/svg';
+let uid = 0;
 const ORANGE = '#FF6000';
 const LIGHT = '#F4F1EA';
 
@@ -46,13 +48,28 @@ export function Dots({ variant, lines, light = false }: { variant: DotsVariant; 
   useEffect(() => {
     const root = svg.current!;
     const host = wrap.current!;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduced = reducedMotion();
+    const touch = isTouch();
     let W = 0;
     let H = 0;
     let visible = false;
     const state = { p: 0, sp: 0, t: 0 };
     const mouse = { x: -9999, y: -9999, on: false };
+    // Depth: the pointer tilts the whole scene a little, and scrolling turns it.
+    const fine = finePointer() && !reduced;
+    const tilt = fine ? { rx: gsap.quickTo(root, 'rotationX', { duration: 1.2, ease: 'power3' }), ry: gsap.quickTo(root, 'rotationY', { duration: 1.2, ease: 'power3' }) } : null;
+    if (tilt) gsap.set(root, { transformPerspective: 1400, transformOrigin: '50% 50%' });
     let draw: (dt: number) => void = () => {};
+    const shadeDefs = () => {
+      const id = `dots-sphere-${++uid}`;
+      const defs = el('defs', {}, root);
+      const g = el('radialGradient', { id, cx: 0.36, cy: 0.3, fx: 0.36, fy: 0.3, r: 0.78 }, defs);
+      el('stop', { offset: 0, 'stop-color': '#fff', 'stop-opacity': light ? 0.5 : 0.55 }, g);
+      el('stop', { offset: 0.28, 'stop-color': '#fff', 'stop-opacity': 0.12 }, g);
+      el('stop', { offset: 0.55, 'stop-color': '#000', 'stop-opacity': 0 }, g);
+      el('stop', { offset: 1, 'stop-color': '#000', 'stop-opacity': light ? 0.3 : 0.5 }, g);
+      return `url(#${id})`;
+    };
 
     const build = () => {
       while (root.firstChild) root.removeChild(root.firstChild);
@@ -63,25 +80,33 @@ export function Dots({ variant, lines, light = false }: { variant: DotsVariant; 
       const mobile = W < 720;
 
       if (variant === 'gooey') {
+        const shade = shadeDefs();
         const N = mobile ? 16 : 30;
-        const dots = Array.from({ length: N }, (_, i) => ({
-          x: rand() * W,
-          y: rand() * H,
-          vx: (rand() - 0.5) * 0.4,
-          vy: (rand() - 0.5) * 0.4,
-          r: 5 + rand() * (mobile ? 11 : 17),
-          hot: i % 4 === 0,
-          // where the dot goes when the band gathers (a loose cluster)
-          gx: W / 2 + (rand() - 0.5) * Math.min(W, 900) * 0.5,
-          gy: H / 2 + (rand() - 0.5) * H * 0.42,
-        }));
+        const dots = Array.from({ length: N }, (_, i) => {
+          const r = 5 + rand() * (mobile ? 11 : 17);
+          return {
+            x: rand() * W,
+            y: rand() * H,
+            vx: (rand() - 0.5) * 0.4,
+            vy: (rand() - 0.5) * 0.4,
+            r,
+            // the big ones are near: they slide more than the small ones as you scroll
+            depth: (r - 5) / (mobile ? 11 : 17),
+            hot: i % 4 === 0,
+            // where the dot goes when the band gathers (a loose cluster)
+            gx: W / 2 + (rand() - 0.5) * Math.min(W, 900) * 0.5,
+            gy: H / 2 + (rand() - 0.5) * H * 0.42,
+          };
+        });
         const gNecks = el('g', {}, root);
         const necks: SVGPathElement[] = [];
         const circles = dots.map((d) => el('circle', { r: d.r, fill: d.hot ? ORANGE : light ? '#1A1A1A' : '#3A3A3A' }, root));
         const cursor = el('circle', { r: 0, fill: ORANGE }, root);
+        const shades = dots.map((d) => el('circle', { r: d.r, fill: shade, opacity: 0.35 + d.depth * 0.65 }, root));
         draw = (dt) => {
           const f = clamp(dt / 16.67, 0.5, 3);
           const g = ease.inOut(range(state.sp, 0.25, 0.65)) * 0.55;
+          const slide = (state.sp - 0.5) * (reduced ? 0 : 90);
           for (const d of dots) {
             if (!reduced) {
               d.x += d.vx * f;
@@ -100,10 +125,12 @@ export function Dots({ variant, lines, light = false }: { variant: DotsVariant; 
             }
           }
           let k = 0;
-          const pos = dots.map((d) => [lerp(d.x, d.gx, g), lerp(d.y, d.gy, g)] as [number, number]);
+          const pos = dots.map((d) => [lerp(d.x, d.gx, g), lerp(d.y, d.gy, g) + slide * (d.depth - 0.5) * (1 - g)] as [number, number]);
           pos.forEach((p, i) => {
-            circles[i].setAttribute('cx', p[0].toFixed(1));
-            circles[i].setAttribute('cy', p[1].toFixed(1));
+            for (const c of [circles[i], shades[i]]) {
+              c.setAttribute('cx', p[0].toFixed(1));
+              c.setAttribute('cy', p[1].toFixed(1));
+            }
           });
           const all = mouse.on ? [...pos, [mouse.x, mouse.y] as [number, number]] : pos;
           const rads = mouse.on ? [...dots.map((d) => d.r), 14] : dots.map((d) => d.r);
@@ -162,6 +189,7 @@ export function Dots({ variant, lines, light = false }: { variant: DotsVariant; 
         let acc = 0;
         draw = (dt) => {
           const reveal = range(state.sp, 0.05, 0.4);
+          if (!tilt && !reduced) root.style.transform = `perspective(1400px) rotateX(${((state.sp - 0.5) * -10).toFixed(2)}deg)`;
           const shown = reveal * (layers.length - 1);
           edges.forEach((e) => {
             const o = clamp(shown - e.li) * 0.12;
@@ -212,12 +240,15 @@ export function Dots({ variant, lines, light = false }: { variant: DotsVariant; 
           const c = MARK[i % 6];
           const a = rand() * Math.PI * 2;
           const rr = Math.sqrt(rand()) * R * 0.8;
+          const depth = rand();
           return {
             x: rand() * W,
             y: rand() * H,
             tx: cx + (c[0] + Math.cos(a) * rr) * s,
             ty: cy + (c[1] + Math.sin(a) * rr) * s,
-            r: 1.5 + rand() * 2.5,
+            // near dots are bigger and slide more with the scroll while they travel
+            r: 1.2 + depth * 3.4,
+            depth,
             ph: rand() * Math.PI * 2,
             dot: i % 6 === 5,
             d: rand() * 0.25,
@@ -225,20 +256,21 @@ export function Dots({ variant, lines, light = false }: { variant: DotsVariant; 
         });
         const gL = el('g', {}, root);
         const lines = Array.from({ length: N }, () => el('line', { stroke: ORANGE, 'stroke-width': 0.8, opacity: 0 }, gL));
-        const circles = dots.map((d) => el('circle', { r: d.r, fill: d.dot ? LIGHT : ORANGE }, root));
+        const circles = dots.map((d) => el('circle', { r: d.r, fill: d.dot ? LIGHT : ORANGE, opacity: 0.45 + d.depth * 0.55 }, root));
+        const shade = shadeDefs();
         const gM = el('g', { opacity: 0 }, root);
         const necks = NECKS.map(() => el('path', { fill: ORANGE }, gM));
-        const mc = MARK.map(([x, y], i) => el('circle', { cx: cx + x * s, cy: cy + y * s, r: R * s, fill: i === 5 ? (light ? '#1A1A1A' : LIGHT) : ORANGE }, gM));
-        necks.forEach((n, k) => {
-          const [a, b] = NECKS[k];
-          n.setAttribute('d', metaball(R * s, R * s, [cx + MARK[a][0] * s, cy + MARK[a][1] * s], [cx + MARK[b][0] * s, cy + MARK[b][1] * s], NECK_OPTS));
-        });
-        void mc;
+        const neckD = NECKS.map(([a, b]) => metaball(R * s, R * s, [cx + MARK[a][0] * s, cy + MARK[a][1] * s], [cx + MARK[b][0] * s, cy + MARK[b][1] * s], NECK_OPTS));
+        necks.forEach((n, k) => n.setAttribute('d', neckD[k]));
+        NECKS.forEach((_, k) => el('path', { d: neckD[k], fill: shade, opacity: 0.5 }, gM));
+        MARK.forEach(([x, y], i) => el('circle', { cx: cx + x * s, cy: cy + y * s, r: R * s, fill: i === 5 ? (light ? '#1A1A1A' : LIGHT) : ORANGE }, gM));
+        MARK.forEach(([x, y]) => el('circle', { cx: cx + x * s, cy: cy + y * s, r: R * s, fill: shade }, gM));
         draw = () => {
+          const slide = reduced ? 0 : (state.sp - 0.5) * 140;
           const pos = dots.map((d) => {
             const k = ease.inOut(range(state.sp, 0.08 + d.d * 0.6, 0.38 + d.d * 0.4));
             const wob = reduced ? 0 : (1 - k) * 10;
-            return [lerp(d.x, d.tx, k) + Math.sin(state.t * 0.8 + d.ph) * wob, lerp(d.y, d.ty, k) + Math.cos(state.t * 0.7 + d.ph) * wob, k] as const;
+            return [lerp(d.x, d.tx, k) + Math.sin(state.t * 0.8 + d.ph) * wob, lerp(d.y, d.ty, k) + Math.cos(state.t * 0.7 + d.ph) * wob + slide * (d.depth - 0.5) * (1 - k), k] as const;
           });
           pos.forEach((p, i) => {
             circles[i].setAttribute('cx', p[0].toFixed(1));
@@ -254,12 +286,16 @@ export function Dots({ variant, lines, light = false }: { variant: DotsVariant; 
           });
           const m = range(state.sp, 0.46, 0.56);
           gM.setAttribute('opacity', m.toFixed(3));
-          circles.forEach((c) => c.setAttribute('opacity', (1 - m).toFixed(3)));
+          circles.forEach((c, i) => c.setAttribute('opacity', ((1 - m) * (0.45 + dots[i].depth * 0.55)).toFixed(3)));
         };
       }
     };
     build();
-    const ro = new ResizeObserver(() => build());
+    // A new layout only when the width changes: the height of the band follows
+    // the viewport, and on phones that moves with the address bar.
+    const ro = new ResizeObserver(() => {
+      if (host.clientWidth !== W) build();
+    });
     ro.observe(host);
 
     const st = ScrollTrigger.create({
@@ -271,12 +307,22 @@ export function Dots({ variant, lines, light = false }: { variant: DotsVariant; 
     const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting), { rootMargin: '100px' });
     io.observe(host);
     const onMove = (e: PointerEvent) => {
-      const b = root.getBoundingClientRect();
+      const b = host.getBoundingClientRect();
       mouse.x = e.clientX - b.left;
       mouse.y = e.clientY - b.top;
       mouse.on = true;
+      if (tilt) {
+        tilt.rx((0.5 - mouse.y / H) * 6);
+        tilt.ry((mouse.x / W - 0.5) * 8);
+      }
     };
-    const onLeave = () => (mouse.on = false);
+    const onLeave = () => {
+      mouse.on = false;
+      if (tilt) {
+        tilt.rx(0);
+        tilt.ry(0);
+      }
+    };
     host.addEventListener('pointermove', onMove);
     host.addEventListener('pointerleave', onLeave);
 
@@ -286,7 +332,8 @@ export function Dots({ variant, lines, light = false }: { variant: DotsVariant; 
       state.sp += (state.p - state.sp) * 0.12;
       draw(dt);
       if (text.current) {
-        const o = range(state.sp, 0.28, 0.42) * (1 - range(state.sp, 0.78, 0.92));
+        // On phones the words come early and stay: a flick must not skip them.
+        const o = touch ? range(state.sp, 0.16, 0.28) : range(state.sp, 0.28, 0.42) * (1 - range(state.sp, 0.78, 0.92));
         text.current.style.setProperty('--o', o.toFixed(3));
       }
     };

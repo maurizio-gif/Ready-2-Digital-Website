@@ -2,76 +2,74 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { copy, CONTACT_EMAIL, type Lang } from './content';
-import { Hero } from './components/Hero';
-import { Antithesis, Contact, Manifesto, Method, Modular, Origin, Sectors, Services, Work } from './components/Sections';
+import { copy, CONTACT_EMAIL, type Copy, type Lang } from './content';
 import { Mark } from './components/Mark';
 import { CasePage } from './components/CasePage';
-import { Dots } from './components/Dots';
-import { TechStack } from './components/Tech';
+import { AboutPage, ContactPage, HomePage, MethodPage, PrivacyPage, SolutionsPage, TechPage, WorkPage } from './components/Pages';
+import { COMPANY, privacyText } from './legal';
+import { Link } from './components/Nav';
 import { cases } from './cases';
-import { navigate, useRoute } from './router';
+import { pages, SERVICE_IDS } from './pages';
+import { href, navigate, pathFor, setNavigateHook, useRoute, type Page, type Route } from './router';
+import { isTouch } from './lib/env';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// On phones the address bar shows and hides while you scroll, and every time the
+// viewport height changes. Without this, ScrollTrigger would refresh on each of
+// those changes and the scrubbed sections would jump under the finger.
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 let lenis: Lenis | null = null;
+// While we scroll the page ourselves (anchors, "back to top") the header stays
+// in view: it should not hide as if the reader were scrolling down.
+let autoScrollUntil = 0;
 const scrollTo = (target: string | number) => {
+  autoScrollUntil = performance.now() + 1700;
   if (lenis) lenis.scrollTo(target, { duration: 1.6 });
   else if (typeof target === 'number') window.scrollTo({ top: target, behavior: 'smooth' });
   else document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' });
 };
-
-function initialLang(): Lang {
-  const q = new URLSearchParams(window.location.search).get('lang');
-  if (q === 'en' || q === 'it') return q;
-  try {
-    const s = localStorage.getItem('r2d-lang');
-    if (s === 'en' || s === 'it') return s;
-  } catch {
-    /* storage unavailable */
+const scrollToEl = (el: HTMLElement) => {
+  autoScrollUntil = performance.now() + 1400;
+  if (lenis) lenis.scrollTo(el, { offset: -96, duration: 1.2 });
+  else {
+    const top = el.getBoundingClientRect().top + window.scrollY - 96;
+    window.scrollTo({ top, behavior: 'smooth' });
   }
-  return navigator.language?.toLowerCase().startsWith('it') ? 'it' : 'en';
+};
+
+function metaFor(route: Route, t: Copy): [string, string] {
+  const p = pages[route.lang];
+  if (route.page === 'caso') {
+    const c = cases[route.lang].find((x) => x.slug === route.slug);
+    if (c) return [`${c.client} — ${route.lang === 'it' ? 'Progetto' : 'Case study'} · Ready2Digital`, c.intro];
+  }
+  if (route.page === 'privacy') {
+    const pv = privacyText(route.lang);
+    return [`${pv.title} — Ready 2 Digital`, pv.intro];
+  }
+  if (route.page === 'home' || route.page === 'caso') return [t.meta.title, t.meta.description];
+  const h = p.heroes[route.page];
+  return [`${h.kicker} — Ready2Digital`, h.sub];
 }
 
 export default function App() {
-  const [lang, setLang] = useState<Lang>(initialLang);
+  const route = useRoute();
+  const lang: Lang = route.lang;
+  const t = copy[lang];
   const [ready, setReady] = useState(false);
   const [menu, setMenu] = useState(false);
-  const [privacy, setPrivacy] = useState(false);
-  const t = copy[lang];
-  const route = useRoute();
-  const kase = route.page === 'case' ? cases[lang].find((c) => c.slug === route.slug) : undefined;
-  const routeKey = kase ? kase.slug : 'home';
-  const pending = useRef<string | null>(null);
+  const wipe = useRef<HTMLDivElement>(null);
+  const kase = route.page === 'caso' ? cases[lang].find((c) => c.slug === route.slug) : undefined;
+  const routeKey = `${lang}-${route.page}-${route.slug ?? ''}`;
 
   useEffect(() => {
+    const [title, desc] = metaFor(route, t);
     document.documentElement.lang = lang;
-    document.title = kase ? `${kase.client} — ${lang === 'it' ? 'Caso' : 'Case study'} · Ready2Digital` : t.meta.title;
-    document.querySelector('meta[name="description"]')?.setAttribute('content', kase ? kase.intro : t.meta.description);
-    try {
-      localStorage.setItem('r2d-lang', lang);
-    } catch {
-      /* ignore */
-    }
-  }, [lang, t, kase]);
-
-  // A new page starts at the top, or at the section it was asked to show.
-  useEffect(() => {
-    const id = pending.current;
-    pending.current = null;
-    lenis?.scrollTo(0, { immediate: true, force: true });
-    window.scrollTo(0, 0);
-    ScrollTrigger.refresh();
-    // Wait for the new page's pins and reveals to settle, then jump there.
-    if (id)
-      setTimeout(() => {
-        ScrollTrigger.refresh();
-        const el = document.getElementById(id);
-        if (!el) return;
-        if (lenis) lenis.scrollTo(el, { immediate: true, force: true });
-        else el.scrollIntoView();
-      }, 500);
-  }, [routeKey]);
+    document.title = title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
+  }, [route, t, lang]);
 
   // Smooth scrolling, driven by GSAP's ticker so everything shares one clock.
   useEffect(() => {
@@ -90,6 +88,26 @@ export default function App() {
     }
   }, []);
 
+  // Page transition: the curtain closes, the page changes, the curtain opens.
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setNavigateHook((go) => {
+      setMenu(false);
+      const el = wipe.current;
+      if (!el || reduced) return go();
+      el.classList.remove('is-out');
+      el.classList.add('is-in');
+      setTimeout(() => {
+        go();
+        setTimeout(() => {
+          el.classList.remove('is-in');
+          el.classList.add('is-out');
+        }, 120);
+      }, 520);
+    });
+    return () => setNavigateHook(null);
+  }, []);
+
   // Wait for the fonts, then lift the curtain.
   useEffect(() => {
     let done = false;
@@ -105,29 +123,47 @@ export default function App() {
     return () => clearTimeout(tm);
   }, []);
 
-  // Generic reveals for every section, re-armed when the language changes.
+  // A new page starts at the top, or at the section named in the address.
   useEffect(() => {
+    setMenu(false);
+    lenis?.scrollTo(0, { immediate: true, force: true });
+    window.scrollTo(0, 0);
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    const tm = setTimeout(() => {
+      ScrollTrigger.refresh();
+      const el = id ? document.getElementById(id) : null;
+      if (!el) return;
+      scrollToEl(el);
+    }, 450);
+    return () => clearTimeout(tm);
+  }, [routeKey]);
+
+  // Same page, new #section (e.g. a service picked from the menu while on Solutions).
+  useEffect(() => {
+    const onHash = () => {
+      const el = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+      if (el) scrollToEl(el);
+    };
+    window.addEventListener('r2d:hash', onHash);
+    return () => window.removeEventListener('r2d:hash', onHash);
+  }, []);
+
+  // Generic reveals for every section, re-armed on every page. On touch screens
+  // they are shorter and start earlier: a flick of the thumb moves a whole screen,
+  // and the content must already be there when the eye lands on it.
+  useEffect(() => {
+    const touch = isTouch();
+    const k = touch ? 0.65 : 1;
+    const start = touch ? 'top 96%' : 'top 88%';
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>('main [data-reveal]').forEach((el) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } },
-        );
+        gsap.fromTo(el, { opacity: 0, y: 40 * k }, { opacity: 1, y: 0, duration: 1.1 * k, ease: 'power3.out', scrollTrigger: { trigger: el, start, once: true } });
       });
       gsap.utils.toArray<HTMLElement>('main [data-split]').forEach((el) => {
-        gsap.fromTo(
-          el,
-          { clipPath: 'inset(0 0 100% 0)', y: 60 },
-          { clipPath: 'inset(0 0 -20% 0)', y: 0, duration: 1.3, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } },
-        );
+        gsap.fromTo(el, { clipPath: 'inset(0 0 100% 0)', y: 60 * k }, { clipPath: 'inset(0 0 -20% 0)', y: 0, duration: 1.3 * k, ease: 'expo.out', scrollTrigger: { trigger: el, start, once: true } });
       });
       gsap.utils.toArray<HTMLElement>('main [data-card]').forEach((el, i) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 70, scale: 0.96 },
-          { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: 'expo.out', delay: (i % 3) * 0.08, scrollTrigger: { trigger: el, start: 'top 92%', once: true } },
-        );
+        gsap.fromTo(el, { opacity: 0, y: 70 * k, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 1.1 * k, ease: 'expo.out', delay: touch ? 0 : (i % 3) * 0.08, scrollTrigger: { trigger: el, start: touch ? 'top 98%' : 'top 92%', once: true } });
       });
     });
     const tm = setTimeout(() => ScrollTrigger.refresh(), 300);
@@ -135,7 +171,56 @@ export default function App() {
       clearTimeout(tm);
       ctx.revert();
     };
-  }, [lang, routeKey]);
+  }, [routeKey]);
+
+  // Cards tilt towards the pointer, with their inner layers lifted a little:
+  // the same hook for every [data-tilt] on the page, pointer devices only.
+  useEffect(() => {
+    if (!window.matchMedia('(pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const live = new Map<HTMLElement, { rx: (v: number) => void; ry: (v: number) => void; y: (v: number) => void }>();
+    const get = (el: HTMLElement) => {
+      let q = live.get(el);
+      if (!q) {
+        q = {
+          rx: gsap.quickTo(el, 'rotationX', { duration: 0.6, ease: 'power3' }),
+          ry: gsap.quickTo(el, 'rotationY', { duration: 0.6, ease: 'power3' }),
+          y: gsap.quickTo(el, 'y', { duration: 0.6, ease: 'power3' }),
+        };
+        gsap.set(el, { transformPerspective: 1100 });
+        live.set(el, q);
+      }
+      return q;
+    };
+    const move = (e: PointerEvent) => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>('[data-tilt]');
+      if (!el) return;
+      const b = el.getBoundingClientRect();
+      const x = (e.clientX - b.left) / b.width;
+      const y = (e.clientY - b.top) / b.height;
+      const amp = Number(el.dataset.tilt) || 6;
+      const q = get(el);
+      q.rx((0.5 - y) * amp);
+      q.ry((x - 0.5) * amp);
+      q.y(el.dataset.lift === '0' ? 0 : -6);
+      el.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`);
+      el.style.setProperty('--my', `${(y * 100).toFixed(1)}%`);
+    };
+    const out = (e: PointerEvent) => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>('[data-tilt]');
+      if (!el || (e.relatedTarget && el.contains(e.relatedTarget as Node))) return;
+      const q = get(el);
+      q.rx(0);
+      q.ry(0);
+      q.y(0);
+    };
+    document.addEventListener('pointermove', move, { passive: true });
+    document.addEventListener('pointerout', out, { passive: true });
+    return () => {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerout', out);
+      live.clear();
+    };
+  }, [routeKey]);
 
   // Magnetic buttons.
   useEffect(() => {
@@ -154,109 +239,106 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (menu || privacy) lenis?.stop();
+    if (menu) lenis?.stop();
     else lenis?.start();
-  }, [menu, privacy]);
+  }, [menu]);
 
-  const go = (id: string) => {
-    setMenu(false);
-    if (kase) {
-      pending.current = id === 'top' ? null : id;
-      navigate('/');
-    } else scrollTo(`#${id}`);
-  };
+  let page: React.ReactNode;
+  switch (route.page) {
+    case 'soluzioni':
+      page = <SolutionsPage t={t} lang={lang} />;
+      break;
+    case 'progetti':
+      page = <WorkPage t={t} lang={lang} />;
+      break;
+    case 'metodo':
+      page = <MethodPage t={t} lang={lang} />;
+      break;
+    case 'tecnologia':
+      page = <TechPage lang={lang} />;
+      break;
+    case 'chisiamo':
+      page = <AboutPage t={t} lang={lang} />;
+      break;
+    case 'contatti':
+      page = <ContactPage t={t} lang={lang} />;
+      break;
+    case 'privacy':
+      page = <PrivacyPage lang={lang} />;
+      break;
+    case 'caso':
+      page = kase ? <CasePage c={kase} lang={lang} /> : <WorkPage t={t} lang={lang} />;
+      break;
+    default:
+      page = <HomePage t={t} lang={lang} ready={ready} />;
+  }
 
   return (
     <>
       <Curtain ready={ready} />
+      <div className="wipe" ref={wipe} aria-hidden="true">
+        <Mark size={44} dot="#0D0D0D" color="#FFFFFF" />
+      </div>
       <Cursor />
-      <Header t={t} lang={lang} setLang={setLang} menu={menu} setMenu={setMenu} go={go} />
-      {kase ? (
-        <main key={`${lang}-${routeKey}`}>
-          <CasePage c={kase} lang={lang} onContact={() => go('contatti')} />
-        </main>
-      ) : (
-        <main key={`${lang}-home`}>
-          <Hero t={t} ready={ready} />
-          <Manifesto t={t} />
-          <Dots variant="gooey" lines={t.dots.a} />
-          <Antithesis t={t} />
-          <Services t={t} />
-          <TechStack lang={lang} />
-          <Modular t={t} />
-          <Dots variant="neural" lines={t.dots.b} />
-          <Method t={t} />
-          <Origin t={t} lang={lang} />
-          <Work t={t} lang={lang} />
-          <Sectors t={t} />
-          <Dots variant="converge" lines={t.dots.c} />
-          <Contact t={t} />
-        </main>
-      )}
-      <footer className="footer">
-        <div className="container footer__inner">
-          <div className="footer__brand">
-            <Mark size={34} dot="#F4F1EA" />
-            <div>
-              <p className="footer__name">Ready2Digital</p>
-              <p className="footer__tag">{t.footer.tagline}</p>
-            </div>
-          </div>
-          <div className="footer__links">
-            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-            <button type="button" onClick={() => setPrivacy(true)}>
-              {t.footer.privacy}
-            </button>
-            <button type="button" onClick={() => scrollTo(0)}>
-              {t.footer.top} ↑
-            </button>
-          </div>
-        </div>
-        <div className="container footer__bottom">
-          <p>
-            © {new Date().getFullYear()} Ready2Digital. {t.footer.rights}
-          </p>
-        </div>
-        <p className="footer__giant" aria-hidden="true">
-          Ready2Digital
-        </p>
-      </footer>
-      {privacy && (
-        <div className="dialog" role="dialog" aria-modal="true" aria-label={t.privacy.title} onClick={() => setPrivacy(false)}>
-          <div className="dialog__box" onClick={(e) => e.stopPropagation()} data-lenis-prevent>
-            <h2>{t.privacy.title}</h2>
-            {t.privacy.body.map(([h, p]) => (
-              <div key={h}>
-                <h3>{h}</h3>
-                <p>{p}</p>
-              </div>
-            ))}
-            <button className="btn" type="button" onClick={() => setPrivacy(false)} autoFocus>
-              {t.privacy.close}
-            </button>
-          </div>
-        </div>
-      )}
+      <Header t={t} route={route} menu={menu} setMenu={setMenu} />
+      <main key={routeKey}>{page}</main>
+      <Footer t={t} lang={lang} />
     </>
   );
 }
 
-function Header({
-  t,
-  lang,
-  setLang,
-  menu,
-  setMenu,
-  go,
-}: {
-  t: (typeof copy)['it'];
-  lang: Lang;
-  setLang: (l: Lang) => void;
-  menu: boolean;
-  setMenu: (b: boolean) => void;
-  go: (id: string) => void;
-}) {
+function Footer({ t, lang }: { t: Copy; lang: Lang }) {
+  const p = pages[lang];
+  return (
+    <footer className="footer">
+      <div className="container footer__inner">
+        <div className="footer__brand">
+          <Mark size={34} dot="#F4F1EA" />
+          <div>
+            <p className="footer__name">Ready2Digital</p>
+            <p className="footer__tag">{t.footer.tagline}</p>
+          </div>
+        </div>
+        <nav className="footer__nav" aria-label="Footer">
+          {p.menu.items.map((m) => (
+            <Link key={m.page} page={m.page} lang={lang}>
+              {m.label}
+            </Link>
+          ))}
+          <Link page="contatti" lang={lang}>
+            {p.menu.contact}
+          </Link>
+        </nav>
+        <div className="footer__links">
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+          <Link page="privacy" lang={lang}>
+            {t.footer.privacy}
+          </Link>
+          <button type="button" onClick={() => scrollTo(0)}>
+            {t.footer.top} ↑
+          </button>
+        </div>
+      </div>
+      <div className="container footer__bottom">
+        <p>
+          © {new Date().getFullYear()} {COMPANY.name} · {COMPANY.address} · P.IVA {COMPANY.vat} · REA {COMPANY.rea} · PEC{' '}
+          <a href={`mailto:${COMPANY.pec}`}>{COMPANY.pec}</a>. {t.footer.rights}
+        </p>
+      </div>
+      <p className="footer__giant" aria-hidden="true">
+        Ready2Digital
+      </p>
+    </footer>
+  );
+}
+
+function Header({ t, route, menu, setMenu }: { t: Copy; route: Route; menu: boolean; setMenu: (b: boolean) => void }) {
   const ref = useRef<HTMLElement>(null);
+  const lang = route.lang;
+  const p = pages[lang];
+  const [open, setOpen] = useState<Page | null>(null);
+  const closeTimer = useRef<number>(0);
+
   useEffect(() => {
     let last = 0;
     const st = ScrollTrigger.create({
@@ -264,84 +346,143 @@ function Header({
       end: 'max',
       onUpdate: (s) => {
         const y = s.scroll();
-        ref.current?.classList.toggle('is-hidden', y > last && y > 300);
-        ref.current?.classList.toggle('is-solid', y > window.innerHeight * 0.5);
-        last = y;
+        const d = y - last;
+        // A clear movement decides, not the jitter of a finger or a rubber-band
+        // bounce; while the page scrolls itself the header stays where it is.
+        if (Math.abs(d) > 8 && performance.now() > autoScrollUntil) {
+          ref.current?.classList.toggle('is-hidden', d > 0 && y > 300);
+          last = y;
+        } else if (Math.abs(d) > 8) last = y;
+        if (y < 300) ref.current?.classList.remove('is-hidden');
+        ref.current?.classList.toggle('is-solid', y > 60);
       },
     });
     return () => st.kill();
   }, []);
+  useEffect(() => setOpen(null), [route]);
+  useEffect(() => {
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(null);
+    window.addEventListener('keydown', esc);
+    return () => window.removeEventListener('keydown', esc);
+  }, []);
+
   const other: Lang = lang === 'it' ? 'en' : 'it';
+  const active = route.page === 'caso' ? 'progetti' : route.page;
+  const hover = (pg: Page | null) => {
+    window.clearTimeout(closeTimer.current);
+    if (pg) setOpen(pg);
+    else closeTimer.current = window.setTimeout(() => setOpen(null), 160);
+  };
+  const goService = (i: number) => {
+    setOpen(null);
+    if (route.page === 'soluzioni') {
+      window.history.replaceState({}, '', `#${SERVICE_IDS[i]}`);
+      window.dispatchEvent(new Event('r2d:hash'));
+    } else navigate(`${pathFor('soluzioni', lang)}#${SERVICE_IDS[i]}`);
+  };
+
   return (
     <>
-      <header className={`header${menu ? ' is-menu' : ''}`} ref={ref}>
+      <header className={`header${menu ? ' is-menu' : ''}${open ? ' is-open' : ''}`} ref={ref} onPointerLeave={() => hover(null)}>
         <div className="container header__inner">
-          <a
-            className="brand"
-            href="#top"
-            onClick={(e) => {
-              e.preventDefault();
-              go('top');
-            }}
-            aria-label="Ready2Digital"
-          >
+          <Link page="home" lang={lang} className="brand" aria-label="Ready2Digital">
             <Mark size={26} dot="#F4F1EA" />
             <span className="brand__name">
               Ready<span className="accent">2</span>Digital
             </span>
-          </a>
+          </Link>
           <nav className="nav" aria-label="Main">
-            {t.nav.items.map((n) => (
-              <a
-                key={n.id}
-                href={`#${n.id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  go(n.id);
-                }}
-              >
-                {n.label}
-              </a>
-            ))}
+            {p.menu.items.map((m) => {
+              const drop = m.page === 'soluzioni' || m.page === 'progetti';
+              return (
+                <div key={m.page} className="nav__item" onPointerEnter={() => hover(drop ? m.page : null)}>
+                  <Link page={m.page} lang={lang} className={active === m.page ? 'is-active' : undefined} aria-haspopup={drop || undefined} aria-expanded={drop ? open === m.page : undefined}>
+                    {m.label}
+                    {drop && <span className="nav__caret">▾</span>}
+                  </Link>
+                </div>
+              );
+            })}
           </nav>
           <div className="header__right">
-            <button type="button" className="lang" onClick={() => setLang(other)} aria-label={other === 'en' ? 'English' : 'Italiano'}>
+            <Link page={route.page} slug={route.slug} lang={other} className="lang" aria-label={other === 'en' ? 'English' : 'Italiano'} hrefLang={other}>
               <span className={lang === 'it' ? 'on' : ''}>IT</span>
               <span className={lang === 'en' ? 'on' : ''}>EN</span>
-            </button>
-            <a
-              className="btn btn--sm magnetic header__cta"
-              href="#contatti"
-              onClick={(e) => {
-                e.preventDefault();
-                go('contatti');
-              }}
-            >
+            </Link>
+            <Link page="contatti" lang={lang} className="btn btn--sm magnetic header__cta">
               {t.nav.cta}
-            </a>
+            </Link>
             <button type="button" className="burger" aria-expanded={menu} aria-label={menu ? t.nav.close : t.nav.menu} onClick={() => setMenu(!menu)}>
               <span />
               <span />
             </button>
           </div>
         </div>
+
+        <div className={`mega${open === 'soluzioni' ? ' is-open' : ''}`} onPointerEnter={() => hover('soluzioni')}>
+          <div className="container mega__inner">
+            {p.menu.groups.map((g) => (
+              <div key={g.t} className="mega__col">
+                <p className="mega__k">{g.t}</p>
+                {g.ids.map((i) => (
+                  <a
+                    key={i}
+                    href={href(`${pathFor('soluzioni', lang)}#${SERVICE_IDS[i]}`)}
+                    className="mega__link"
+                    tabIndex={open === 'soluzioni' ? 0 : -1}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      goService(i);
+                    }}
+                  >
+                    <strong>{t.services.items[i].t}</strong>
+                    <span>{t.services.items[i].d}</span>
+                  </a>
+                ))}
+              </div>
+            ))}
+            <Link page="soluzioni" lang={lang} className="mega__all" tabIndex={open === 'soluzioni' ? 0 : -1}>
+              {p.menu.allSolutions} →
+            </Link>
+          </div>
+        </div>
+        <div className={`mega${open === 'progetti' ? ' is-open' : ''}`} onPointerEnter={() => hover('progetti')}>
+          <div className="container mega__inner mega__inner--work">
+            {cases[lang].map((c) => (
+              <Link key={c.slug} page="caso" slug={c.slug} lang={lang} className="mega__case" tabIndex={open === 'progetti' ? 0 : -1}>
+                <span className="mega__logo">{c.logo ? <img src={`${import.meta.env.BASE_URL}${c.logo}`} alt="" /> : c.client[0]}</span>
+                <strong>{c.client}</strong>
+                <span>{c.sector}</span>
+              </Link>
+            ))}
+            <div className="mega__aside">
+              <p>{p.menu.workBlurb}</p>
+              <Link page="progetti" lang={lang} className="mega__all" tabIndex={open === 'progetti' ? 0 : -1}>
+                {p.menu.allWork} →
+              </Link>
+            </div>
+          </div>
+        </div>
       </header>
-      <div className={`menu${menu ? ' is-open' : ''}`} aria-hidden={!menu}>
+
+      <div className={`menu${menu ? ' is-open' : ''}`} aria-hidden={!menu} data-lenis-prevent>
         <nav className="container menu__nav">
-          {[...t.nav.items, { id: 'contatti', label: t.nav.cta }].map((n, i) => (
-            <a
-              key={n.id}
-              href={`#${n.id}`}
-              tabIndex={menu ? 0 : -1}
-              style={{ transitionDelay: menu ? `${0.08 + i * 0.05}s` : '0s' }}
-              onClick={(e) => {
-                e.preventDefault();
-                go(n.id);
-              }}
-            >
-              <small>{String(i + 1).padStart(2, '0')}</small>
-              {n.label}
-            </a>
+          {[{ page: 'home' as Page, label: 'Home' }, ...p.menu.items, { page: 'contatti' as Page, label: p.menu.contact }].map((n, i) => (
+            <div key={n.page}>
+              <Link page={n.page} lang={lang} tabIndex={menu ? 0 : -1} style={{ transitionDelay: menu ? `${0.08 + i * 0.05}s` : '0s' }} className={active === n.page ? 'is-active' : undefined}>
+                <small>{String(i + 1).padStart(2, '0')}</small>
+                {n.label}
+              </Link>
+              {n.page === 'progetti' && (
+                <div className="menu__sub">
+                  {cases[lang].map((c) => (
+                    <Link key={c.slug} page="caso" slug={c.slug} lang={lang} tabIndex={menu ? 0 : -1}>
+                      {c.client}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </nav>
       </div>

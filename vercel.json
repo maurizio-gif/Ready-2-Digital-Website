@@ -16,42 +16,77 @@
     },
     {
       "source": "/it/progetti/athlon-club",
-      "destination": "/casi/athlon",
+      "destination": "/progetti/athlon",
       "permanent": true
     },
     {
       "source": "/en/work/athlon-club",
-      "destination": "/casi/athlon?lang=en",
+      "destination": "/en/work/athlon",
       "permanent": true
     },
     {
       "source": "/it/progetti/tennis-club-ambrosiano",
-      "destination": "/casi/tennis-club-ambrosiano",
-      "permanent": true
-    },
-    {
-      "source": "/en/work/tennis-club-ambrosiano",
-      "destination": "/casi/tennis-club-ambrosiano?lang=en",
+      "destination": "/progetti/tennis-club-ambrosiano",
       "permanent": true
     },
     {
       "source": "/it/progetti/ronchiverdi",
-      "destination": "/casi/ronchiverdi",
-      "permanent": true
-    },
-    {
-      "source": "/en/work/ronchiverdi",
-      "destination": "/casi/ronchiverdi?lang=en",
+      "destination": "/progetti/ronchiverdi",
       "permanent": true
     },
     {
       "source": "/it/progetti/passion-fitness",
-      "destination": "/casi/passion-fitness",
+      "destination": "/progetti/passion-fitness",
       "permanent": true
     },
     {
-      "source": "/en/work/passion-fitness",
-      "destination": "/casi/passion-fitness?lang=en",
+      "source": "/it/soluzioni",
+      "destination": "/soluzioni",
+      "permanent": true
+    },
+    {
+      "source": "/it/progetti",
+      "destination": "/progetti",
+      "permanent": true
+    },
+    {
+      "source": "/it/metodo",
+      "destination": "/metodo",
+      "permanent": true
+    },
+    {
+      "source": "/it/tecnologia",
+      "destination": "/tecnologia",
+      "permanent": true
+    },
+    {
+      "source": "/it/chi-siamo",
+      "destination": "/chi-siamo",
+      "permanent": true
+    },
+    {
+      "source": "/it/contatti",
+      "destination": "/contatti",
+      "permanent": true
+    },
+    {
+      "source": "/casi/:slug",
+      "destination": "/progetti/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/en/cookie-policy",
+      "destination": "/en/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/it/privacy",
+      "destination": "/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/it/cookie-policy",
+      "destination": "/privacy",
       "permanent": true
     },
     {
@@ -63,21 +98,75 @@
       "source": "/it/:path*",
       "destination": "/",
       "permanent": true
-    },
-    {
-      "source": "/en",
-      "destination": "/?lang=en",
-      "permanent": true
-    },
-    {
-      "source": "/en/:path*",
-      "destination": "/?lang=en",
-      "permanent": true
     }
   ],
   "rewrites": [
     {
-      "source": "/casi/:slug",
+      "source": "/soluzioni",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/progetti",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/progetti/:slug",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/metodo",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/tecnologia",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/chi-siamo",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/contatti",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/solutions",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/work",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/work/:slug",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/method",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/technology",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/about",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/contact",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/privacy",
       "destination": "/index.html"
     }
   ]

@@ -6,7 +6,7 @@ function LayerStack({ layers, rich }: { layers: { name: string; d?: string; item
   return (
     <div className={`layers${rich ? ' layers--rich' : ''}`}>
       {layers.map((l, i) => (
-        <div key={l.name} className="layer" data-reveal style={{ ['--i' as string]: i }}>
+        <div key={l.name} className="layer" data-reveal style={{ ['--i' as string]: i, ['--n' as string]: layers.length }}>
           <div className="layer__head">
             <span className="layer__n">{String(i + 1).padStart(2, '0')}</span>
             <div>
@@ -42,22 +42,24 @@ function LayerStack({ layers, rich }: { layers: { name: string; d?: string; item
 }
 
 /** Home: the stack explained for a business owner. */
-export function TechStack({ lang }: { lang: Lang }) {
+export function TechStack({ lang, head = true }: { lang: Lang; head?: boolean }) {
   const s = stack[lang];
   return (
     <section className="section tech" id="tecnologia">
       <div className="container">
-        <div className="section__head">
-          <p className="kicker" data-reveal>
-            {s.kicker}
-          </p>
-          <h2 className="h-xl" data-split>
-            {s.title}
-          </h2>
-          <p className="lead" data-reveal>
-            {s.sub}
-          </p>
-        </div>
+        {head && (
+          <div className="section__head">
+            <p className="kicker" data-reveal>
+              {s.kicker}
+            </p>
+            <h2 className="h-xl" data-split>
+              {s.title}
+            </h2>
+            <p className="lead" data-reveal>
+              {s.sub}
+            </p>
+          </div>
+        )}
         <LayerStack layers={s.layers} rich />
       </div>
     </section>
@@ -92,7 +94,7 @@ export function CaseTech({ slug, lang }: { slug: string; lang: Lang }) {
         </p>
         <div className="parts">
           {t.parts.map((p, i) => (
-            <article key={p.t} className="part" data-card>
+            <article key={p.t} className="part card-3d" data-card data-tilt="6">
               <span className="part__n">{String(i + 1).padStart(2, '0')}</span>
               <h3 className="part__t">{p.t}</h3>
               <p className="part__role">{p.role}</p>

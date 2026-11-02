@@ -3,8 +3,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CONTACT_EMAIL, type Copy } from '../content';
 import { Mark } from './Mark';
-import { CaseLink } from './CasePage';
+import { Link } from './Nav';
+import { ContactForm } from './ContactForm';
 import { caseUi } from '../cases';
+import { SERVICE_IDS } from '../pages';
+import type { Lang } from '../content';
+import { isTouch } from '../lib/env';
 
 const SLUG: Record<string, string> = {
   'Tennis Club Ambrosiano': 'tennis-club-ambrosiano',
@@ -23,15 +27,17 @@ export function Manifesto({ t }: { t: Copy }) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const words = ref.current!.querySelectorAll('.mw');
+    // The words light up as they pass the middle of the screen; a paragraph that
+    // is fully in view is fully lit, so nobody ever reads a dim line.
     const ctx = gsap.context(() => {
       gsap.fromTo(
         words,
-        { opacity: 0.12 },
+        { opacity: 0.22 },
         {
           opacity: 1,
           stagger: 0.05,
           ease: 'none',
-          scrollTrigger: { trigger: ref.current, start: 'top 70%', end: 'bottom 60%', scrub: true },
+          scrollTrigger: { trigger: ref.current, start: 'top 75%', end: isTouch() ? 'bottom 90%' : 'bottom 78%', scrub: true },
         },
       );
     }, ref);
@@ -165,11 +171,11 @@ const ICONS: string[] = [
   'M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z M9 12l2 2 4-4', // privacy
 ];
 
-export function Services({ t }: { t: Copy }) {
+export function Services({ t, head = true }: { t: Copy; head?: boolean }) {
   return (
     <section className="services section section--light" id="servizi">
       <div className="container">
-        <div className="section__head">
+        {head && <div className="section__head">
           <p className="kicker" data-reveal>
             {t.services.kicker}
           </p>
@@ -179,27 +185,10 @@ export function Services({ t }: { t: Copy }) {
           <p className="lead" data-reveal>
             {t.services.sub}
           </p>
-        </div>
+        </div>}
         <div className="svc-grid">
           {t.services.items.map((s, i) => (
-            <article
-              key={s.t}
-              className="svc"
-              data-card
-              onPointerMove={(e) => {
-                const b = e.currentTarget.getBoundingClientRect();
-                const x = e.clientX - b.left;
-                const y = e.clientY - b.top;
-                e.currentTarget.style.setProperty('--mx', `${x}px`);
-                e.currentTarget.style.setProperty('--my', `${y}px`);
-                e.currentTarget.style.setProperty('--rx', `${((y / b.height) - 0.5) * -8}deg`);
-                e.currentTarget.style.setProperty('--ry', `${((x / b.width) - 0.5) * 8}deg`);
-              }}
-              onPointerLeave={(e) => {
-                e.currentTarget.style.setProperty('--rx', '0deg');
-                e.currentTarget.style.setProperty('--ry', '0deg');
-              }}
-            >
+            <article key={s.t} id={SERVICE_IDS[i]} className="svc card-3d" data-card data-tilt="7">
               <div className="svc__top">
                 <svg viewBox="0 0 24 24" className="svc__icon" aria-hidden="true">
                   <path d={ICONS[i]} />
@@ -301,7 +290,7 @@ export function Modular({ t }: { t: Copy }) {
 /* ------------------------------------------------------------------ */
 /* Method: a horizontal track pinned while you scroll.                 */
 /* ------------------------------------------------------------------ */
-export function Method({ t }: { t: Copy }) {
+export function Method({ t, head = true }: { t: Copy; head?: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -319,23 +308,40 @@ export function Method({ t }: { t: Copy }) {
           pin: true,
           scrub: 0.8,
           invalidateOnRefresh: true,
-          onUpdate: (s) => ref.current!.style.setProperty('--mp', s.progress.toFixed(4)),
+          onUpdate: (s) => {
+            ref.current!.style.setProperty('--mp', s.progress.toFixed(4));
+            depth();
+          },
         },
       });
+      // Each card turns a little towards the centre of the screen as it passes:
+      // the track reads as a row of panels standing in space, not a flat strip.
+      const steps = Array.from(el.querySelectorAll<HTMLElement>('.step'));
+      const depth = () => {
+        const mid = window.innerWidth / 2;
+        steps.forEach((st) => {
+          const b = st.getBoundingClientRect();
+          const d = Math.max(-1, Math.min(1, (b.left + b.width / 2 - mid) / window.innerWidth));
+          st.style.setProperty('--d', d.toFixed(3));
+        });
+      };
+      depth();
       return () => tw.kill();
     });
     return () => mm.revert();
   }, []);
   return (
     <section className="method section" id="metodo" ref={ref}>
-      <div className="container method__head">
-        <p className="kicker" data-reveal>
-          {t.method.kicker}
-        </p>
-        <h2 className="h-xl" data-split>
-          {t.method.title}
-        </h2>
-      </div>
+      {head && (
+        <div className="container method__head">
+          <p className="kicker" data-reveal>
+            {t.method.kicker}
+          </p>
+          <h2 className="h-xl" data-split>
+            {t.method.title}
+          </h2>
+        </div>
+      )}
       <div className="method__rail" aria-hidden="true">
         <span className="method__rail-fill" />
         <span className="method__rail-dot" />
@@ -356,7 +362,7 @@ export function Method({ t }: { t: Copy }) {
 /* ------------------------------------------------------------------ */
 /* Origin: Athlon, with numbers that count up.                         */
 /* ------------------------------------------------------------------ */
-export function Origin({ t, lang }: { t: Copy; lang: string }) {
+export function Origin({ t, lang }: { t: Copy; lang: Lang }) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -384,7 +390,7 @@ export function Origin({ t, lang }: { t: Copy; lang: string }) {
   return (
     <section className="origin section" ref={ref}>
       <div className="container origin__grid">
-        <div className="origin__img" data-reveal>
+        <div className="origin__img" data-reveal data-tilt="4" data-lift="0">
           <img src={asset('images/work/athlon.jpg')} alt="Athlon Club, Roma" loading="lazy" />
         </div>
         <div>
@@ -398,10 +404,10 @@ export function Origin({ t, lang }: { t: Copy; lang: string }) {
             {t.origin.text}
           </p>
           <div data-reveal>
-            <CaseLink slug="athlon" className="btn magnetic origin__cta">
-              <span>{caseUi[lang === 'en' ? 'en' : 'it'].open} Athlon</span>
+            <Link page="caso" slug="athlon" lang={lang} className="btn magnetic origin__cta">
+              <span>{caseUi[lang].open} Athlon</span>
               <span className="btn__arrow">→</span>
-            </CaseLink>
+            </Link>
           </div>
         </div>
       </div>
@@ -431,22 +437,25 @@ export function Origin({ t, lang }: { t: Copy; lang: string }) {
 /* ------------------------------------------------------------------ */
 /* Work                                                                */
 /* ------------------------------------------------------------------ */
-export function Work({ t, lang }: { t: Copy; lang: string }) {
-  const open = caseUi[lang === 'en' ? 'en' : 'it'].open;
+export function Work({ t, lang, head = true, only }: { t: Copy; lang: Lang; head?: boolean; only?: number }) {
+  const open = caseUi[lang].open;
+  const items = only ? t.work.items.slice(0, only) : t.work.items;
   return (
     <section className="work section section--light" id="progetti">
       <div className="container">
-        <div className="section__head">
-          <p className="kicker" data-reveal>
-            {t.work.kicker}
-          </p>
-          <h2 className="h-xl" data-split>
-            {t.work.title}
-          </h2>
-        </div>
+        {head && (
+          <div className="section__head">
+            <p className="kicker" data-reveal>
+              {t.work.kicker}
+            </p>
+            <h2 className="h-xl" data-split>
+              {t.work.title}
+            </h2>
+          </div>
+        )}
         <div className="work-grid">
-          {t.work.items.map((w, i) => (
-            <article key={w.c} className={`case${w.img ? ' case--img' : ''}${i < 3 ? ' case--big' : ''}`} data-card>
+          {items.map((w, i) => (
+            <article key={w.c} className={`case card-3d${w.img ? ' case--img' : ''}${i < 3 ? ' case--big' : ''}`} data-card data-tilt="5">
               {w.img && (
                 <div className="case__media">
                   <img src={asset(w.img)} alt="" loading="lazy" />
@@ -465,9 +474,9 @@ export function Work({ t, lang }: { t: Copy; lang: string }) {
                   <strong>{w.m}</strong> {w.ml}
                 </p>
                 {SLUG[w.c] && (
-                  <CaseLink slug={SLUG[w.c]} className="case__open">
+                  <Link page="caso" slug={SLUG[w.c]} lang={lang} className="case__open">
                     {open} <span>→</span>
-                  </CaseLink>
+                  </Link>
                 )}
               </div>
             </article>
@@ -536,21 +545,11 @@ export function Sectors({ t }: { t: Copy }) {
 /* ------------------------------------------------------------------ */
 /* Contact                                                             */
 /* ------------------------------------------------------------------ */
-export function Contact({ t }: { t: Copy }) {
-  const btn = useRef<HTMLButtonElement>(null);
-  const [f, setF] = useState({ name: '', company: '', email: '', message: '' });
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const body = `${f.message}\n\n— ${f.name}${f.company ? `, ${f.company}` : ''}\n${f.email}`;
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.contact.mailSubject)}&body=${encodeURIComponent(body)}`;
-  };
+export function Contact({ t, lang }: { t: Copy; lang: Lang }) {
   return (
     <section className="contact section" id="contatti">
       <div className="container contact__grid">
-        <div>
-          <p className="kicker" data-reveal>
-            {t.contact.kicker}
-          </p>
+        <div className="contact__side">
           <h2 className="contact__title" data-split>
             <span>{t.contact.title[0]}</span> <span className="accent">{t.contact.title[1]}</span>
           </h2>
@@ -564,33 +563,9 @@ export function Contact({ t }: { t: Copy }) {
             </a>
           </p>
         </div>
-        <form className="form" onSubmit={submit} data-reveal>
-          {(['name', 'company', 'email'] as const).map((k) => (
-            <label key={k} className="field">
-              <input
-                type={k === 'email' ? 'email' : 'text'}
-                required={k !== 'company'}
-                placeholder=" "
-                value={f[k]}
-                onChange={(e) => setF({ ...f, [k]: e.target.value })}
-                autoComplete={k === 'name' ? 'name' : k === 'email' ? 'email' : 'organization'}
-              />
-              <span>{t.contact[k]}</span>
-            </label>
-          ))}
-          <label className="field">
-            <textarea required rows={4} placeholder=" " value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} />
-            <span>{t.contact.message}</span>
-          </label>
-          <button
-            ref={btn}
-            className="btn btn--big magnetic"
-            type="submit"
-          >
-            <span>{t.contact.send}</span>
-            <span className="btn__arrow">→</span>
-          </button>
-        </form>
+        <div data-reveal>
+          <ContactForm lang={lang} />
+        </div>
       </div>
     </section>
   );
