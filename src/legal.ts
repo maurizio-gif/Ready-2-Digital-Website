@@ -9,11 +9,13 @@
 
 import type { Lang } from './content';
 
+// From the company registry extract (visura camerale, 14/01/2025).
 export const COMPANY = {
-  name: 'Ready 2 Digital Srl',
-  address: '', // sede legale, es. "Via …, 00100 Roma"
-  vat: '', // P.IVA
-  pec: '',
+  name: 'Ready 2 Digital S.r.l.',
+  address: 'Via Giuseppe De Nittis 4, 00125 Roma (RM)',
+  vat: '16573891005',
+  rea: 'RM-1664181',
+  pec: 'ready2digital@pec.it',
   email: 'info@ready2digital.it',
 };
 
@@ -126,7 +128,8 @@ function controller(lang: Lang) {
   const c = COMPANY;
   const parts = [c.name];
   if (c.address) parts.push(lang === 'it' ? `sede legale in ${c.address}` : `registered office at ${c.address}`);
-  if (c.vat) parts.push(lang === 'it' ? `P.IVA ${c.vat}` : `VAT no. ${c.vat}`);
+  if (c.vat) parts.push(lang === 'it' ? `P.IVA e C.F. ${c.vat}` : `VAT and tax code ${c.vat}`);
+  if (c.rea) parts.push(`REA ${c.rea}`);
   parts.push(`email ${c.email}`);
   if (c.pec) parts.push(`PEC ${c.pec}`);
   return parts.join(', ');

@@ -6,7 +6,7 @@ import { copy, CONTACT_EMAIL, type Copy, type Lang } from './content';
 import { Mark } from './components/Mark';
 import { CasePage } from './components/CasePage';
 import { AboutPage, ContactPage, HomePage, MethodPage, PrivacyPage, SolutionsPage, TechPage, WorkPage } from './components/Pages';
-import { privacyText } from './legal';
+import { COMPANY, privacyText } from './legal';
 import { Link } from './components/Nav';
 import { cases } from './cases';
 import { pages, SERVICE_IDS } from './pages';
@@ -250,7 +250,8 @@ function Footer({ t, lang }: { t: Copy; lang: Lang }) {
       </div>
       <div className="container footer__bottom">
         <p>
-          © {new Date().getFullYear()} Ready2Digital. {t.footer.rights}
+          © {new Date().getFullYear()} {COMPANY.name} · {COMPANY.address} · P.IVA {COMPANY.vat} · REA {COMPANY.rea} · PEC{' '}
+          <a href={`mailto:${COMPANY.pec}`}>{COMPANY.pec}</a>. {t.footer.rights}
         </p>
       </div>
       <p className="footer__giant" aria-hidden="true">
