@@ -11,14 +11,32 @@ import { Link } from './components/Nav';
 import { cases } from './cases';
 import { pages, SERVICE_IDS } from './pages';
 import { href, navigate, pathFor, setNavigateHook, useRoute, type Page, type Route } from './router';
+import { isTouch } from './lib/env';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// On phones the address bar shows and hides while you scroll, and every time the
+// viewport height changes. Without this, ScrollTrigger would refresh on each of
+// those changes and the scrubbed sections would jump under the finger.
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 let lenis: Lenis | null = null;
+// While we scroll the page ourselves (anchors, "back to top") the header stays
+// in view: it should not hide as if the reader were scrolling down.
+let autoScrollUntil = 0;
 const scrollTo = (target: string | number) => {
+  autoScrollUntil = performance.now() + 1700;
   if (lenis) lenis.scrollTo(target, { duration: 1.6 });
   else if (typeof target === 'number') window.scrollTo({ top: target, behavior: 'smooth' });
   else document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' });
+};
+const scrollToEl = (el: HTMLElement) => {
+  autoScrollUntil = performance.now() + 1400;
+  if (lenis) lenis.scrollTo(el, { offset: -96, duration: 1.2 });
+  else {
+    const top = el.getBoundingClientRect().top + window.scrollY - 96;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
 };
 
 function metaFor(route: Route, t: Copy): [string, string] {
@@ -115,8 +133,7 @@ export default function App() {
       ScrollTrigger.refresh();
       const el = id ? document.getElementById(id) : null;
       if (!el) return;
-      if (lenis) lenis.scrollTo(el, { offset: -90, duration: 1.2 });
-      else el.scrollIntoView();
+      scrollToEl(el);
     }, 450);
     return () => clearTimeout(tm);
   }, [routeKey]);
@@ -125,29 +142,83 @@ export default function App() {
   useEffect(() => {
     const onHash = () => {
       const el = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
-      if (el) lenis ? lenis.scrollTo(el, { offset: -90, duration: 1.2 }) : el.scrollIntoView();
+      if (el) scrollToEl(el);
     };
     window.addEventListener('r2d:hash', onHash);
     return () => window.removeEventListener('r2d:hash', onHash);
   }, []);
 
-  // Generic reveals for every section, re-armed on every page.
+  // Generic reveals for every section, re-armed on every page. On touch screens
+  // they are shorter and start earlier: a flick of the thumb moves a whole screen,
+  // and the content must already be there when the eye lands on it.
   useEffect(() => {
+    const touch = isTouch();
+    const k = touch ? 0.65 : 1;
+    const start = touch ? 'top 96%' : 'top 88%';
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>('main [data-reveal]').forEach((el) => {
-        gsap.fromTo(el, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+        gsap.fromTo(el, { opacity: 0, y: 40 * k }, { opacity: 1, y: 0, duration: 1.1 * k, ease: 'power3.out', scrollTrigger: { trigger: el, start, once: true } });
       });
       gsap.utils.toArray<HTMLElement>('main [data-split]').forEach((el) => {
-        gsap.fromTo(el, { clipPath: 'inset(0 0 100% 0)', y: 60 }, { clipPath: 'inset(0 0 -20% 0)', y: 0, duration: 1.3, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+        gsap.fromTo(el, { clipPath: 'inset(0 0 100% 0)', y: 60 * k }, { clipPath: 'inset(0 0 -20% 0)', y: 0, duration: 1.3 * k, ease: 'expo.out', scrollTrigger: { trigger: el, start, once: true } });
       });
       gsap.utils.toArray<HTMLElement>('main [data-card]').forEach((el, i) => {
-        gsap.fromTo(el, { opacity: 0, y: 70, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: 'expo.out', delay: (i % 3) * 0.08, scrollTrigger: { trigger: el, start: 'top 92%', once: true } });
+        gsap.fromTo(el, { opacity: 0, y: 70 * k, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 1.1 * k, ease: 'expo.out', delay: touch ? 0 : (i % 3) * 0.08, scrollTrigger: { trigger: el, start: touch ? 'top 98%' : 'top 92%', once: true } });
       });
     });
     const tm = setTimeout(() => ScrollTrigger.refresh(), 300);
     return () => {
       clearTimeout(tm);
       ctx.revert();
+    };
+  }, [routeKey]);
+
+  // Cards tilt towards the pointer, with their inner layers lifted a little:
+  // the same hook for every [data-tilt] on the page, pointer devices only.
+  useEffect(() => {
+    if (!window.matchMedia('(pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const live = new Map<HTMLElement, { rx: (v: number) => void; ry: (v: number) => void; y: (v: number) => void }>();
+    const get = (el: HTMLElement) => {
+      let q = live.get(el);
+      if (!q) {
+        q = {
+          rx: gsap.quickTo(el, 'rotationX', { duration: 0.6, ease: 'power3' }),
+          ry: gsap.quickTo(el, 'rotationY', { duration: 0.6, ease: 'power3' }),
+          y: gsap.quickTo(el, 'y', { duration: 0.6, ease: 'power3' }),
+        };
+        gsap.set(el, { transformPerspective: 1100 });
+        live.set(el, q);
+      }
+      return q;
+    };
+    const move = (e: PointerEvent) => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>('[data-tilt]');
+      if (!el) return;
+      const b = el.getBoundingClientRect();
+      const x = (e.clientX - b.left) / b.width;
+      const y = (e.clientY - b.top) / b.height;
+      const amp = Number(el.dataset.tilt) || 6;
+      const q = get(el);
+      q.rx((0.5 - y) * amp);
+      q.ry((x - 0.5) * amp);
+      q.y(el.dataset.lift === '0' ? 0 : -6);
+      el.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`);
+      el.style.setProperty('--my', `${(y * 100).toFixed(1)}%`);
+    };
+    const out = (e: PointerEvent) => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>('[data-tilt]');
+      if (!el || (e.relatedTarget && el.contains(e.relatedTarget as Node))) return;
+      const q = get(el);
+      q.rx(0);
+      q.ry(0);
+      q.y(0);
+    };
+    document.addEventListener('pointermove', move, { passive: true });
+    document.addEventListener('pointerout', out, { passive: true });
+    return () => {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerout', out);
+      live.clear();
     };
   }, [routeKey]);
 
@@ -275,9 +346,15 @@ function Header({ t, route, menu, setMenu }: { t: Copy; route: Route; menu: bool
       end: 'max',
       onUpdate: (s) => {
         const y = s.scroll();
-        ref.current?.classList.toggle('is-hidden', y > last && y > 300);
+        const d = y - last;
+        // A clear movement decides, not the jitter of a finger or a rubber-band
+        // bounce; while the page scrolls itself the header stays where it is.
+        if (Math.abs(d) > 8 && performance.now() > autoScrollUntil) {
+          ref.current?.classList.toggle('is-hidden', d > 0 && y > 300);
+          last = y;
+        } else if (Math.abs(d) > 8) last = y;
+        if (y < 300) ref.current?.classList.remove('is-hidden');
         ref.current?.classList.toggle('is-solid', y > 60);
-        last = y;
       },
     });
     return () => st.kill();
