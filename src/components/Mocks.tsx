@@ -7,10 +7,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { Extract } from '../cases';
 import { Mark } from './Mark';
 import { finePointer, isTouch, reducedMotion } from '../lib/env';
+import { AgentBook, AgentCall, AgentPay, Dash } from './Scenes';
 
 gsap.registerPlugin(ScrollTrigger);
 
-function useInView<T extends Element>(threshold = 0.35) {
+function useInView<T extends Element>(threshold = 0.18) {
   const ref = useRef<T>(null);
   const [on, setOn] = useState(false);
   useEffect(() => {
@@ -644,6 +645,18 @@ export function ExtractView({ x, sample, flip = false }: { x: Extract; sample: s
       break;
     case 'weight':
       body = <Weight x={x} on={on} />;
+      break;
+    case 'dash':
+      body = <Dash x={x} on={on} sample={sample} />;
+      break;
+    case 'agentBook':
+      body = <AgentBook x={x} on={on} />;
+      break;
+    case 'agentPay':
+      body = <AgentPay x={x} on={on} />;
+      break;
+    case 'agentCall':
+      body = <AgentCall x={x} on={on} sample={sample} />;
       break;
   }
   return (

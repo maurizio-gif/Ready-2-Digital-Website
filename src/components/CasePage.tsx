@@ -9,6 +9,7 @@ import { Mark } from './Mark';
 import { CaseTech } from './Tech';
 import { Link } from './Nav';
 import { RealScreens } from './RealScreens';
+import { Ecosystem } from './Scenes';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -97,6 +98,27 @@ export function CasePage({ c, lang }: { c: Case; lang: Lang }) {
           </div>
         </div>
       </section>
+
+      {c.ecosystem && (
+        <section className="section eco-section">
+          <div className="container">
+            <div className="section__head">
+              <p className="kicker" data-reveal>
+                {c.ecosystem.kicker}
+              </p>
+              <h2 className="h-xl" data-split>
+                {c.ecosystem.title}
+              </h2>
+              <p className="lead" data-reveal>
+                {c.ecosystem.text}
+              </p>
+            </div>
+            <div data-reveal>
+              <Ecosystem e={c.ecosystem} lang={lang} />
+            </div>
+          </div>
+        </section>
+      )}
 
       <RealScreens slug={c.slug} lang={lang} />
 

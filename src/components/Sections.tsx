@@ -11,6 +11,7 @@ import type { Lang } from '../content';
 import { isTouch } from '../lib/env';
 
 const SLUG: Record<string, string> = {
+  'Athlon Club 4.0': 'athlon',
   'Tennis Club Ambrosiano': 'tennis-club-ambrosiano',
   Ronchiverdi: 'ronchiverdi',
   'Passion Fitness': 'passion-fitness',

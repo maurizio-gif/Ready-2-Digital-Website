@@ -146,6 +146,7 @@ const it = {
     kicker: 'Progetti',
     title: 'Ogni progetto, un percorso diverso.',
     items: [
+      { c: 'Athlon Club 4.0', s: 'Club sportivo multi-attività · Roma', t: 'Sito, CRM e app su un solo database: il club dove il metodo è nato.', m: '570', ml: 'lead unici al mese', logo: 'images/work/logos/athlon-mark.svg', img: 'images/work/athlon.jpg' },
       { c: 'Tennis Club Ambrosiano', s: 'Circolo sportivo · Milano', t: 'Un’unica anagrafica al posto di sistemi scollegati.', m: '220', ml: 'anagrafiche unificate', logo: 'images/work/logos/tca-mark.png', img: 'images/work/tca.jpg' },
       { c: 'Lume Fitness', s: 'Palestre multi-sede', t: 'Dalla prevendita prima dell’apertura alla gestione del cliente, in un unico sistema.', m: '3', ml: 'sedi, un solo flusso', logo: 'images/work/logos/lume-mark.svg', img: 'images/work/lume.jpg' },
       { c: 'Ronchiverdi', s: 'Sport club', t: 'Prima abbiamo studiato l’azienda. Poi abbiamo scritto il software.', m: 'SQL', ml: 'Server collegato al CRM', logo: 'images/work/logos/ronchiverdi-mark.png', img: 'images/work/ronchiverdi.jpg' },
@@ -329,6 +330,7 @@ const en: Copy = {
     kicker: 'Work',
     title: 'Every project, a different path.',
     items: [
+      { c: 'Athlon Club 4.0', s: 'Multi-sport club · Rome', t: 'Website, CRM and app on one database: the club where the method was born.', m: '570', ml: 'unique leads a month', logo: 'images/work/logos/athlon-mark.svg', img: 'images/work/athlon.jpg' },
       { c: 'Tennis Club Ambrosiano', s: 'Sports club · Milan', t: 'One customer record instead of disconnected systems.', m: '220', ml: 'records unified', logo: 'images/work/logos/tca-mark.png', img: 'images/work/tca.jpg' },
       { c: 'Lume Fitness', s: 'Multi-site gyms', t: 'From pre-sales before opening day to customer management, in one system.', m: '3', ml: 'sites, one flow', logo: 'images/work/logos/lume-mark.svg', img: 'images/work/lume.jpg' },
       { c: 'Ronchiverdi', s: 'Sport club', t: 'First we studied the company. Then we wrote the software.', m: 'SQL', ml: 'Server wired to the CRM', logo: 'images/work/logos/ronchiverdi-mark.png', img: 'images/work/ronchiverdi.jpg' },
