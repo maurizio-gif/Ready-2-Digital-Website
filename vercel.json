@@ -98,76 +98,127 @@
       "source": "/it/:path*",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/siti-web{/}?",
+      "destination": "/soluzioni#siti",
+      "statusCode": 301
+    },
+    {
+      "source": "/gestione-hardware{/}?",
+      "destination": "/soluzioni#totem",
+      "statusCode": 301
+    },
+    {
+      "source": "/gestione-adv{/}?",
+      "destination": "/soluzioni",
+      "statusCode": 301
+    },
+    {
+      "source": "/automazione-digitale{/}?",
+      "destination": "/agenti-ai",
+      "statusCode": 301
+    },
+    {
+      "source": "/strategia{/}?",
+      "destination": "/metodo",
+      "statusCode": 301
+    },
+    {
+      "source": "/glofox{/}?",
+      "destination": "/chi-siamo",
+      "statusCode": 301
+    },
+    {
+      "source": "/glofox-demo{/}?",
+      "destination": "/chi-siamo",
+      "statusCode": 301
+    },
+    {
+      "source": "/ready-2-digital-porta-glofox-in-italia{/}?",
+      "destination": "/chi-siamo",
+      "statusCode": 301
+    },
+    {
+      "source": "/report-athlon-performance-commerciale{/}?",
+      "destination": "/progetti/athlon",
+      "statusCode": 301
+    },
+    {
+      "source": "/thank-you{/}?",
+      "destination": "/contatti",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog{/}?",
+      "destination": "/progetti",
+      "statusCode": 301
+    },
+    {
+      "source": "/test{/}?",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/sample-home-page{/}?",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/category/:path*{/}?",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tag/:path*{/}?",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/author/:path*{/}?",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/websites-2{/}?",
+      "destination": "/en/solutions#siti",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/hardware-manage{/}?",
+      "destination": "/en/solutions#totem",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/advertising-management-2{/}?",
+      "destination": "/en/solutions",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/digital-automation-2{/}?",
+      "destination": "/en/ai-agents",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/digital-strategy{/}?",
+      "destination": "/en/method",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/home-english{/}?",
+      "destination": "/en",
+      "statusCode": 301
     }
   ],
-  "rewrites": [
+  "headers": [
     {
-      "source": "/soluzioni",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/progetti",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/progetti/:slug",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/metodo",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/tecnologia",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/chi-siamo",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/contatti",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/solutions",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/work",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/work/:slug",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/method",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/technology",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/about",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/contact",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/privacy",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/privacy",
-      "destination": "/index.html"
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ]
 }

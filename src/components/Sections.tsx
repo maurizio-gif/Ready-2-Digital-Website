@@ -6,7 +6,7 @@ import { Mark } from './Mark';
 import { Link } from './Nav';
 import { ContactForm } from './ContactForm';
 import { caseUi } from '../cases';
-import { SERVICE_IDS } from '../pages';
+import { SERVICE_IDS, pages } from '../pages';
 import type { Lang } from '../content';
 import { isTouch } from '../lib/env';
 
@@ -171,7 +171,7 @@ const ICONS: string[] = [
   'M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z M9 12l2 2 4-4', // privacy
 ];
 
-export function Services({ t, head = true }: { t: Copy; head?: boolean }) {
+export function Services({ t, head = true, lang }: { t: Copy; head?: boolean; lang?: Lang }) {
   return (
     <section className="services section section--light" id="servizi">
       <div className="container">
@@ -197,6 +197,11 @@ export function Services({ t, head = true }: { t: Copy; head?: boolean }) {
               </div>
               <h3 className="svc__title">{s.t}</h3>
               <p className="svc__text">{s.d}</p>
+              {lang && (SERVICE_IDS[i] === 'ai' || SERVICE_IDS[i] === 'automazioni') && (
+                <Link page="agenti" lang={lang} className="svc__more">
+                  {pages[lang].teasers.servicesMore} <span aria-hidden="true">→</span>
+                </Link>
+              )}
               <span className="svc__n">{String(i + 1).padStart(2, '0')}</span>
             </article>
           ))}

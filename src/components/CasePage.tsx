@@ -58,6 +58,7 @@ export function CasePage({ c, lang }: { c: Case; lang: Lang }) {
             {titleLines.map((l, i) => (
               <span key={i} className="reveal-line">
                 <span className={i === 1 ? 'accent' : undefined}>{l}</span>
+                {' '}
               </span>
             ))}
           </h1>
