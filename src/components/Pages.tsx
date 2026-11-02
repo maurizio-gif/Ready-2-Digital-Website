@@ -6,6 +6,7 @@ import { Dots } from './Dots';
 import { TechStack } from './Tech';
 import { Link, NextPage, PageHero } from './Nav';
 import { privacyText } from '../legal';
+import { AgentsTeaser } from './Agents';
 
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
 
@@ -62,6 +63,8 @@ export function HomePage({ t, lang, ready }: { t: Copy; lang: Lang; ready: boole
         </div>
       </section>
 
+      <AgentsTeaser lang={lang} />
+
       <section className="section teaser">
         <div className="container">
           <div className="teaser__head">
@@ -109,7 +112,7 @@ export function SolutionsPage({ t, lang }: { t: Copy; lang: Lang }) {
   return (
     <>
       <PageHero kicker={h.kicker} title={h.title} sub={h.sub} />
-      <Services t={t} head={false} />
+      <Services t={t} head={false} lang={lang} />
       <Modular t={t} />
       <Dots variant="gooey" lines={t.dots.a} />
       <Sectors t={t} />

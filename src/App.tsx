@@ -6,7 +6,9 @@ import { copy, CONTACT_EMAIL, type Copy, type Lang } from './content';
 import { Mark } from './components/Mark';
 import { CasePage } from './components/CasePage';
 import { AboutPage, ContactPage, HomePage, MethodPage, PrivacyPage, SolutionsPage, TechPage, WorkPage } from './components/Pages';
-import { COMPANY, privacyText } from './legal';
+import { AgentsPage } from './components/Agents';
+import { COMPANY } from './legal';
+import { applyHead, seoFor, shellSeo } from './seo';
 import { Link } from './components/Nav';
 import { cases } from './cases';
 import { pages, SERVICE_IDS } from './pages';
@@ -39,23 +41,8 @@ const scrollToEl = (el: HTMLElement) => {
   }
 };
 
-function metaFor(route: Route, t: Copy): [string, string] {
-  const p = pages[route.lang];
-  if (route.page === 'caso') {
-    const c = cases[route.lang].find((x) => x.slug === route.slug);
-    if (c) return [`${c.client} — ${route.lang === 'it' ? 'Progetto' : 'Case study'} · Ready2Digital`, c.intro];
-  }
-  if (route.page === 'privacy') {
-    const pv = privacyText(route.lang);
-    return [`${pv.title} — Ready 2 Digital`, pv.intro];
-  }
-  if (route.page === 'home' || route.page === 'caso') return [t.meta.title, t.meta.description];
-  const h = p.heroes[route.page];
-  return [`${h.kicker} — Ready2Digital`, h.sub];
-}
-
-export default function App() {
-  const route = useRoute();
+export default function App({ ssrPath }: { ssrPath?: string }) {
+  const route = useRoute(ssrPath);
   const lang: Lang = route.lang;
   const t = copy[lang];
   const [ready, setReady] = useState(false);
@@ -64,12 +51,12 @@ export default function App() {
   const kase = route.page === 'caso' ? cases[lang].find((c) => c.slug === route.slug) : undefined;
   const routeKey = `${lang}-${route.page}-${route.slug ?? ''}`;
 
+  // Title, description, canonical, language alternates and structured data follow
+  // the page when the reader moves around without a reload. The first load already
+  // has them in the HTML (scripts/prerender.mjs).
   useEffect(() => {
-    const [title, desc] = metaFor(route, t);
-    document.documentElement.lang = lang;
-    document.title = title;
-    document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
-  }, [route, t, lang]);
+    applyHead(route.notFound ? shellSeo() : seoFor(route));
+  }, [route]);
 
   // Smooth scrolling, driven by GSAP's ticker so everything shares one clock.
   useEffect(() => {
@@ -247,6 +234,9 @@ export default function App() {
   switch (route.page) {
     case 'soluzioni':
       page = <SolutionsPage t={t} lang={lang} />;
+      break;
+    case 'agenti':
+      page = <AgentsPage lang={lang} />;
       break;
     case 'progetti':
       page = <WorkPage t={t} lang={lang} />;

@@ -13,6 +13,7 @@ const it = {
   menu: {
     items: [
       { page: 'soluzioni' as Page, label: 'Soluzioni' },
+      { page: 'agenti' as Page, label: 'Agenti AI' },
       { page: 'progetti' as Page, label: 'Progetti' },
       { page: 'metodo' as Page, label: 'Metodo' },
       { page: 'tecnologia' as Page, label: 'Tecnologia' },
@@ -30,6 +31,11 @@ const it = {
   },
   heroes: {
     soluzioni: { kicker: 'Soluzioni', title: ['Dal sito all’ERP.', 'Dalla app al totem.'], sub: 'Dieci cose che sappiamo costruire. Ognuna può vivere da sola o diventare parte dello stesso percorso, accanto al software che hai già.' },
+    agenti: {
+      kicker: 'Agenti AI e automazioni',
+      title: ['Dove ci sono dati,', 'un agente lavora.'],
+      sub: 'Agenti di intelligenza artificiale su misura: leggono i tuoi dati, agiscono sui tuoi strumenti e passano la mano a una persona quando serve. Per vendere, assistere, capire i numeri e tenere in ordine il CRM.',
+    },
     progetti: { kicker: 'Progetti', title: ['Ogni progetto,', 'un percorso diverso.'], sub: 'Club sportivi, palestre, circoli, amministrazione. Quattro casi raccontati per intero, con le schermate e la tecnica; gli altri in breve.' },
     metodo: { kicker: 'Metodo', title: ['Prima il processo.', 'Poi il codice.'], sub: 'Sei passi, sempre gli stessi. Perché la tecnologia funziona solo se nasce da come lavora davvero l’azienda, e se le persone la adottano.' },
     tecnologia: { kicker: 'Tecnologia', title: ['Lo stack,', 'spiegato semplice.'], sub: 'Cosa usiamo, perché, e come lo colleghiamo a quello che hai già. Senza gergo, per chi decide.' },
@@ -39,12 +45,26 @@ const it = {
   teasers: {
     solutions: { kicker: 'Soluzioni', title: 'Un pezzo o tutto il sistema.', more: 'Tutte le soluzioni' },
     work: { kicker: 'Progetti', title: 'Fatto, in produzione, usato ogni giorno.', more: 'Tutti i progetti' },
+    agents: {
+      kicker: 'Agenti AI e automazioni',
+      title: 'Dove ci sono dati, un agente lavora.',
+      text: 'Leggono i tuoi dati, agiscono sui tuoi strumenti e passano la mano a una persona quando serve. Non sono chatbot: fanno il lavoro.',
+      more: 'Scopri gli agenti AI',
+      cards: [
+        { id: 'vendita', tag: 'Vendita', t: 'Rispondono e qualificano', d: 'Ogni contatto riceve risposta subito, a ogni ora, e arriva nel CRM già pronto.' },
+        { id: 'assistenza', tag: 'Assistenza', t: 'Risolvono e passano la mano', d: 'Sito, app e WhatsApp: rispondono dalle tue informazioni e chiamano una persona quando serve.' },
+        { id: 'analisi-dati', tag: 'Analisi dati', t: 'Fanno parlare i numeri', d: 'Report che arrivano da soli e avvisi quando qualcosa si scosta.' },
+        { id: 'crm', tag: 'CRM', t: 'Tengono in ordine il CRM', d: 'Schede aggiornate, bozze di risposta, la prossima azione già indicata.' },
+      ],
+    },
+    servicesMore: 'Scopri gli agenti AI',
     cta: { title: 'Hai un processo da semplificare?', btn: 'Parliamone' },
   },
   next: 'Continua',
   nextLabels: {
     home: 'Home',
     soluzioni: 'Le soluzioni',
+    agenti: 'Gli agenti AI',
     progetti: 'I progetti',
     metodo: 'Il metodo',
     tecnologia: 'La tecnologia',
@@ -105,6 +125,7 @@ const en: typeof it = {
   menu: {
     items: [
       { page: 'soluzioni', label: 'Solutions' },
+      { page: 'agenti', label: 'AI agents' },
       { page: 'progetti', label: 'Work' },
       { page: 'metodo', label: 'Method' },
       { page: 'tecnologia', label: 'Technology' },
@@ -122,6 +143,11 @@ const en: typeof it = {
   },
   heroes: {
     soluzioni: { kicker: 'Solutions', title: ['From website to ERP.', 'From app to kiosk.'], sub: 'Ten things we know how to build. Each can live on its own or become part of the same path, alongside the software you already have.' },
+    agenti: {
+      kicker: 'AI agents and automation',
+      title: ['Where there’s data,', 'an agent works.'],
+      sub: 'Custom AI agents: they read your data, act in your tools and hand over to a person when needed. To sell, support, make sense of the numbers and keep the CRM in order.',
+    },
     progetti: { kicker: 'Work', title: ['Every project,', 'a different path.'], sub: 'Sports clubs, gyms, tennis clubs, administration. Four cases told in full, with screens and technology; the others in brief.' },
     metodo: { kicker: 'Method', title: ['Process first.', 'Code second.'], sub: 'Six steps, always the same. Because technology only works if it grows out of how the company really works, and if people adopt it.' },
     tecnologia: { kicker: 'Technology', title: ['The stack,', 'explained simply.'], sub: 'What we use, why, and how we connect it to what you already have. No jargon, for the people who decide.' },
@@ -131,12 +157,26 @@ const en: typeof it = {
   teasers: {
     solutions: { kicker: 'Solutions', title: 'One piece or the whole system.', more: 'All solutions' },
     work: { kicker: 'Work', title: 'Built, in production, used every day.', more: 'All work' },
+    agents: {
+      kicker: 'AI agents and automation',
+      title: 'Where there’s data, an agent works.',
+      text: 'They read your data, act in your tools and hand over to a person when needed. Not chatbots: they do the work.',
+      more: 'Discover AI agents',
+      cards: [
+        { id: 'vendita', tag: 'Sales', t: 'They reply and qualify', d: 'Every lead gets an answer at once, at any hour, and reaches the CRM ready to work.' },
+        { id: 'assistenza', tag: 'Support', t: 'They solve and hand over', d: 'Website, app and WhatsApp: they answer from your information and call a person when needed.' },
+        { id: 'analisi-dati', tag: 'Data analysis', t: 'They make numbers talk', d: 'Reports that arrive on their own, and alerts when something drifts.' },
+        { id: 'crm', tag: 'CRM', t: 'They keep the CRM in order', d: 'Records kept current, draft replies, the next action already pointed out.' },
+      ],
+    },
+    servicesMore: 'Discover AI agents',
     cta: { title: 'Got a process to simplify?', btn: 'Let’s talk' },
   },
   next: 'Next',
   nextLabels: {
     home: 'Home',
     soluzioni: 'Solutions',
+    agenti: 'AI agents',
     progetti: 'Work',
     metodo: 'The method',
     tecnologia: 'Technology',
@@ -198,7 +238,8 @@ export const pages: Record<Lang, typeof it> = { it, en };
 /** The page each page points to at the bottom. */
 export const NEXT: Record<string, Page> = {
   home: 'soluzioni',
-  soluzioni: 'progetti',
+  soluzioni: 'agenti',
+  agenti: 'progetti',
   progetti: 'metodo',
   metodo: 'tecnologia',
   tecnologia: 'chisiamo',
