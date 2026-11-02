@@ -3,34 +3,18 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { caseUi, cases, type Case } from '../cases';
 import type { Lang } from '../content';
-import { navigate } from '../router';
 import { Dots, type DotsVariant } from './Dots';
 import { ExtractView } from './Mocks';
 import { Mark } from './Mark';
 import { CaseTech } from './Tech';
+import { Link } from './Nav';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
 const VARIANTS: DotsVariant[] = ['gooey', 'neural', 'converge'];
 
-export function CaseLink({ slug, children, className }: { slug: string; children: React.ReactNode; className?: string }) {
-  return (
-    <a
-      className={className}
-      href={`${import.meta.env.BASE_URL}casi/${slug}`}
-      onClick={(e) => {
-        if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-        e.preventDefault();
-        navigate(`/casi/${slug}`);
-      }}
-    >
-      {children}
-    </a>
-  );
-}
-
-export function CasePage({ c, lang, onContact }: { c: Case; lang: Lang; onContact: () => void }) {
+export function CasePage({ c, lang }: { c: Case; lang: Lang }) {
   const ui = caseUi[lang];
   const list = cases[lang];
   const idx = list.findIndex((x) => x.slug === c.slug);
@@ -60,18 +44,9 @@ export function CasePage({ c, lang, onContact }: { c: Case; lang: Lang; onContac
           </div>
         )}
         <div className="container case-hero__inner">
-          <a
-            className="case-back"
-            href={import.meta.env.BASE_URL}
-            onClick={(e) => {
-              e.preventDefault();
-              navigate('/');
-              setTimeout(() => document.getElementById('progetti')?.scrollIntoView(), 80);
-            }}
-            data-fade
-          >
+          <Link page="progetti" lang={lang} className="case-back" data-fade>
             ← {ui.back}
-          </a>
+          </Link>
           <div className="case-hero__client" data-fade>
             {c.logo ? <img src={asset(c.logo)} alt="" /> : <span className="case__mono">{c.client.slice(0, 1)}</span>}
             <div>
@@ -194,17 +169,17 @@ export function CasePage({ c, lang, onContact }: { c: Case; lang: Lang; onContac
         <div className="container case-next__grid">
           <div>
             <p className="kicker">{ui.cta}</p>
-            <button type="button" className="btn btn--big magnetic" onClick={onContact}>
+            <Link page="contatti" lang={lang} className="btn btn--big magnetic">
               <span>{ui.ctaBtn}</span>
               <span className="btn__arrow">→</span>
-            </button>
+            </Link>
           </div>
-          <CaseLink slug={next.slug} className="case-next__link">
+          <Link page="caso" slug={next.slug} lang={lang} className="case-next__link">
             <span className="kicker">{ui.next}</span>
             <strong>{next.client}</strong>
             <span className="case-next__t">{next.title}</span>
             <Mark size={28} dot="#F4F1EA" />
-          </CaseLink>
+          </Link>
         </div>
       </section>
     </article>

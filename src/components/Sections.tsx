@@ -3,8 +3,10 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CONTACT_EMAIL, type Copy } from '../content';
 import { Mark } from './Mark';
-import { CaseLink } from './CasePage';
+import { Link } from './Nav';
 import { caseUi } from '../cases';
+import { SERVICE_IDS } from '../pages';
+import type { Lang } from '../content';
 
 const SLUG: Record<string, string> = {
   'Tennis Club Ambrosiano': 'tennis-club-ambrosiano',
@@ -165,11 +167,11 @@ const ICONS: string[] = [
   'M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z M9 12l2 2 4-4', // privacy
 ];
 
-export function Services({ t }: { t: Copy }) {
+export function Services({ t, head = true }: { t: Copy; head?: boolean }) {
   return (
     <section className="services section section--light" id="servizi">
       <div className="container">
-        <div className="section__head">
+        {head && <div className="section__head">
           <p className="kicker" data-reveal>
             {t.services.kicker}
           </p>
@@ -179,11 +181,12 @@ export function Services({ t }: { t: Copy }) {
           <p className="lead" data-reveal>
             {t.services.sub}
           </p>
-        </div>
+        </div>}
         <div className="svc-grid">
           {t.services.items.map((s, i) => (
             <article
               key={s.t}
+              id={SERVICE_IDS[i]}
               className="svc"
               data-card
               onPointerMove={(e) => {
@@ -301,7 +304,7 @@ export function Modular({ t }: { t: Copy }) {
 /* ------------------------------------------------------------------ */
 /* Method: a horizontal track pinned while you scroll.                 */
 /* ------------------------------------------------------------------ */
-export function Method({ t }: { t: Copy }) {
+export function Method({ t, head = true }: { t: Copy; head?: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -328,14 +331,16 @@ export function Method({ t }: { t: Copy }) {
   }, []);
   return (
     <section className="method section" id="metodo" ref={ref}>
-      <div className="container method__head">
-        <p className="kicker" data-reveal>
-          {t.method.kicker}
-        </p>
-        <h2 className="h-xl" data-split>
-          {t.method.title}
-        </h2>
-      </div>
+      {head && (
+        <div className="container method__head">
+          <p className="kicker" data-reveal>
+            {t.method.kicker}
+          </p>
+          <h2 className="h-xl" data-split>
+            {t.method.title}
+          </h2>
+        </div>
+      )}
       <div className="method__rail" aria-hidden="true">
         <span className="method__rail-fill" />
         <span className="method__rail-dot" />
@@ -356,7 +361,7 @@ export function Method({ t }: { t: Copy }) {
 /* ------------------------------------------------------------------ */
 /* Origin: Athlon, with numbers that count up.                         */
 /* ------------------------------------------------------------------ */
-export function Origin({ t, lang }: { t: Copy; lang: string }) {
+export function Origin({ t, lang }: { t: Copy; lang: Lang }) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -398,10 +403,10 @@ export function Origin({ t, lang }: { t: Copy; lang: string }) {
             {t.origin.text}
           </p>
           <div data-reveal>
-            <CaseLink slug="athlon" className="btn magnetic origin__cta">
-              <span>{caseUi[lang === 'en' ? 'en' : 'it'].open} Athlon</span>
+            <Link page="caso" slug="athlon" lang={lang} className="btn magnetic origin__cta">
+              <span>{caseUi[lang].open} Athlon</span>
               <span className="btn__arrow">→</span>
-            </CaseLink>
+            </Link>
           </div>
         </div>
       </div>
@@ -431,21 +436,24 @@ export function Origin({ t, lang }: { t: Copy; lang: string }) {
 /* ------------------------------------------------------------------ */
 /* Work                                                                */
 /* ------------------------------------------------------------------ */
-export function Work({ t, lang }: { t: Copy; lang: string }) {
-  const open = caseUi[lang === 'en' ? 'en' : 'it'].open;
+export function Work({ t, lang, head = true, only }: { t: Copy; lang: Lang; head?: boolean; only?: number }) {
+  const open = caseUi[lang].open;
+  const items = only ? t.work.items.slice(0, only) : t.work.items;
   return (
     <section className="work section section--light" id="progetti">
       <div className="container">
-        <div className="section__head">
-          <p className="kicker" data-reveal>
-            {t.work.kicker}
-          </p>
-          <h2 className="h-xl" data-split>
-            {t.work.title}
-          </h2>
-        </div>
+        {head && (
+          <div className="section__head">
+            <p className="kicker" data-reveal>
+              {t.work.kicker}
+            </p>
+            <h2 className="h-xl" data-split>
+              {t.work.title}
+            </h2>
+          </div>
+        )}
         <div className="work-grid">
-          {t.work.items.map((w, i) => (
+          {items.map((w, i) => (
             <article key={w.c} className={`case${w.img ? ' case--img' : ''}${i < 3 ? ' case--big' : ''}`} data-card>
               {w.img && (
                 <div className="case__media">
@@ -465,9 +473,9 @@ export function Work({ t, lang }: { t: Copy; lang: string }) {
                   <strong>{w.m}</strong> {w.ml}
                 </p>
                 {SLUG[w.c] && (
-                  <CaseLink slug={SLUG[w.c]} className="case__open">
+                  <Link page="caso" slug={SLUG[w.c]} lang={lang} className="case__open">
                     {open} <span>→</span>
-                  </CaseLink>
+                  </Link>
                 )}
               </div>
             </article>

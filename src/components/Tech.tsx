@@ -42,22 +42,24 @@ function LayerStack({ layers, rich }: { layers: { name: string; d?: string; item
 }
 
 /** Home: the stack explained for a business owner. */
-export function TechStack({ lang }: { lang: Lang }) {
+export function TechStack({ lang, head = true }: { lang: Lang; head?: boolean }) {
   const s = stack[lang];
   return (
     <section className="section tech" id="tecnologia">
       <div className="container">
-        <div className="section__head">
-          <p className="kicker" data-reveal>
-            {s.kicker}
-          </p>
-          <h2 className="h-xl" data-split>
-            {s.title}
-          </h2>
-          <p className="lead" data-reveal>
-            {s.sub}
-          </p>
-        </div>
+        {head && (
+          <div className="section__head">
+            <p className="kicker" data-reveal>
+              {s.kicker}
+            </p>
+            <h2 className="h-xl" data-split>
+              {s.title}
+            </h2>
+            <p className="lead" data-reveal>
+              {s.sub}
+            </p>
+          </div>
+        )}
         <LayerStack layers={s.layers} rich />
       </div>
     </section>
