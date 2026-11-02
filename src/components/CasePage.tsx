@@ -125,7 +125,7 @@ export function CasePage({ c, lang }: { c: Case; lang: Lang }) {
                 </p>
               </div>
               <div className="extract__view" data-reveal>
-                <ExtractView x={x} sample={ui.sample} />
+                <ExtractView x={x} sample={ui.sample} flip={i % 2 === 1} />
               </div>
             </div>
             {i === 1 && c.extracts.length > 3 && <Dots variant={VARIANTS[(idx + 1) % 3]} />}

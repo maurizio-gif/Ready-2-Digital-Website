@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { Copy } from '../content';
 import { metaball } from '../lib/metaball';
 import { MARK, NECKS, NECK_OPTS, ORANGE, R, clamp, ease, lerp, mix, range } from '../lib/mark';
+import { finePointer, isTouch, reducedMotion } from '../lib/env';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,9 +20,25 @@ const SCATTER: P[] = [
   [0.14, 0.1], [0.02, 0.6], [0.4, 0.95], [0.9, 0.04], [0.56, 0.44], [0.97, 0.74],
 ];
 const PACKETS = 5;
+// When each caption is on screen, as a fraction of the hero's scroll. On phones
+// the windows touch each other: a flick of the thumb moves a whole screen, and
+// there must never be a stretch of scroll with nothing to read.
+const WINDOWS: [number, number][] = [
+  [0.12, 0.36],
+  [0.44, 0.68],
+  [0.78, 1.2],
+];
+const WINDOWS_MOBILE: [number, number][] = [
+  [0.1, 0.42],
+  [0.42, 0.74],
+  [0.74, 1.2],
+];
+// Where the thumb lands on phones: the intro and the three acts, each at the
+// point where its picture is complete (see .hero__snap in the stylesheet).
+export const SNAPS = [0, 0.34, 0.65, 0.96];
 
 function layouts(W: number, H: number) {
-  const mobile = W < 820;
+  const mobile = W <= 820;
   const area = mobile
     ? { x: W * 0.12, y: H * 0.13, w: W * 0.76, h: H * 0.44 }
     : { x: W * 0.46, y: H * 0.16, w: W * 0.46, h: H * 0.66 };
@@ -61,6 +78,7 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
   const labels = useRef<(HTMLDivElement | null)[]>([]);
   const stages = useRef<(HTMLDivElement | null)[]>([]);
   const intro = useRef<HTMLDivElement>(null);
+  const copy = useRef<HTMLDivElement>(null);
   const hud = useRef<HTMLDivElement>(null);
   const started = useRef(false);
 
@@ -69,28 +87,59 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
     const el = section.current!;
     const root = svg.current!;
     const necks = Array.from(root.querySelectorAll<SVGPathElement>('.neck'));
+    const neckShades = Array.from(root.querySelectorAll<SVGPathElement>('.neck-shade'));
+    const neckGrads = Array.from(root.querySelectorAll<SVGLinearGradientElement>('.neck-grad'));
     const nodes = Array.from(root.querySelectorAll<SVGCircleElement>('.node'));
+    const shades = Array.from(root.querySelectorAll<SVGCircleElement>('.shade'));
+    const blooms = Array.from(root.querySelectorAll<SVGCircleElement>('.bloom'));
     const halos = Array.from(root.querySelectorAll<SVGCircleElement>('.halo'));
+    const sphere = Array.from(root.querySelectorAll<SVGRadialGradientElement>('.sphere-grad'));
     const chaos = Array.from(root.querySelectorAll<SVGLineElement>('.chaos'));
     const pipe = root.querySelector<SVGPathElement>('.pipe')!;
     const pipeGlow = root.querySelector<SVGPathElement>('.pipe-glow')!;
     const packets = Array.from(root.querySelectorAll<SVGCircleElement>('.packet'));
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduced = reducedMotion();
+    const touch = isTouch();
+    const sticky = el.querySelector<HTMLElement>('.hero__sticky')!;
 
     let W = 0;
     let H = 0;
     let L = layouts(1, 1);
-    const resize = () => {
-      W = el.querySelector<HTMLElement>('.hero__sticky')!.clientWidth;
-      H = window.innerHeight;
+    const measure = () => {
+      W = sticky.clientWidth;
+      // The stage is 100svh tall: on phones that stays put while the address bar
+      // comes and goes, unlike window.innerHeight.
+      H = sticky.clientHeight || window.innerHeight;
       root.setAttribute('viewBox', `0 0 ${W} ${H}`);
       L = layouts(W, H);
     };
-    resize();
+    measure();
+    const resize = () => {
+      // On a phone the only resize worth a new layout is a real one (rotation):
+      // the address bar showing or hiding must not make the mark jump.
+      if (touch && sticky.clientWidth === W && Math.abs((sticky.clientHeight || window.innerHeight) - H) < H * 0.3) return;
+      measure();
+    };
     window.addEventListener('resize', resize);
 
     const state = { p: 0, sp: 0, intro: reduced ? 1 : 0, time: 0 };
     const mouse = { x: -9999, y: -9999, on: false };
+    // The light: from the top left by default, towards the pointer when there is one.
+    const light = { x: 0.36, y: 0.3, tx: 0.36, ty: 0.3 };
+    // Depth with the pointer: the stage tilts a little and its layers slide at
+    // different rates, so the mark, the field and the copy sit at different distances.
+    const fine = finePointer() && !reduced;
+    const tilt = fine
+      ? {
+          rx: gsap.quickTo(root, 'rotationX', { duration: 1.1, ease: 'power3' }),
+          ry: gsap.quickTo(root, 'rotationY', { duration: 1.1, ease: 'power3' }),
+          fx: gsap.quickTo(field.current, 'x', { duration: 1.4, ease: 'power3' }),
+          fy: gsap.quickTo(field.current, 'y', { duration: 1.4, ease: 'power3' }),
+          ix: gsap.quickTo(copy.current, 'x', { duration: 1.2, ease: 'power3' }),
+          iy: gsap.quickTo(copy.current, 'y', { duration: 1.2, ease: 'power3' }),
+        }
+      : null;
+    if (tilt) gsap.set(root, { transformPerspective: 1600, transformOrigin: '50% 50%' });
     const pos: P[] = L.start.map((p) => [...p] as P);
     const vel: P[] = L.start.map(() => [0, 0]);
     // Intro: each node arrives from somewhere off in the dark.
@@ -109,13 +158,35 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
     });
 
     const onMove = (e: PointerEvent) => {
-      const b = root.getBoundingClientRect();
+      const b = sticky.getBoundingClientRect();
       mouse.x = e.clientX - b.left;
       mouse.y = e.clientY - b.top;
       mouse.on = true;
+      const nx = mouse.x / W - 0.5;
+      const ny = mouse.y / H - 0.5;
+      light.tx = 0.36 + nx * 0.22;
+      light.ty = 0.3 + ny * 0.22;
+      if (tilt) {
+        tilt.rx(-ny * 5);
+        tilt.ry(nx * 6);
+        tilt.fx(nx * -18);
+        tilt.fy(ny * -14);
+        tilt.ix(nx * 8);
+        tilt.iy(ny * 6);
+      }
     };
     const onLeave = () => {
       mouse.on = false;
+      light.tx = 0.36;
+      light.ty = 0.3;
+      if (tilt) {
+        tilt.rx(0);
+        tilt.ry(0);
+        tilt.fx(0);
+        tilt.fy(0);
+        tilt.ix(0);
+        tilt.iy(0);
+      }
     };
     el.addEventListener('pointermove', onMove);
     el.addEventListener('pointerleave', onLeave);
@@ -197,10 +268,27 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
         const grey = t1 * (1 - t2);
         const fill = i === 5 ? mix(LIGHT, GREY, grey) : mix(ORANGE, GREY, grey);
         const n = nodes[i];
-        n.setAttribute('cx', pos[i][0].toFixed(2));
-        n.setAttribute('cy', pos[i][1].toFixed(2));
-        n.setAttribute('r', rad[i].toFixed(2));
+        const cx = pos[i][0].toFixed(2);
+        const cy = pos[i][1].toFixed(2);
+        const rr = rad[i].toFixed(2);
+        n.setAttribute('cx', cx);
+        n.setAttribute('cy', cy);
+        n.setAttribute('r', rr);
         n.setAttribute('fill', fill);
+        // The same circle again on top, filled with the light: a highlight where
+        // the light hits and a darker rim away from it make it a sphere.
+        const sh = shades[i];
+        sh.setAttribute('cx', cx);
+        sh.setAttribute('cy', cy);
+        sh.setAttribute('r', rr);
+        sh.setAttribute('opacity', (1 - grey * 0.55).toFixed(3));
+        // A soft bloom under the big spheres: the orange bouncing off the dark.
+        const big = clamp((rad[i] - L.rP) / Math.max(1, L.r0 - L.rP));
+        const bl = blooms[i];
+        bl.setAttribute('cx', cx);
+        bl.setAttribute('cy', (pos[i][1] + rad[i] * 0.55).toFixed(2));
+        bl.setAttribute('r', (rad[i] * 1.9).toFixed(2));
+        bl.setAttribute('opacity', (big * (i === 5 ? 0.08 : 0.2)).toFixed(3));
         const h = halos[i];
         const pulse = 1 + 0.35 * ((state.time * 0.8 + i * 0.37) % 1);
         h.setAttribute('cx', pos[i][0].toFixed(2));
@@ -223,10 +311,29 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
         }
       }
 
-      // Gooey necks: they only exist while two nodes of the mark are close.
+      // The light drifts towards the pointer.
+      light.x += (light.tx - light.x) * 0.08;
+      light.y += (light.ty - light.y) * 0.08;
+      sphere.forEach((g) => {
+        g.setAttribute('cx', light.x.toFixed(3));
+        g.setAttribute('cy', light.y.toFixed(3));
+        g.setAttribute('fx', light.x.toFixed(3));
+        g.setAttribute('fy', light.y.toFixed(3));
+      });
+
+      // Gooey necks: they only exist while two nodes of the mark are close. Each
+      // neck is shaded top to bottom between its two spheres.
       NECKS.forEach(([a, b], k) => {
         const d = metaball(rad[a], rad[b], pos[a], pos[b], NECK_OPTS);
         necks[k].setAttribute('d', d);
+        neckShades[k].setAttribute('d', d);
+        const top = Math.min(pos[a][1], pos[b][1]) - rad[a];
+        const bottom = Math.max(pos[a][1], pos[b][1]) + rad[b];
+        const g = neckGrads[k];
+        g.setAttribute('y1', top.toFixed(1));
+        g.setAttribute('y2', bottom.toFixed(1));
+        g.setAttribute('x1', (pos[a][0] - (light.x - 0.5) * 80).toFixed(1));
+        g.setAttribute('x2', (pos[a][0] + (light.x - 0.5) * 80).toFixed(1));
       });
 
       // The tangle: every system loosely wired to every other one.
@@ -276,15 +383,13 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
         intro.current.style.transform = `translate3d(0, ${(-60 * (1 - o)).toFixed(1)}px, 0)`;
         intro.current.style.visibility = o <= 0.001 ? 'hidden' : 'visible';
       }
-      const windows: [number, number][] = [
-        [0.12, 0.36],
-        [0.44, 0.68],
-        [0.78, 1.2],
-      ];
+      const windows = L.mobile ? WINDOWS_MOBILE : WINDOWS;
+      const fadeIn = L.mobile ? 0.035 : 0.06;
+      const fadeOut = L.mobile ? 0.03 : 0.05;
       stages.current.forEach((s, k) => {
         if (!s) return;
         const [a, b] = windows[k];
-        const o = range(p, a, a + 0.06) * (1 - range(p, b - 0.05, b));
+        const o = range(p, a, a + fadeIn) * (1 - range(p, b - fadeOut, b));
         s.style.opacity = o.toFixed(3);
         s.style.transform = `translate3d(0, ${((1 - o) * (p < a + 0.06 ? 40 : -40)).toFixed(1)}px, 0)`;
         s.style.visibility = o <= 0.001 ? 'hidden' : 'visible';
@@ -407,6 +512,12 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
 
   return (
     <section id="top" className="hero" ref={section}>
+      {/* Where a flick of the thumb comes to rest on phones: one stop per act. */}
+      <div className="hero__snaps" aria-hidden="true">
+        {SNAPS.map((p) => (
+          <i key={p} className="hero__snap" style={{ top: `calc(${p} * (100% - 100svh))` }} />
+        ))}
+      </div>
       <div className="hero__sticky">
         <canvas className="hero__field" ref={field} aria-hidden="true" />
         <svg className="hero__svg" ref={svg} aria-hidden="true">
@@ -414,6 +525,24 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
             <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="8" />
             </filter>
+            {/* The light on a sphere: a highlight where it hits, a darker rim away from it. */}
+            <radialGradient id="hero-sphere" className="sphere-grad" cx="0.36" cy="0.3" fx="0.36" fy="0.3" r="0.78">
+              <stop offset="0" stopColor="#fff" stopOpacity="0.62" />
+              <stop offset="0.26" stopColor="#fff" stopOpacity="0.16" />
+              <stop offset="0.52" stopColor="#000" stopOpacity="0" />
+              <stop offset="1" stopColor="#000" stopOpacity="0.46" />
+            </radialGradient>
+            <radialGradient id="hero-bloom" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stopColor={ORANGE} stopOpacity="1" />
+              <stop offset="1" stopColor={ORANGE} stopOpacity="0" />
+            </radialGradient>
+            {NECKS.map((_, k) => (
+              <linearGradient key={k} id={`hero-neck-${k}`} className="neck-grad" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stopColor="#fff" stopOpacity="0.18" />
+                <stop offset="0.5" stopColor="#000" stopOpacity="0.02" />
+                <stop offset="1" stopColor="#000" stopOpacity="0.38" />
+              </linearGradient>
+            ))}
           </defs>
           {CHAOS.map((_, k) => (
             <line key={k} className="chaos" stroke="#8A8A8A" strokeWidth="1.2" strokeDasharray="3 7" opacity="0" />
@@ -423,11 +552,20 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
           {MARK.map((_, i) => (
             <circle key={`h${i}`} className="halo" fill="none" stroke={ORANGE} strokeWidth="1.5" opacity="0" />
           ))}
+          {MARK.map((_, i) => (
+            <circle key={`b${i}`} className="bloom" fill="url(#hero-bloom)" r="0" opacity="0" />
+          ))}
           {NECKS.map((_, k) => (
             <path key={`n${k}`} className="neck" fill={ORANGE} />
           ))}
+          {NECKS.map((_, k) => (
+            <path key={`ns${k}`} className="neck-shade" fill={`url(#hero-neck-${k})`} />
+          ))}
           {MARK.map((_, i) => (
             <circle key={`c${i}`} className="node" r="0" />
+          ))}
+          {MARK.map((_, i) => (
+            <circle key={`s${i}`} className="shade" fill="url(#hero-sphere)" r="0" />
           ))}
           {Array.from({ length: PACKETS }, (_, k) => (
             <circle key={`p${k}`} className="packet" r="4" fill={LIGHT} opacity="0" />
@@ -441,30 +579,32 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
           </div>
         ))}
 
-        <div className="hero__intro container" ref={intro}>
-          <p className="eyebrow hero__fade">{t.hero.eyebrow}</p>
-          <h1 className="hero__title">
-            {t.hero.title.map((l, i) => (
-              <span key={i} className="reveal-line">
-                <span className={i === 2 ? 'accent' : undefined}>{l}</span>
-              </span>
-            ))}
-          </h1>
-          <p className="hero__sub hero__fade">{t.hero.sub}</p>
-          <div className="hero__cue hero__fade">
-            <span className="hero__cue-line" />
-            {t.hero.scroll}
-          </div>
-        </div>
-
-        <div className="hero__stages container">
-          {t.hero.stages.map((s, k) => (
-            <div key={k} className="stage" ref={(e) => void (stages.current[k] = e)}>
-              <p className="stage__kicker">{s.kicker}</p>
-              <h2 className="stage__title">{s.title}</h2>
-              <p className="stage__text">{s.text}</p>
+        <div className="hero__copy" ref={copy}>
+          <div className="hero__intro container" ref={intro}>
+            <p className="eyebrow hero__fade">{t.hero.eyebrow}</p>
+            <h1 className="hero__title">
+              {t.hero.title.map((l, i) => (
+                <span key={i} className="reveal-line">
+                  <span className={i === 2 ? 'accent' : undefined}>{l}</span>
+                </span>
+              ))}
+            </h1>
+            <p className="hero__sub hero__fade">{t.hero.sub}</p>
+            <div className="hero__cue hero__fade">
+              <span className="hero__cue-line" />
+              {t.hero.scroll}
             </div>
-          ))}
+          </div>
+
+          <div className="hero__stages container">
+            {t.hero.stages.map((s, k) => (
+              <div key={k} className="stage" ref={(e) => void (stages.current[k] = e)}>
+                <p className="stage__kicker">{s.kicker}</p>
+                <h2 className="stage__title">{s.title}</h2>
+                <p className="stage__text">{s.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="hero__hud" ref={hud} aria-hidden="true">

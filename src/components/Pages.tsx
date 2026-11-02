@@ -42,7 +42,7 @@ export function HomePage({ t, lang, ready }: { t: Copy; lang: Lang; ready: boole
             {picks.map((i) => {
               const s = t.services.items[i];
               return (
-                <Link key={s.t} page="soluzioni" lang={lang} hash={SERVICE_IDS[i]} className="teaser__card" data-card>
+                <Link key={s.t} page="soluzioni" lang={lang} hash={SERVICE_IDS[i]} className="teaser__card card-3d" data-card data-tilt="7">
                   <span className="svc__tag">{s.tag}</span>
                   <strong>{s.t}</strong>
                   <span>{s.d}</span>
@@ -164,7 +164,7 @@ export function TechPage({ lang }: { lang: Lang }) {
           </div>
           <div className="compliance__grid">
             {p.compliance.items.map((c, i) => (
-              <article key={c.t} className="compliance__item" data-card>
+              <article key={c.t} className="compliance__item card-3d" data-card data-tilt="6">
                 <span className="compliance__n">{String(i + 1).padStart(2, '0')}</span>
                 <h3>{c.t}</h3>
                 <p>{c.d}</p>
@@ -188,7 +188,7 @@ export function AboutPage({ t, lang }: { t: Copy; lang: Lang }) {
       <section className="section founder">
         <div className="container founder__grid">
           <aside className="founder__aside">
-            <div className="founder__photo" data-reveal>
+            <div className="founder__photo" data-reveal data-tilt="4" data-lift="0">
               <img src={asset('images/maurizio-taruggi.jpg')} alt={a.photoAlt} loading="lazy" />
               <div className="founder__badge">
                 <strong>{a.name}</strong>

@@ -6,7 +6,7 @@ function LayerStack({ layers, rich }: { layers: { name: string; d?: string; item
   return (
     <div className={`layers${rich ? ' layers--rich' : ''}`}>
       {layers.map((l, i) => (
-        <div key={l.name} className="layer" data-reveal style={{ ['--i' as string]: i }}>
+        <div key={l.name} className="layer" data-reveal style={{ ['--i' as string]: i, ['--n' as string]: layers.length }}>
           <div className="layer__head">
             <span className="layer__n">{String(i + 1).padStart(2, '0')}</span>
             <div>
@@ -94,7 +94,7 @@ export function CaseTech({ slug, lang }: { slug: string; lang: Lang }) {
         </p>
         <div className="parts">
           {t.parts.map((p, i) => (
-            <article key={p.t} className="part" data-card>
+            <article key={p.t} className="part card-3d" data-card data-tilt="6">
               <span className="part__n">{String(i + 1).padStart(2, '0')}</span>
               <h3 className="part__t">{p.t}</h3>
               <p className="part__role">{p.role}</p>
