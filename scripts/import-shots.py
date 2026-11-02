@@ -17,8 +17,8 @@ GEN = os.path.join(os.path.dirname(__file__), '..', 'src', 'real-generated.json'
 # shots dir → case slug, and which pages also get a phone frame.
 # shots dir → (case slug, desktop pages in display order, pages that also get a phone frame)
 APPS = {
-    'athlon': ('athlon', ['dashboard', 'contatti', 'contatto', 'planning', 'pagamenti_falliti', 'whatsapp', 'agenda', 'registro_giornaliero', 'performance', 'scuola_nuoto_dashboard', 'billing_run', 'contratti'], ['dashboard', 'contatti', 'planning']),
-    'portale': ('athlon', ['home'], None),  # phone-first: every phone screen, plus the home on desktop
+    'athlon': ('athlon', ['dashboard_da_fare', 'dashboard', 'contatti', 'contatto', 'planning', 'pagamenti_falliti', 'whatsapp_chat', 'contratti', 'registro_giornaliero', 'agenda', 'performance', 'scuola_nuoto', 'billing_run', 'certificati'], ['dashboard_da_fare', 'contatti', 'planning']),
+    'portale': ('athlon', ['home'], ['home_benvenuto', 'calendario_lezioni', 'prenotata', 'punteggio', 'ahs_abitudini', 'pagamenti', 'abbonamenti', 'junior', 'notifiche', 'shop']),  # phone-first
     'ronchiverdi': ('ronchiverdi', ['dashboard', 'abbonamenti_andamento', 'incassato', 'persona', 'agenda_calendario', 'accessi_report', 'richiesta', 'report', 'direzione', 'voucher'], ['dashboard', 'persona']),
     'tca': ('tennis-club-ambrosiano', ['dashboard', 'persone', 'persona', 'analytics', 'scuola_tennis', 'agenda', 'persone_duplicati', 'summer_camp', 'iscrizioni_eventi', 'invita_amico'], ['dashboard', 'agenda']),
     'passion': ('passion-fitness', ['dashboard', 'abbonamenti', 'lead', 'prove', 'rinnovi', 'debitori', 'persona', 'task', 'ticket', 'report_giornaliero'], ['dashboard', 'abbonamenti']),
@@ -43,10 +43,7 @@ for app, (case, desk_pages, phone_pages) in APPS.items():
         if not os.path.exists(src):
             continue
         is_phone = dev == 'm'
-        if app == 'portale':
-            keep = is_phone or page in desk_pages
-        else:
-            keep = (page in desk_pages) if not is_phone else bool(phone_pages and page in phone_pages)
+        keep = (page in desk_pages) if not is_phone else bool(phone_pages and page in phone_pages)
         if not keep:
             continue
         kind = 'phone' if is_phone else 'browser'
@@ -61,7 +58,11 @@ for app, (case, desk_pages, phone_pages) in APPS.items():
         seen.add(key)
         items.append({'src': f'{case}/{name}', 'kind': kind, 'url': URLS[app], 'page': c.get('page', ''), 't': c['t'], 'd': c['d'], 't_en': c.get('t_en', c['t']), 'd_en': c.get('d_en', c['d']), 'app': app})
     # desktop pages in the curated order, each phone shot right after its desktop twin
-    items.sort(key=lambda it: (desk_pages.index(it['src'].rsplit('-', 1)[1][:-5]) if it['src'].rsplit('-', 1)[1][:-5] in desk_pages else 99))
+    def rank(it):
+        pg = it['src'].rsplit('-', 1)[1][:-5]
+        lst = desk_pages if it['kind'] == 'browser' else (phone_pages or [])
+        return lst.index(pg) if pg in lst else 99
+    items.sort(key=rank)
     order = []
     for it in items:
         if it['kind'] == 'browser':
