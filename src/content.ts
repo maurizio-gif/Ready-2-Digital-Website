@@ -148,7 +148,7 @@ const it = {
       { c: 'Tennis Club Ambrosiano', s: 'Circolo sportivo · Milano', t: 'Un’unica anagrafica al posto di sistemi scollegati.', m: '220', ml: 'anagrafiche unificate', logo: 'images/work/logos/tca-mark.png', img: 'images/work/tca.jpg' },
       { c: 'Lume Fitness', s: 'Palestre multi-sede', t: 'Dalla prevendita prima dell’apertura alla gestione del cliente, in un unico sistema.', m: '3', ml: 'sedi, un solo flusso', logo: 'images/work/logos/lume-mark.svg', img: 'images/work/lume.jpg' },
       { c: 'Ronchiverdi', s: 'Sport club', t: 'Prima abbiamo studiato l’azienda. Poi abbiamo scritto il software.', m: 'SQL', ml: 'Server collegato al CRM', logo: 'images/work/logos/ronchiverdi-mark.png', img: 'images/work/ronchiverdi.jpg' },
-      { c: 'Passion Fitness', s: 'Palestra', t: 'Sito, CRM e mirror del gestionale: prenoti e paghi dove lavora la palestra.', m: '−89%', ml: 'peso della home', logo: '', img: '' },
+      { c: 'Passion Fitness', s: 'Palestra', t: 'Sito, CRM e mirror del gestionale: prenoti e paghi dove lavora la palestra.', m: '−89%', ml: 'peso della home', logo: 'images/work/logos/passion-mark.svg', img: '' },
       { c: 'Aspresso', s: 'Amministrazione e fisco', t: 'Dalla transazione al corrispettivo fiscalizzato, fino al dato contabile.', m: '0', ml: 'passaggi manuali', logo: '', img: '' },
       { c: 'Enjoy Club', s: 'Club multi-sede', t: 'Non tutto va costruito da zero: far rendere gli strumenti che c’erano già.', m: '30,9%', ml: 'conversione media', logo: '', img: '' },
       { c: 'Body Energie', s: 'Centro fitness', t: 'Una fotografia settimanale del funnel, per capire dove si ferma un contatto.', m: '18%', ml: 'conversione su contatti validi', logo: '', img: '' },
@@ -158,6 +158,11 @@ const it = {
     kicker: 'Settori',
     title: 'Partiamo dallo sport. Arriviamo ovunque ci sia un processo.',
     list: ['Fitness', 'Sport club', 'Piscine', 'Circoli tennis', 'Retail', 'E-commerce', 'Hospitality', 'Food', 'Servizi', 'Totem & kiosk', 'Amministrazione'],
+  },
+  dots: {
+    a: ['Ogni strumento è un punto.', 'Noi li colleghiamo.'] as [string, string],
+    b: ['I dati entrano da una parte,', 'escono decisioni dall’altra.'] as [string, string],
+    c: ['Tanti punti.', 'Un disegno solo.'] as [string, string],
   },
   stack: ['App Store', 'Google Play', 'GDPR', 'SQL Server', 'REST · SOAP', 'Supabase', 'n8n', 'Stripe', 'Adyen', 'GoCardless', 'WhatsApp Business', 'PerfectGym', 'Airtable', 'React', 'Next.js', 'Expo'],
   contact: {
@@ -325,7 +330,7 @@ const en: Copy = {
       { c: 'Tennis Club Ambrosiano', s: 'Sports club · Milan', t: 'One customer record instead of disconnected systems.', m: '220', ml: 'records unified', logo: 'images/work/logos/tca-mark.png', img: 'images/work/tca.jpg' },
       { c: 'Lume Fitness', s: 'Multi-site gyms', t: 'From pre-sales before opening day to customer management, in one system.', m: '3', ml: 'sites, one flow', logo: 'images/work/logos/lume-mark.svg', img: 'images/work/lume.jpg' },
       { c: 'Ronchiverdi', s: 'Sport club', t: 'First we studied the company. Then we wrote the software.', m: 'SQL', ml: 'Server wired to the CRM', logo: 'images/work/logos/ronchiverdi-mark.png', img: 'images/work/ronchiverdi.jpg' },
-      { c: 'Passion Fitness', s: 'Gym', t: 'Website, CRM and a back-office mirror: book and pay where the gym actually works.', m: '−89%', ml: 'home page weight', logo: '', img: '' },
+      { c: 'Passion Fitness', s: 'Gym', t: 'Website, CRM and a back-office mirror: book and pay where the gym actually works.', m: '−89%', ml: 'home page weight', logo: 'images/work/logos/passion-mark.svg', img: '' },
       { c: 'Aspresso', s: 'Administration & tax', t: 'From transaction to fiscal receipt, all the way to accounting data.', m: '0', ml: 'manual steps', logo: '', img: '' },
       { c: 'Enjoy Club', s: 'Multi-site club', t: 'Not everything needs building from scratch: getting the most from existing tools.', m: '30.9%', ml: 'average conversion', logo: '', img: '' },
       { c: 'Body Energie', s: 'Fitness centre', t: 'A weekly snapshot of the funnel, to see where a lead stalls.', m: '18%', ml: 'conversion on valid leads', logo: '', img: '' },
@@ -335,6 +340,11 @@ const en: Copy = {
     kicker: 'Industries',
     title: 'We start from sport. We go wherever there’s a process.',
     list: ['Fitness', 'Sports clubs', 'Pools', 'Tennis clubs', 'Retail', 'E-commerce', 'Hospitality', 'Food', 'Services', 'Kiosks', 'Administration'],
+  },
+  dots: {
+    a: ['Every tool is a dot.', 'We connect them.'],
+    b: ['Data goes in one side,', 'decisions come out the other.'],
+    c: ['Many dots.', 'One design.'],
   },
   stack: it.stack,
   contact: {

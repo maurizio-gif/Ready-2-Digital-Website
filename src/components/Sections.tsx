@@ -3,6 +3,14 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CONTACT_EMAIL, type Copy } from '../content';
 import { Mark } from './Mark';
+import { CaseLink } from './CasePage';
+import { caseUi } from '../cases';
+
+const SLUG: Record<string, string> = {
+  'Tennis Club Ambrosiano': 'tennis-club-ambrosiano',
+  Ronchiverdi: 'ronchiverdi',
+  'Passion Fitness': 'passion-fitness',
+};
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -389,6 +397,12 @@ export function Origin({ t, lang }: { t: Copy; lang: string }) {
           <p className="lead" data-reveal>
             {t.origin.text}
           </p>
+          <div data-reveal>
+            <CaseLink slug="athlon" className="btn magnetic origin__cta">
+              <span>{caseUi[lang === 'en' ? 'en' : 'it'].open} Athlon</span>
+              <span className="btn__arrow">→</span>
+            </CaseLink>
+          </div>
         </div>
       </div>
       <div className="container">
@@ -417,7 +431,8 @@ export function Origin({ t, lang }: { t: Copy; lang: string }) {
 /* ------------------------------------------------------------------ */
 /* Work                                                                */
 /* ------------------------------------------------------------------ */
-export function Work({ t }: { t: Copy }) {
+export function Work({ t, lang }: { t: Copy; lang: string }) {
+  const open = caseUi[lang === 'en' ? 'en' : 'it'].open;
   return (
     <section className="work section section--light" id="progetti">
       <div className="container">
@@ -449,6 +464,11 @@ export function Work({ t }: { t: Copy }) {
                 <p className="case__metric">
                   <strong>{w.m}</strong> {w.ml}
                 </p>
+                {SLUG[w.c] && (
+                  <CaseLink slug={SLUG[w.c]} className="case__open">
+                    {open} <span>→</span>
+                  </CaseLink>
+                )}
               </div>
             </article>
           ))}

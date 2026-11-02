@@ -4,11 +4,81 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "redirects": [
-    { "source": "/Ready-2-Digital-Website", "destination": "/", "permanent": false },
-    { "source": "/Ready-2-Digital-Website/:path*", "destination": "/:path*", "permanent": false },
-    { "source": "/it", "destination": "/", "permanent": true },
-    { "source": "/it/:path*", "destination": "/", "permanent": true },
-    { "source": "/en", "destination": "/?lang=en", "permanent": true },
-    { "source": "/en/:path*", "destination": "/?lang=en", "permanent": true }
+    {
+      "source": "/Ready-2-Digital-Website",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/Ready-2-Digital-Website/:path*",
+      "destination": "/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/it/progetti/athlon-club",
+      "destination": "/casi/athlon",
+      "permanent": true
+    },
+    {
+      "source": "/en/work/athlon-club",
+      "destination": "/casi/athlon?lang=en",
+      "permanent": true
+    },
+    {
+      "source": "/it/progetti/tennis-club-ambrosiano",
+      "destination": "/casi/tennis-club-ambrosiano",
+      "permanent": true
+    },
+    {
+      "source": "/en/work/tennis-club-ambrosiano",
+      "destination": "/casi/tennis-club-ambrosiano?lang=en",
+      "permanent": true
+    },
+    {
+      "source": "/it/progetti/ronchiverdi",
+      "destination": "/casi/ronchiverdi",
+      "permanent": true
+    },
+    {
+      "source": "/en/work/ronchiverdi",
+      "destination": "/casi/ronchiverdi?lang=en",
+      "permanent": true
+    },
+    {
+      "source": "/it/progetti/passion-fitness",
+      "destination": "/casi/passion-fitness",
+      "permanent": true
+    },
+    {
+      "source": "/en/work/passion-fitness",
+      "destination": "/casi/passion-fitness?lang=en",
+      "permanent": true
+    },
+    {
+      "source": "/it",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/it/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/en",
+      "destination": "/?lang=en",
+      "permanent": true
+    },
+    {
+      "source": "/en/:path*",
+      "destination": "/?lang=en",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/casi/:slug",
+      "destination": "/index.html"
+    }
   ]
 }

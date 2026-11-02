@@ -6,6 +6,10 @@ import { copy, CONTACT_EMAIL, type Lang } from './content';
 import { Hero } from './components/Hero';
 import { Antithesis, Contact, Manifesto, Method, Modular, Origin, Sectors, Services, Work } from './components/Sections';
 import { Mark } from './components/Mark';
+import { CasePage } from './components/CasePage';
+import { Dots } from './components/Dots';
+import { cases } from './cases';
+import { navigate, useRoute } from './router';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -34,17 +38,39 @@ export default function App() {
   const [menu, setMenu] = useState(false);
   const [privacy, setPrivacy] = useState(false);
   const t = copy[lang];
+  const route = useRoute();
+  const kase = route.page === 'case' ? cases[lang].find((c) => c.slug === route.slug) : undefined;
+  const routeKey = kase ? kase.slug : 'home';
+  const pending = useRef<string | null>(null);
 
   useEffect(() => {
     document.documentElement.lang = lang;
-    document.title = t.meta.title;
-    document.querySelector('meta[name="description"]')?.setAttribute('content', t.meta.description);
+    document.title = kase ? `${kase.client} — ${lang === 'it' ? 'Caso' : 'Case study'} · Ready2Digital` : t.meta.title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', kase ? kase.intro : t.meta.description);
     try {
       localStorage.setItem('r2d-lang', lang);
     } catch {
       /* ignore */
     }
-  }, [lang, t]);
+  }, [lang, t, kase]);
+
+  // A new page starts at the top, or at the section it was asked to show.
+  useEffect(() => {
+    const id = pending.current;
+    pending.current = null;
+    lenis?.scrollTo(0, { immediate: true, force: true });
+    window.scrollTo(0, 0);
+    ScrollTrigger.refresh();
+    // Wait for the new page's pins and reveals to settle, then jump there.
+    if (id)
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (lenis) lenis.scrollTo(el, { immediate: true, force: true });
+        else el.scrollIntoView();
+      }, 500);
+  }, [routeKey]);
 
   // Smooth scrolling, driven by GSAP's ticker so everything shares one clock.
   useEffect(() => {
@@ -108,7 +134,7 @@ export default function App() {
       clearTimeout(tm);
       ctx.revert();
     };
-  }, [lang]);
+  }, [lang, routeKey]);
 
   // Magnetic buttons.
   useEffect(() => {
@@ -133,7 +159,10 @@ export default function App() {
 
   const go = (id: string) => {
     setMenu(false);
-    scrollTo(`#${id}`);
+    if (kase) {
+      pending.current = id === 'top' ? null : id;
+      navigate('/');
+    } else scrollTo(`#${id}`);
   };
 
   return (
@@ -141,18 +170,27 @@ export default function App() {
       <Curtain ready={ready} />
       <Cursor />
       <Header t={t} lang={lang} setLang={setLang} menu={menu} setMenu={setMenu} go={go} />
-      <main key={lang}>
-        <Hero t={t} ready={ready} />
-        <Manifesto t={t} />
-        <Antithesis t={t} />
-        <Services t={t} />
-        <Modular t={t} />
-        <Method t={t} />
-        <Origin t={t} lang={lang} />
-        <Work t={t} />
-        <Sectors t={t} />
-        <Contact t={t} />
-      </main>
+      {kase ? (
+        <main key={`${lang}-${routeKey}`}>
+          <CasePage c={kase} lang={lang} onContact={() => go('contatti')} />
+        </main>
+      ) : (
+        <main key={`${lang}-home`}>
+          <Hero t={t} ready={ready} />
+          <Manifesto t={t} />
+          <Dots variant="gooey" lines={t.dots.a} />
+          <Antithesis t={t} />
+          <Services t={t} />
+          <Modular t={t} />
+          <Dots variant="neural" lines={t.dots.b} />
+          <Method t={t} />
+          <Origin t={t} lang={lang} />
+          <Work t={t} lang={lang} />
+          <Sectors t={t} />
+          <Dots variant="converge" lines={t.dots.c} />
+          <Contact t={t} />
+        </main>
+      )}
       <footer className="footer">
         <div className="container footer__inner">
           <div className="footer__brand">

@@ -16,6 +16,13 @@ che si scompone e si ricompone.
   `prefers-reduced-motion`.
 - **I testi** stanno tutti in `src/content.ts`, italiano e inglese. La lingua si sceglie
   dall'intestazione, da `?lang=en` o dalla lingua del browser.
+- **Le pagine dei casi** (`/casi/athlon`, `/casi/ronchiverdi`, `/casi/tennis-club-ambrosiano`,
+  `/casi/passion-fitness`): testi in `src/cases.ts`, schermate ricostruite e animate in
+  `src/components/Mocks.tsx`. I numeri dentro le schermate sono **di esempio, anonimi** (la pagina
+  lo dice); i numeri veri del progetto sono solo quelli di `metrics`. Il router è
+  `src/router.ts`; Vercel riscrive `/casi/*` su `index.html`, GitHub Pages usa `404.html`.
+- **Gli intermezzi «connecting dots»** (`src/components/Dots.tsx`): puntini che si fondono come i
+  cerchi del marchio, una rete neurale con i segnali, puntini che convergono nel marchio.
 - **`public/demo/garden/`** resta servita com'era (`/demo/garden/`).
 
 ```
