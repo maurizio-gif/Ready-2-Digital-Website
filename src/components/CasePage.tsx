@@ -7,6 +7,7 @@ import { navigate } from '../router';
 import { Dots, type DotsVariant } from './Dots';
 import { ExtractView } from './Mocks';
 import { Mark } from './Mark';
+import { CaseTech } from './Tech';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -184,6 +185,8 @@ export function CasePage({ c, lang, onContact }: { c: Case; lang: Lang; onContac
           </div>
         </div>
       </section>
+
+      <CaseTech slug={c.slug} lang={lang} />
 
       <Dots variant="converge" />
 

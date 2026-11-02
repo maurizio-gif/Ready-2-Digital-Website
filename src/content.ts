@@ -14,6 +14,7 @@ const it = {
     items: [
       { id: 'approccio', label: 'Approccio' },
       { id: 'servizi', label: 'Servizi' },
+      { id: 'tecnologia', label: 'Tecnologia' },
       { id: 'modulare', label: 'Modulare' },
       { id: 'metodo', label: 'Metodo' },
       { id: 'progetti', label: 'Progetti' },
@@ -205,6 +206,7 @@ const en: Copy = {
     items: [
       { id: 'approccio', label: 'Approach' },
       { id: 'servizi', label: 'Services' },
+      { id: 'tecnologia', label: 'Technology' },
       { id: 'modulare', label: 'Modular' },
       { id: 'metodo', label: 'Method' },
       { id: 'progetti', label: 'Work' },

@@ -21,6 +21,9 @@ che si scompone e si ricompone.
   `src/components/Mocks.tsx`. I numeri dentro le schermate sono **di esempio, anonimi** (la pagina
   lo dice); i numeri veri del progetto sono solo quelli di `metrics`. Il router è
   `src/router.ts`; Vercel riscrive `/casi/*` su `index.html`, GitHub Pages usa `404.html`.
+- **«Come è fatto»** (`src/tech.ts`, `src/components/Tech.tsx`): in ogni pagina caso l'architettura
+  a strati, i pezzi (Astro, Next.js, Expo, Supabase, Edge Functions, automazioni, AI) e i numeri
+  presi dai repository; in home «Lo stack, spiegato semplice».
 - **Gli intermezzi «connecting dots»** (`src/components/Dots.tsx`): puntini che si fondono come i
   cerchi del marchio, una rete neurale con i segnali, puntini che convergono nel marchio.
 - **`public/demo/garden/`** resta servita com'era (`/demo/garden/`).

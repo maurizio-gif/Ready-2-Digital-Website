@@ -8,6 +8,7 @@ import { Antithesis, Contact, Manifesto, Method, Modular, Origin, Sectors, Servi
 import { Mark } from './components/Mark';
 import { CasePage } from './components/CasePage';
 import { Dots } from './components/Dots';
+import { TechStack } from './components/Tech';
 import { cases } from './cases';
 import { navigate, useRoute } from './router';
 
@@ -181,6 +182,7 @@ export default function App() {
           <Dots variant="gooey" lines={t.dots.a} />
           <Antithesis t={t} />
           <Services t={t} />
+          <TechStack lang={lang} />
           <Modular t={t} />
           <Dots variant="neural" lines={t.dots.b} />
           <Method t={t} />
