@@ -36,6 +36,10 @@ stanno in `src/pages.ts`.
   `src/components/Mocks.tsx`. I numeri dentro le schermate sono **di esempio, anonimi** (la pagina
   lo dice); i numeri veri del progetto sono solo quelli di `metrics`. Il router è
   `src/router.ts`; Vercel riscrive ogni pagina su `index.html`, GitHub Pages usa `404.html`.
+- **«Dal vivo»** (`src/real.ts`, `src/components/RealScreens.tsx`, immagini in `public/images/real/<caso>/`):
+  schermate reali catturate dai siti e dalle app pubbliche (desktop 1600×1000 webp, telefono 780×1328),
+  in cornici di browser e telefono con ingrandimento. Quello che sta dietro login (cruscotti dei CRM,
+  app da socio) non c'è: arriva da screenshot forniti dal cliente, da aggiungere nello stesso elenco.
 - **«Come è fatto»** (`src/tech.ts`, `src/components/Tech.tsx`): in ogni pagina caso l'architettura
   a strati, i pezzi (Astro, Next.js, Expo, Supabase, Edge Functions, automazioni, AI) e i numeri
   presi dai repository; in home «Lo stack, spiegato semplice».
