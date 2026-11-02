@@ -83,7 +83,22 @@ const en: Record<string, RealShot[]> = {
   ],
 };
 
-export const real: Record<Lang, Record<string, RealShot[]>> = { it, en };
+import generated from './real-generated.json';
+
+type Generated = { src: string; kind: 'browser' | 'phone'; url: string; t: string; d: string; t_en: string; d_en: string };
+
+/** Public captures first? No: the CRM/portal screens rendered from the apps' code come first, then the public site. */
+function merge(lang: Lang, hand: Record<string, RealShot[]>): Record<string, RealShot[]> {
+  const out: Record<string, RealShot[]> = {};
+  const g = generated as Record<string, Generated[]>;
+  for (const slug of new Set([...Object.keys(hand), ...Object.keys(g)])) {
+    const app = (g[slug] ?? []).map((x) => ({ src: x.src, kind: x.kind, url: x.url, t: lang === 'en' ? x.t_en : x.t, d: lang === 'en' ? x.d_en : x.d }));
+    out[slug] = [...app, ...(hand[slug] ?? [])];
+  }
+  return out;
+}
+
+export const real: Record<Lang, Record<string, RealShot[]>> = { it: merge('it', it), en: merge('en', en) };
 
 export const realUi: Record<Lang, { kicker: string; title: string; sub: string; badge: string; open: string; close: string; prev: string; next: string }> = {
   it: { kicker: 'Dal vivo', title: 'Schermate reali.', sub: 'Il sito, l’app e gli strumenti così come li usano clienti e staff oggi. Tocca una schermata per ingrandirla.', badge: 'Schermata reale', open: 'Ingrandisci', close: 'Chiudi', prev: 'Precedente', next: 'Successiva' },
