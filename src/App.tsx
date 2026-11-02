@@ -475,15 +475,6 @@ function Header({ t, route, menu, setMenu }: { t: Copy; route: Route; menu: bool
                 <small>{String(i + 1).padStart(2, '0')}</small>
                 {n.label}
               </Link>
-              {n.page === 'progetti' && (
-                <div className="menu__sub">
-                  {cases[lang].map((c) => (
-                    <Link key={c.slug} page="caso" slug={c.slug} lang={lang} tabIndex={menu ? 0 : -1}>
-                      {c.client}
-                    </Link>
-                  ))}
-                </div>
-              )}
             </div>
           ))}
         </nav>

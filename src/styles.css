@@ -3813,19 +3813,6 @@ button {
 .menu__nav a.is-active {
   color: var(--orange);
 }
-.menu__sub {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 16px;
-  margin: 4px 0 12px 44px;
-}
-.menu__nav .menu__sub a {
-  font-family: var(--body);
-  font-size: 15px;
-  font-weight: 500;
-  text-transform: none;
-  color: var(--muted);
-}
 .wipe {
   position: fixed;
   inset: 0;
