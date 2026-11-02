@@ -1,7 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "redirects": [
-    { "source": "/Ready-2-Digital-Website", "destination": "/it/", "permanent": false },
-    { "source": "/Ready-2-Digital-Website/:path*", "destination": "/:path*", "permanent": false }
+    { "source": "/Ready-2-Digital-Website", "destination": "/", "permanent": false },
+    { "source": "/Ready-2-Digital-Website/:path*", "destination": "/:path*", "permanent": false },
+    { "source": "/it", "destination": "/", "permanent": true },
+    { "source": "/it/:path*", "destination": "/", "permanent": true },
+    { "source": "/en", "destination": "/?lang=en", "permanent": true },
+    { "source": "/en/:path*", "destination": "/?lang=en", "permanent": true }
   ]
 }
