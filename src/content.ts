@@ -6,9 +6,9 @@ export type Copy = typeof it;
 
 const it = {
   meta: {
-    title: 'Ready2Digital — Orchestratori di processi digitali',
+    title: 'Ready2Digital — Automazioni, agenti AI e software su misura',
     description:
-      "Siti, app certificate Apple e Google, CRM, ERP, automazioni e integrazioni costruite su misura. Non software standard: un percorso unico disegnato sui processi della tua azienda.",
+      'Automazione dei processi, agenti di intelligenza artificiale, CRM, ERP, app e integrazioni su misura. Colleghiamo i tuoi dati e mettiamo l’AI al lavoro nella tua azienda.',
   },
   nav: {
     items: [
@@ -81,10 +81,10 @@ const it = {
       { t: 'CRM su misura', d: 'Pipeline, permessi per ruolo, ticket, WhatsApp, timbrature: il CRM disegnato su come vendi e come assisti.', tag: 'CRM' },
       { t: 'ERP e gestionali', d: 'Moduli gestionali custom o estensioni del tuo ERP: contratti, billing, incassi, prima nota.', tag: 'ERP' },
       { t: 'Dashboard & riclassificazioni', d: 'KPI in tempo reale, riclassificazione dei dati contabili, report che arrivano da soli.', tag: 'Data' },
-      { t: 'Automazioni & fisco', d: 'Flussi che girano da soli: dalla transazione al corrispettivo, fino all’Agenzia delle Entrate e alla contabilità.', tag: 'Automation' },
+      { t: 'Automazioni & fisco', d: 'Automazione dei processi aziendali: flussi che girano da soli, dalla transazione al corrispettivo, fino all’Agenzia delle Entrate e alla contabilità.', tag: 'Automation' },
       { t: 'Integrazioni', d: 'API di ogni tipo, webhook, connessione diretta a database SQL Server su Windows, sincronizzazioni e mirror.', tag: 'API · SQL' },
       { t: 'Totem & kiosk', d: 'Applicativi per totem e postazioni in sede: check-in, vendita assistita, firma, QR e pagamenti.', tag: 'Kiosk' },
-      { t: 'AI & assistenti', d: 'Assistenti virtuali su sito, app e WhatsApp che rispondono, propongono, prenotano e passano la palla al team.', tag: 'AI' },
+      { t: 'Agenti AI & assistenti', d: 'Agenti di intelligenza artificiale per vendita, assistenza, analisi dei dati e CRM: su sito, app e WhatsApp rispondono, propongono, prenotano e passano la palla al team.', tag: 'AI' },
       { t: 'Privacy & compliance', d: 'GDPR by design, consensi granulari, dati sanitari protetti, requisiti degli store rispettati dal primo commit.', tag: 'GDPR' },
     ],
   },
@@ -198,9 +198,9 @@ const it = {
 
 const en: Copy = {
   meta: {
-    title: 'Ready2Digital — Digital process orchestrators',
+    title: 'Ready2Digital — Automation, AI agents and custom software',
     description:
-      'Websites, Apple- and Google-certified apps, CRMs, ERPs, automations and integrations built to measure. Not off-the-shelf software: one single path designed around how your company really works.',
+      'Process automation, AI agents, CRMs, ERPs, apps and integrations built to measure. We connect your data and put artificial intelligence to work in your company.',
   },
   nav: {
     items: [
@@ -273,10 +273,10 @@ const en: Copy = {
       { t: 'Custom CRM', d: 'Pipelines, role permissions, tickets, WhatsApp, time clocks: a CRM designed around how you sell and support.', tag: 'CRM' },
       { t: 'ERP and back office', d: 'Custom back-office modules or extensions to your ERP: contracts, billing, collections, cash book.', tag: 'ERP' },
       { t: 'Dashboards & reclassification', d: 'Real-time KPIs, reclassified accounting data, reports that arrive on their own.', tag: 'Data' },
-      { t: 'Automation & tax', d: 'Flows that run themselves: from transaction to fiscal receipt, through to the Italian Revenue Agency and your accounts.', tag: 'Automation' },
+      { t: 'Automation & tax', d: 'Business process automation: flows that run themselves, from transaction to fiscal receipt, through to the Italian Revenue Agency and your accounts.', tag: 'Automation' },
       { t: 'Integrations', d: 'Every kind of API, webhooks, direct connections to SQL Server databases on Windows, syncs and mirrors.', tag: 'API · SQL' },
       { t: 'Kiosks & totems', d: 'Applications for on-site kiosks: check-in, assisted sales, signatures, QR codes and payments.', tag: 'Kiosk' },
-      { t: 'AI & assistants', d: 'Virtual assistants on web, app and WhatsApp that answer, suggest, book — and hand over to your team.', tag: 'AI' },
+      { t: 'AI agents & assistants', d: 'AI agents for sales, support, data analysis and CRM: on web, app and WhatsApp they answer, suggest, book — and hand over to your team.', tag: 'AI' },
       { t: 'Privacy & compliance', d: 'GDPR by design, granular consent, protected health data, store requirements met from the first commit.', tag: 'GDPR' },
     ],
   },

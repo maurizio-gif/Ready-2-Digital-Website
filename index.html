@@ -3,33 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Ready2Digital — Orchestratori di processi digitali</title>
-    <meta name="description" content="Siti, app certificate Apple e Google, CRM, ERP, automazioni e integrazioni costruite su misura. Non software standard: un percorso unico disegnato sui processi della tua azienda." />
     <meta name="theme-color" content="#0D0D0D" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Ready2Digital" />
-    <meta property="og:title" content="Ready2Digital — Orchestratori di processi digitali" />
-    <meta property="og:description" content="Soluzioni digitali only one: dal sito all'app, dal CRM all'ERP, fino alle automazioni. Un percorso unico, disegnato sul tuo processo." />
-    <meta property="og:image" content="/images/logo_ready2digital.png" />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Ready2Digital",
-        "email": "info@ready2digital.it",
-        "description": "Agenzia digitale: soluzioni customizzate, orchestrazione di processi, siti, app, CRM, ERP, automazioni e integrazioni.",
-        "knowsAbout": ["CRM", "ERP", "App iOS", "App Android", "Automazione", "Integrazioni API", "SQL Server", "GDPR", "Totem", "E-commerce"]
-      }
-    </script>
+    <!-- Everything between the two markers is replaced, page by page, by scripts/prerender.mjs
+         (title, description, canonical, hreflang, Open Graph, structured data: see src/seo.ts).
+         What is written here is only what the dev server shows before the app starts. -->
+    <!--seo:start-->
+    <title>Ready2Digital — Automazioni, agenti AI e software su misura</title>
+    <meta name="description" content="Automazione dei processi, agenti di intelligenza artificiale, CRM, ERP, app e integrazioni su misura." />
+    <!--seo:end-->
+    <!-- Without JavaScript the page is still readable: the loading curtain would never lift, and the headlines are hidden until the animation shows them. -->
+    <noscript><style>.curtain,.wipe{display:none!important}.reveal-line>span{transform:none!important}.hero__fade{opacity:1!important}</style></noscript>
   </head>
   <body>
     <div id="root"></div>
-    <noscript>
-      <h1>Ready2Digital</h1>
-      <p>Soluzioni digitali su misura: siti, app certificate Apple e Google, CRM, ERP, automazioni e integrazioni. Scrivici: <a href="mailto:info@ready2digital.it">info@ready2digital.it</a></p>
-    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

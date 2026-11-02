@@ -6,11 +6,12 @@ import type { Lang } from './content';
 // so the same build works at the domain root (Vercel) and under
 // /Ready-2-Digital-Website/ (GitHub Pages).
 
-export type Page = 'home' | 'soluzioni' | 'progetti' | 'metodo' | 'tecnologia' | 'chisiamo' | 'contatti' | 'privacy' | 'caso';
+export type Page = 'home' | 'soluzioni' | 'agenti' | 'progetti' | 'metodo' | 'tecnologia' | 'chisiamo' | 'contatti' | 'privacy' | 'caso';
 
 export const PATHS: Record<Exclude<Page, 'caso'>, Record<Lang, string>> = {
   home: { it: '/', en: '/en' },
   soluzioni: { it: '/soluzioni', en: '/en/solutions' },
+  agenti: { it: '/agenti-ai', en: '/en/ai-agents' },
   progetti: { it: '/progetti', en: '/en/work' },
   metodo: { it: '/metodo', en: '/en/method' },
   tecnologia: { it: '/tecnologia', en: '/en/technology' },
@@ -19,7 +20,8 @@ export const PATHS: Record<Exclude<Page, 'caso'>, Record<Lang, string>> = {
   privacy: { it: '/privacy', en: '/en/privacy' },
 };
 
-export type Route = { page: Page; lang: Lang; slug?: string };
+/** `notFound` marks an address that matches no page: the app shows the home page there, but it is not one. */
+export type Route = { page: Page; lang: Lang; slug?: string; notFound?: boolean };
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -40,7 +42,7 @@ export function parse(pathname: string): Route {
     const m = rel.match(new RegExp(`^${PATHS.progetti[lang]}/([a-z0-9-]+)$`));
     if (m) return { page: 'caso', lang, slug: m[1] };
   }
-  return { page: 'home', lang: rel.startsWith('/en') ? 'en' : 'it' };
+  return { page: 'home', lang: rel.startsWith('/en') ? 'en' : 'it', notFound: true };
 }
 
 /** Addresses from earlier versions of the site, rewritten in place. */
@@ -80,8 +82,13 @@ export function navigate(path: string) {
   else go();
 }
 
-export function useRoute(): Route {
+/**
+ * The current route. On the server (prerender) there is no address bar: the
+ * path to render is passed in. In the browser it is read from the address.
+ */
+export function useRoute(ssrPath?: string): Route {
   const [route, setRoute] = useState<Route>(() => {
+    if (typeof window === 'undefined') return parse(ssrPath ?? '/');
     const fix = legacy();
     if (fix) window.history.replaceState({}, '', fix);
     return parse(window.location.pathname);

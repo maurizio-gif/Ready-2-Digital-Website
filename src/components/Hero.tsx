@@ -586,6 +586,7 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
               {t.hero.title.map((l, i) => (
                 <span key={i} className="reveal-line">
                   <span className={i === 2 ? 'accent' : undefined}>{l}</span>
+                {' '}
                 </span>
               ))}
             </h1>
