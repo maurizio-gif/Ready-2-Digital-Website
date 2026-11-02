@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CONTACT_EMAIL, type Copy } from '../content';
 import { Mark } from './Mark';
 import { Link } from './Nav';
+import { ContactForm } from './ContactForm';
 import { caseUi } from '../cases';
 import { SERVICE_IDS } from '../pages';
 import type { Lang } from '../content';
@@ -544,21 +545,11 @@ export function Sectors({ t }: { t: Copy }) {
 /* ------------------------------------------------------------------ */
 /* Contact                                                             */
 /* ------------------------------------------------------------------ */
-export function Contact({ t }: { t: Copy }) {
-  const btn = useRef<HTMLButtonElement>(null);
-  const [f, setF] = useState({ name: '', company: '', email: '', message: '' });
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const body = `${f.message}\n\n— ${f.name}${f.company ? `, ${f.company}` : ''}\n${f.email}`;
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.contact.mailSubject)}&body=${encodeURIComponent(body)}`;
-  };
+export function Contact({ t, lang }: { t: Copy; lang: Lang }) {
   return (
     <section className="contact section" id="contatti">
       <div className="container contact__grid">
-        <div>
-          <p className="kicker" data-reveal>
-            {t.contact.kicker}
-          </p>
+        <div className="contact__side">
           <h2 className="contact__title" data-split>
             <span>{t.contact.title[0]}</span> <span className="accent">{t.contact.title[1]}</span>
           </h2>
@@ -572,33 +563,9 @@ export function Contact({ t }: { t: Copy }) {
             </a>
           </p>
         </div>
-        <form className="form" onSubmit={submit} data-reveal>
-          {(['name', 'company', 'email'] as const).map((k) => (
-            <label key={k} className="field">
-              <input
-                type={k === 'email' ? 'email' : 'text'}
-                required={k !== 'company'}
-                placeholder=" "
-                value={f[k]}
-                onChange={(e) => setF({ ...f, [k]: e.target.value })}
-                autoComplete={k === 'name' ? 'name' : k === 'email' ? 'email' : 'organization'}
-              />
-              <span>{t.contact[k]}</span>
-            </label>
-          ))}
-          <label className="field">
-            <textarea required rows={4} placeholder=" " value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} />
-            <span>{t.contact.message}</span>
-          </label>
-          <button
-            ref={btn}
-            className="btn btn--big magnetic"
-            type="submit"
-          >
-            <span>{t.contact.send}</span>
-            <span className="btn__arrow">→</span>
-          </button>
-        </form>
+        <div data-reveal>
+          <ContactForm lang={lang} />
+        </div>
       </div>
     </section>
   );

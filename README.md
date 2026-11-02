@@ -13,6 +13,7 @@ Sito di Ready2Digital, bilingue, costruito attorno al marchio che si scompone e 
 | Tecnologia | `/tecnologia` | `/en/technology` |
 | Chi siamo | `/chi-siamo` | `/en/about` |
 | Contatti | `/contatti` | `/en/contact` |
+| Privacy | `/privacy` | `/en/privacy` |
 
 Il menu (con i pannelli di Soluzioni e Progetti), le intestazioni delle pagine e la pagina Chi siamo
 stanno in `src/pages.ts`.
@@ -50,3 +51,16 @@ npm run build    # produzione in dist/
 
 Deploy: Vercel (root del dominio; `vercel.json` reindirizza i vecchi indirizzi `/it/…`
 e `/en/…`) e GitHub Pages (`.github/workflows/deploy.yml`, con `BASE_PATH`).
+
+## Modulo contatti e privacy
+
+- Il modulo (`src/components/ContactForm.tsx`) chiede una cosa per volta: nome e cognome, email e
+  cellulare, azienda, bisogni, progetto, consensi (privacy obbligatorio, marketing facoltativo).
+  Il marchio fa da barra di avanzamento.
+- **Dove arrivano le richieste:** con `CONTACT_ENDPOINT` vuoto (in `src/legal.ts`) il modulo apre il
+  programma di posta con il messaggio pronto per info@ready2digital.it. Impostandolo su un webhook
+  (per esempio n8n) il modulo invia la richiesta in JSON, consensi compresi.
+- **Dati societari:** sede legale, P.IVA e PEC vanno scritti in `COMPANY` (`src/legal.ts`);
+  l'informativa mostra solo i campi compilati.
+- **Cookie:** il sito non installa cookie propri; il banner sarà CookieYes, da aggiungere con il suo
+  script in `index.html` una volta attivo sul dominio.

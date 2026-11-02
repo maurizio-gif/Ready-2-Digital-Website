@@ -75,13 +75,18 @@
       "permanent": true
     },
     {
-      "source": "/en/privacy",
-      "destination": "/en",
+      "source": "/en/cookie-policy",
+      "destination": "/en/privacy",
       "permanent": true
     },
     {
-      "source": "/en/cookie-policy",
-      "destination": "/en",
+      "source": "/it/privacy",
+      "destination": "/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/it/cookie-policy",
+      "destination": "/privacy",
       "permanent": true
     },
     {
@@ -154,6 +159,14 @@
     },
     {
       "source": "/en/contact",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/privacy",
       "destination": "/index.html"
     }
   ]

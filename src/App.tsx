@@ -5,7 +5,8 @@ import Lenis from 'lenis';
 import { copy, CONTACT_EMAIL, type Copy, type Lang } from './content';
 import { Mark } from './components/Mark';
 import { CasePage } from './components/CasePage';
-import { AboutPage, ContactPage, HomePage, MethodPage, SolutionsPage, TechPage, WorkPage } from './components/Pages';
+import { AboutPage, ContactPage, HomePage, MethodPage, PrivacyPage, SolutionsPage, TechPage, WorkPage } from './components/Pages';
+import { privacyText } from './legal';
 import { Link } from './components/Nav';
 import { cases } from './cases';
 import { pages, SERVICE_IDS } from './pages';
@@ -26,6 +27,10 @@ function metaFor(route: Route, t: Copy): [string, string] {
     const c = cases[route.lang].find((x) => x.slug === route.slug);
     if (c) return [`${c.client} — ${route.lang === 'it' ? 'Progetto' : 'Case study'} · Ready2Digital`, c.intro];
   }
+  if (route.page === 'privacy') {
+    const pv = privacyText(route.lang);
+    return [`${pv.title} — Ready 2 Digital`, pv.intro];
+  }
   if (route.page === 'home' || route.page === 'caso') return [t.meta.title, t.meta.description];
   const h = p.heroes[route.page];
   return [`${h.kicker} — Ready2Digital`, h.sub];
@@ -37,7 +42,6 @@ export default function App() {
   const t = copy[lang];
   const [ready, setReady] = useState(false);
   const [menu, setMenu] = useState(false);
-  const [privacy, setPrivacy] = useState(false);
   const wipe = useRef<HTMLDivElement>(null);
   const kase = route.page === 'caso' ? cases[lang].find((c) => c.slug === route.slug) : undefined;
   const routeKey = `${lang}-${route.page}-${route.slug ?? ''}`;
@@ -164,9 +168,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (menu || privacy) lenis?.stop();
+    if (menu) lenis?.stop();
     else lenis?.start();
-  }, [menu, privacy]);
+  }, [menu]);
 
   let page: React.ReactNode;
   switch (route.page) {
@@ -188,6 +192,9 @@ export default function App() {
     case 'contatti':
       page = <ContactPage t={t} lang={lang} />;
       break;
+    case 'privacy':
+      page = <PrivacyPage lang={lang} />;
+      break;
     case 'caso':
       page = kase ? <CasePage c={kase} lang={lang} /> : <WorkPage t={t} lang={lang} />;
       break;
@@ -204,28 +211,12 @@ export default function App() {
       <Cursor />
       <Header t={t} route={route} menu={menu} setMenu={setMenu} />
       <main key={routeKey}>{page}</main>
-      <Footer t={t} lang={lang} onPrivacy={() => setPrivacy(true)} />
-      {privacy && (
-        <div className="dialog" role="dialog" aria-modal="true" aria-label={t.privacy.title} onClick={() => setPrivacy(false)}>
-          <div className="dialog__box" onClick={(e) => e.stopPropagation()} data-lenis-prevent>
-            <h2>{t.privacy.title}</h2>
-            {t.privacy.body.map(([h, p]) => (
-              <div key={h}>
-                <h3>{h}</h3>
-                <p>{p}</p>
-              </div>
-            ))}
-            <button className="btn" type="button" onClick={() => setPrivacy(false)} autoFocus>
-              {t.privacy.close}
-            </button>
-          </div>
-        </div>
-      )}
+      <Footer t={t} lang={lang} />
     </>
   );
 }
 
-function Footer({ t, lang, onPrivacy }: { t: Copy; lang: Lang; onPrivacy: () => void }) {
+function Footer({ t, lang }: { t: Copy; lang: Lang }) {
   const p = pages[lang];
   return (
     <footer className="footer">
@@ -249,9 +240,9 @@ function Footer({ t, lang, onPrivacy }: { t: Copy; lang: Lang; onPrivacy: () => 
         </nav>
         <div className="footer__links">
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-          <button type="button" onClick={onPrivacy}>
+          <Link page="privacy" lang={lang}>
             {t.footer.privacy}
-          </button>
+          </Link>
           <button type="button" onClick={() => scrollTo(0)}>
             {t.footer.top} ↑
           </button>

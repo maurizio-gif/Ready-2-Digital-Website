@@ -6,7 +6,7 @@ import type { Lang } from './content';
 // so the same build works at the domain root (Vercel) and under
 // /Ready-2-Digital-Website/ (GitHub Pages).
 
-export type Page = 'home' | 'soluzioni' | 'progetti' | 'metodo' | 'tecnologia' | 'chisiamo' | 'contatti' | 'caso';
+export type Page = 'home' | 'soluzioni' | 'progetti' | 'metodo' | 'tecnologia' | 'chisiamo' | 'contatti' | 'privacy' | 'caso';
 
 export const PATHS: Record<Exclude<Page, 'caso'>, Record<Lang, string>> = {
   home: { it: '/', en: '/en' },
@@ -16,6 +16,7 @@ export const PATHS: Record<Exclude<Page, 'caso'>, Record<Lang, string>> = {
   tecnologia: { it: '/tecnologia', en: '/en/technology' },
   chisiamo: { it: '/chi-siamo', en: '/en/about' },
   contatti: { it: '/contatti', en: '/en/contact' },
+  privacy: { it: '/privacy', en: '/en/privacy' },
 };
 
 export type Route = { page: Page; lang: Lang; slug?: string };

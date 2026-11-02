@@ -5,6 +5,7 @@ import { Antithesis, Contact, Manifesto, Method, Modular, Origin, Sectors, Servi
 import { Dots } from './Dots';
 import { TechStack } from './Tech';
 import { Link, NextPage, PageHero } from './Nav';
+import { privacyText } from '../legal';
 
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
 
@@ -186,31 +187,51 @@ export function AboutPage({ t, lang }: { t: Copy; lang: Lang }) {
       <PageHero kicker={h.kicker} title={h.title} sub={h.sub} />
       <section className="section founder">
         <div className="container founder__grid">
-          <div className="founder__photo" data-reveal>
-            <img src={asset('images/maurizio-taruggi.jpg')} alt={a.photoAlt} loading="lazy" />
-            <div className="founder__badge">
-              <strong>{a.name}</strong>
-              <span>{a.role}</span>
+          <aside className="founder__aside">
+            <div className="founder__photo" data-reveal>
+              <img src={asset('images/maurizio-taruggi.jpg')} alt={a.photoAlt} loading="lazy" />
+              <div className="founder__badge">
+                <strong>{a.name}</strong>
+                <span>{a.role}</span>
+              </div>
             </div>
-          </div>
-          <div>
-            <p className="founder__intro" data-reveal>
-              {a.intro}
-            </p>
-            <ol className="chapters">
-              {a.chapters.map((c, i) => (
-                <li key={c.k} className="chapter" data-reveal>
-                  <span className="chapter__dot" aria-hidden="true">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <div>
-                    <p className="chapter__k">{c.k}</p>
-                    <h3 className="chapter__t">{c.t}</h3>
-                    <p className="chapter__d">{c.d}</p>
-                  </div>
-                </li>
+            <dl className="founder__facts" data-reveal>
+              {a.facts.map((f) => (
+                <div key={f.v}>
+                  <dt>{f.v}</dt>
+                  <dd>{f.l}</dd>
+                </div>
               ))}
-            </ol>
+            </dl>
+          </aside>
+          <article className="story">
+            <h2 className="story__title" data-split>
+              {a.title}
+            </h2>
+            {a.paragraphs.map((para, i) => (
+              <p key={i} className={i === 0 ? 'story__lead' : undefined} data-reveal>
+                {para}
+              </p>
+            ))}
+          </article>
+        </div>
+      </section>
+      <section className="section lenses">
+        <div className="container">
+          <p className="kicker" data-reveal>
+            {a.lensesTitle}
+          </p>
+          <div className="lenses__row">
+            <svg className="lenses__line" viewBox="0 0 1000 20" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 10 H1000" />
+            </svg>
+            {a.lenses.map((l, i) => (
+              <div key={l.t} className="lens" data-card style={{ ['--i' as string]: i }}>
+                <span className="lens__dot" />
+                <strong>{l.t}</strong>
+                <span>{l.d}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -239,9 +260,38 @@ export function AboutPage({ t, lang }: { t: Copy; lang: Lang }) {
           </div>
         </div>
       </section>
-      <Manifesto t={t} />
       <Origin t={t} lang={lang} />
       <NextPage to={NEXT.chisiamo} lang={lang} />
+    </>
+  );
+}
+
+export function PrivacyPage({ lang }: { lang: Lang }) {
+  const pv = privacyText(lang);
+  return (
+    <>
+      <header className="page-hero page-hero--plain">
+        <div className="container">
+          <p className="kicker">{lang === 'it' ? 'Legale' : 'Legal'}</p>
+          <h1 className="page-hero__title">{pv.title}</h1>
+          <p className="page-hero__sub">{pv.intro}</p>
+        </div>
+      </header>
+      <section className="section legal">
+        <div className="container">
+          <div className="legal__inner">
+          <p className="legal__updated">{pv.updated}</p>
+          {pv.sections.map((s) => (
+            <section key={s.h}>
+              <h2>{s.h}</h2>
+              {s.p.map((x, i) => (
+                <p key={i}>{x}</p>
+              ))}
+            </section>
+          ))}
+          </div>
+        </div>
+      </section>
     </>
   );
 }
@@ -251,7 +301,7 @@ export function ContactPage({ t, lang }: { t: Copy; lang: Lang }) {
   return (
     <>
       <PageHero kicker={h.kicker} title={h.title} sub={h.sub} />
-      <Contact t={t} />
+      <Contact t={t} lang={lang} />
       <Dots variant="converge" lines={t.dots.c} />
     </>
   );
