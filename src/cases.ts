@@ -18,7 +18,11 @@ export type Extract =
   | { kind: 'timeline'; title: string; text: string; url: string; person: string; meta: string; events: { d: string; t: string; s: string }[] }
   | { kind: 'bars'; title: string; text: string; url: string; tiles: { l: string; v: number; suf?: string; d?: string }[]; months: string[]; a: number[]; b: number[]; legend: [string, string] }
   | { kind: 'mirror'; title: string; text: string; tables: { n: string; rows: number }[]; totalLabel: string; total: number; time: string }
-  | { kind: 'weight'; title: string; text: string; before: string; after: string; beforeV: number; afterV: number };
+  | { kind: 'weight'; title: string; text: string; before: string; after: string; beforeV: number; afterV: number }
+  | { kind: 'dash'; title: string; text: string; url: string; tiles: { l: string; v: number; suf?: string; d?: string; eur?: boolean }[]; months: string[]; revenue: number[]; members: { new: number[]; renewed: number[]; lapsed: number[] }; mix: { l: string; v: number }[]; feed: { t: string; s: string; amt: string }[]; legend: { revenue: string; mix: string; active: string; new: string; renewed: string; lapsed: string; feed: string } }
+  | { kind: 'agentBook'; title: string; text: string; who: string; ask: string; reply: string; slot: { cls: string; when: string; where: string; spots: string }; btn: string; booked: string; calendar: string; tabs: string[] }
+  | { kind: 'agentPay'; title: string; text: string; who: string; ask: string; reply: string; card: { brand: string; num: string; holder: string; exp: string }; save: string; saved: string; done: string; tabs: string[] }
+  | { kind: 'agentCall'; title: string; text: string; url: string; contact: { n: string; s: string; events: { d: string; t: string; s: string }[] }; panelTitle: string; points: string[]; goalLabel: string; goal: string; openingLabel: string; opening: string; call: string };
 
 export type Case = {
   slug: string;
@@ -35,6 +39,7 @@ export type Case = {
   stack: string[];
   extracts: Extract[];
   dots: [string, string];
+  ecosystem?: import('./components/Scenes').EcosystemData;
 };
 
 const MONTHS_IT = ['Nov', 'Dic', 'Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott'];
@@ -69,7 +74,82 @@ const it: Case[] = [
     ],
     stack: ['Next.js', 'Expo', 'Supabase', 'PerfectGym API', 'WhatsApp Cloud API', 'Adyen', 'GoCardless', 'n8n', 'Web Push'],
     dots: ['Ogni canale è un punto.', 'Il CRM li collega in una persona sola.'],
+    ecosystem: {
+      kicker: 'L’ecosistema',
+      title: 'Sito, CRM e app: un solo sistema.',
+      text: 'Tre programmi diversi per tre persone diverse — chi cerca il club, chi ci lavora, chi è socio — ma un solo database. Un dato entra da una parte e si vede subito dalle altre; il gestionale resta, collegato.',
+      nodes: { site: 'Sito', crm: 'CRM', app: 'App / Portale', db: 'Un solo database', gest: 'Gestionale' },
+      flows: [
+        { t: 'Una richiesta dal sito arriva nel CRM, già deduplicata e assegnata.', path: 'site-db' },
+        { t: 'Il CRM la vede come opportunità, con la storia della persona.', path: 'db-crm' },
+        { t: 'Una prenotazione dall’app va dritta al gestionale.', path: 'app-db' },
+        { t: 'Contratti, pagamenti e accessi del gestionale si copiano nel database.', path: 'gest-db' },
+        { t: 'Un avviso dal CRM arriva nell’app come notifica.', path: 'crm-app' },
+      ],
+    },
     extracts: [
+      {
+        kind: 'dash',
+        title: 'Abbonamenti e ricavi, in diretta',
+        text: 'Attivi per tipo, nuovi e rinnovati contro gli scaduti, i ricavi mese per mese e gli incassi che arrivano mentre guardi. Tutto dallo stesso database che usano l’app e il sito.',
+        url: 'crm.club.it/dashboard/abbonamenti',
+        tiles: [{ l: 'Abbonamenti attivi', v: 2412, d: '+6% su un anno fa' }, { l: 'Ricavi del mese', v: 186400, eur: true, d: '+11%' }, { l: 'Rinnovi del mese', v: 214 }, { l: 'Nuovi del mese', v: 103, d: '+12%' }],
+        months: ['Dic', 'Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov'],
+        revenue: [142, 171, 168, 159, 163, 158, 151, 139, 118, 174, 181, 186],
+        members: { new: [88, 132, 96, 84, 92, 78, 70, 61, 44, 128, 110, 103], renewed: [160, 190, 176, 182, 171, 168, 150, 140, 120, 205, 212, 214], lapsed: [52, 48, 61, 55, 58, 66, 74, 81, 69, 47, 50, 46] },
+        mix: [{ l: 'Open', v: 1180 }, { l: 'Fitness', v: 540 }, { l: 'Nuoto', v: 412 }, { l: 'Junior', v: 280 }],
+        feed: [{ t: 'Giulia R.', s: 'Rinnovo Open annuale', amt: '€ 590,00' }, { t: 'Marco B.', s: 'Nuovo · Fitness mensile', amt: '€ 69,00' }, { t: 'Sara L.', s: 'Corso nuoto · 2ª rata', amt: '€ 120,00' }, { t: 'Luca V.', s: 'Guest Pass 7 giorni', amt: '€ 19,00' }, { t: 'Anna P.', s: 'Rinnovo Junior', amt: '€ 95,00' }, { t: 'Davide C.', s: 'Nuovo · Open mensile', amt: '€ 89,00' }],
+        legend: { revenue: 'Ricavi mensili (€)', mix: 'Abbonamenti attivi per tipo', active: 'attivi', new: 'Nuovi', renewed: 'Rinnovati', lapsed: 'Scaduti', feed: 'Ultimi incassi' },
+      },
+      {
+        kind: 'agentBook',
+        title: 'L’agente AI prenota la lezione',
+        text: 'Dentro l’app il socio scrive come scriverebbe a una persona. L’agente capisce, propone il posto giusto e prenota: nessun menu da imparare.',
+        who: 'Assistente Athlon',
+        ask: 'Vorrei fare acquagym domani sera',
+        reply: 'Domani sera c’è Acquagym alle 18:30, ci sono ancora posti. Te la prenoto?',
+        slot: { cls: 'Acquagym', when: 'Domani · 18:30', where: 'Vasca 2', spots: '4 posti liberi' },
+        btn: 'Prenota',
+        booked: 'Prenotata',
+        calendar: 'È nel tuo calendario, con il promemoria un’ora prima.',
+        tabs: ['Home', 'Calendario', 'Pagamenti', 'Profilo'],
+      },
+      {
+        kind: 'agentPay',
+        title: 'L’agente AI aggiunge la carta',
+        text: '«Devo cambiare la carta»: l’agente porta al punto giusto, la carta si salva con il gestionale e le prossime quote passano da lì. Senza telefonate al desk.',
+        who: 'Assistente Athlon',
+        ask: 'Devo cambiare la carta per le quote',
+        reply: 'Ti apro il metodo di pagamento: inserisci la nuova carta e la uso dalla prossima quota.',
+        card: { brand: 'VISA', num: '4242 4242 4242 4242', holder: 'GIULIA ROSSI', exp: '09/29' },
+        save: 'Salva la carta',
+        saved: 'Carta salvata',
+        done: 'Fatto: la quota del 1° dicembre passerà dalla nuova carta.',
+        tabs: ['Home', 'Calendario', 'Pagamenti', 'Profilo'],
+      },
+      {
+        kind: 'agentCall',
+        title: 'L’agente AI prepara la telefonata',
+        text: 'Prima che l’operatore chiami, l’agente legge la scheda e prepara il terreno: cosa ha fatto la persona, perché chiamarla, con quale frase partire. La telefonata parte già informata.',
+        url: 'crm.club.it/contatti/…',
+        contact: {
+          n: 'Marco Bianchi',
+          s: 'Opportunità · Guest Pass scaduto · Roma Talenti',
+          events: [
+            { d: 'Oggi', t: 'Visita al sito', s: 'Pagina «Nuoto adulti», 2 volte' },
+            { d: 'Ieri', t: 'WhatsApp', s: '«Avete corsi la sera?» · risposto dall’agente' },
+            { d: '3 gg', t: 'Guest Pass scaduto', s: '7 giorni · 4 ingressi · 2 lezioni di nuoto' },
+            { d: '10 gg', t: 'Modulo prova', s: 'Interesse: nuoto, sala pesi' },
+          ],
+        },
+        panelTitle: 'Prepara la telefonata',
+        points: ['Ha provato il club 7 giorni: 4 ingressi, 2 lezioni di nuoto adulti.', 'Ieri ha chiesto dei corsi serali: il lunedì e il giovedì alle 20:00 sono i suoi.', 'Nessun abbonamento in corso. Pass scaduto da 3 giorni: il momento giusto.'],
+        goalLabel: 'Obiettivo',
+        goal: 'Proporre l’Open mensile con le due lezioni serali di nuoto, prima lezione questo giovedì.',
+        openingLabel: 'Apertura suggerita',
+        opening: '«Ciao Marco, sono Giulia di Athlon. Ho visto che il nuoto la sera ti è piaciuto: giovedì alle 20 c’è posto, te lo tengo?»',
+        call: 'Chiama Marco',
+      },
       {
         kind: 'kpi',
         title: 'Il cruscotto della direzione',
@@ -174,6 +254,19 @@ const it: Case[] = [
     dots: ['Il dato c’era già.', 'Bastava collegarlo.'],
     extracts: [
       {
+        kind: 'dash',
+        title: 'Abbonamenti e incassato',
+        text: 'L’andamento letto dal gestionale: attivi per area, nuovi e rinnovati contro gli scaduti, l’incassato mese per mese. La direzione vede dove si perde un socio prima che diventi un problema.',
+        url: 'crm.club.it/abbonamenti/andamento',
+        tiles: [{ l: 'Abbonamenti attivi', v: 1240, d: '+6%' }, { l: 'Incassato del mese', v: 97800, eur: true, d: '+8%' }, { l: 'In scadenza (30 gg)', v: 96 }, { l: 'Rinnovati', v: 78, suf: '%' }],
+        months: ['Dic', 'Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov'],
+        revenue: [84, 92, 88, 81, 86, 79, 74, 70, 58, 95, 99, 98],
+        members: { new: [42, 66, 58, 52, 47, 44, 39, 30, 22, 74, 61, 55], renewed: [90, 104, 98, 96, 92, 88, 80, 72, 60, 110, 112, 108], lapsed: [28, 25, 30, 34, 29, 33, 41, 38, 26, 22, 27, 24] },
+        mix: [{ l: 'Club', v: 520 }, { l: 'Gym & Swim', v: 310 }, { l: 'Tennis', v: 240 }, { l: 'Young School', v: 170 }],
+        feed: [{ t: 'Famiglia B.', s: 'Rinnovo Club', amt: '€ 1.250,00' }, { t: 'Elena M.', s: 'Nuovo · Gym & Swim', amt: '€ 640,00' }, { t: 'Tommaso R.', s: 'Young School tennis', amt: '€ 380,00' }, { t: 'Chiara F.', s: 'Padel · quota corso', amt: '€ 220,00' }, { t: 'Paolo G.', s: 'Rinnovo Tennis', amt: '€ 890,00' }],
+        legend: { revenue: 'Ricavi mensili (€)', mix: 'Abbonamenti attivi per tipo', active: 'attivi', new: 'Nuovi', renewed: 'Rinnovati', lapsed: 'Scaduti', feed: 'Ultimi incassi' },
+      },
+      {
         kind: 'alert',
         title: 'Nessuna trattativa resta senza titolare',
         text: 'Una richiesta arriva dal sito e nessuno la prende? Il CRM lo dice subito, a tutti i commerciali. Un tocco e la trattativa ha un titolare.',
@@ -260,6 +353,19 @@ const it: Case[] = [
     dots: ['Tre richieste, tre nomi diversi.', 'Una persona sola.'],
     extracts: [
       {
+        kind: 'dash',
+        title: 'Soci, scuola tennis e incassi',
+        text: 'Quanti soci, quanti iscritti alla scuola tennis e al summer camp, quanto entra mese per mese: dopo la deduplica sono numeri di persone, non di moduli.',
+        url: 'crm.circolo.it/analytics',
+        tiles: [{ l: 'Soci attivi', v: 860, d: '+4%' }, { l: 'Incassi del mese', v: 64200, eur: true, d: '+9%' }, { l: 'Iscrizioni scuola tennis', v: 212 }, { l: 'Eventi del mese', v: 14 }],
+        months: ['Dic', 'Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov'],
+        revenue: [48, 61, 58, 55, 59, 62, 71, 44, 39, 88, 70, 64],
+        members: { new: [12, 14, 18, 22, 30, 41, 26, 15, 9, 64, 34, 21], renewed: [60, 72, 68, 70, 74, 80, 58, 40, 30, 120, 96, 84], lapsed: [10, 11, 14, 17, 12, 7, 6, 19, 22, 13, 10, 9] },
+        mix: [{ l: 'Soci', v: 420 }, { l: 'Scuola tennis', v: 212 }, { l: 'Summer camp', v: 96 }, { l: 'Eventi', v: 132 }],
+        feed: [{ t: 'Luca V.', s: 'Scuola tennis · corso adulti', amt: '€ 420,00' }, { t: 'Famiglia S.', s: 'Rinnovo soci', amt: '€ 980,00' }, { t: 'Martina D.', s: 'Torneo sociale doppio', amt: '€ 40,00' }, { t: 'Andrea T.', s: 'Summer camp · 2 settimane', amt: '€ 360,00' }, { t: 'Federica N.', s: 'Nuovo socio', amt: '€ 650,00' }],
+        legend: { revenue: 'Ricavi mensili (€)', mix: 'Abbonamenti attivi per tipo', active: 'attivi', new: 'Nuovi', renewed: 'Rinnovati', lapsed: 'Scaduti', feed: 'Ultimi incassi' },
+      },
+      {
         kind: 'merge',
         title: 'La stessa persona, una volta sola',
         text: 'Un modulo del sito, un’iscrizione alla scuola tennis, un contatto dello storico: tre righe, una persona. Il sistema le riconosce e le unisce, l’operatore lo vede già fatto.',
@@ -330,6 +436,19 @@ const it: Case[] = [
     stack: ['Astro', 'Next.js', 'Supabase', 'PerfectGym API', 'Meta Lead Ads', 'n8n', 'pg_cron'],
     dots: ['Due verità sugli stessi clienti.', 'Ora ce n’è una.'],
     extracts: [
+      {
+        kind: 'dash',
+        title: 'La dashboard abbonamenti',
+        text: 'Attivi oggi contro un anno fa, nuovi e rinnovati contro gli scaduti, i ricavi mese per mese. Le regole stanno nel database, non nel foglio di qualcuno: abbonamento, rinnovo, prova sono definiti una volta.',
+        url: 'crm.palestra.it/abbonamenti',
+        tiles: [{ l: 'Attivi oggi', v: 1530, d: '+14% su un anno fa' }, { l: 'Ricavi del mese', v: 118600, eur: true, d: '+10%' }, { l: 'Prove → abbonati', v: 34, suf: '%' }, { l: 'Retention a 12 mesi', v: 61, suf: '%' }],
+        months: ['Dic', 'Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov'],
+        revenue: [98, 121, 114, 108, 104, 99, 92, 80, 76, 126, 122, 119],
+        members: { new: [88, 140, 118, 102, 95, 80, 64, 70, 58, 132, 110, 104], renewed: [150, 176, 170, 164, 158, 150, 142, 130, 118, 184, 190, 186], lapsed: [52, 58, 66, 61, 59, 64, 72, 75, 69, 55, 58, 54] },
+        mix: [{ l: 'Open', v: 720 }, { l: 'Sala pesi + corsi', v: 410 }, { l: 'Reformer', v: 240 }, { l: 'Under 25', v: 160 }],
+        feed: [{ t: 'Alessia P.', s: 'Nuovo · Open annuale', amt: '€ 549,00' }, { t: 'Simone G.', s: 'Rinnovo mensile', amt: '€ 59,00' }, { t: 'Valentina C.', s: 'Reformer Club · 10 lezioni', amt: '€ 190,00' }, { t: 'Matteo R.', s: 'Under 25 · trimestrale', amt: '€ 129,00' }, { t: 'Ilaria B.', s: 'Pass prova → abbonata', amt: '€ 449,00' }],
+        legend: { revenue: 'Ricavi mensili (€)', mix: 'Abbonamenti attivi per tipo', active: 'attivi', new: 'Nuovi', renewed: 'Rinnovati', lapsed: 'Scaduti', feed: 'Ultimi incassi' },
+      },
       {
         kind: 'bars',
         title: 'La dashboard abbonamenti',
@@ -411,12 +530,75 @@ const en: Case[] = [
       { v: '100%', l: 'Digital sign-ups, signature included' },
     ],
     dots: ['Every channel is a dot.', 'The CRM joins them into one person.'],
+    ecosystem: {
+      kicker: 'The ecosystem',
+      title: 'Website, CRM and app: one system.',
+      text: 'Three programs for three kinds of people — those looking for the club, those who work there, members — but one database. Data enters on one side and shows on the others at once; the back office stays, connected.',
+      nodes: { site: 'Website', crm: 'CRM', app: 'App / Portal', db: 'One database', gest: 'Back office' },
+      flows: [
+        { t: 'A request from the website lands in the CRM, de-duplicated and assigned.', path: 'site-db' },
+        { t: 'The CRM sees it as an opportunity, with the person’s history.', path: 'db-crm' },
+        { t: 'A booking from the app goes straight to the back office.', path: 'app-db' },
+        { t: 'Contracts, payments and check-ins from the back office are copied into the database.', path: 'gest-db' },
+        { t: 'An alert from the CRM reaches the app as a notification.', path: 'crm-app' },
+      ],
+    },
     extracts: [
-      { ...(it[0].extracts[0] as Extract & { kind: 'kpi' }), title: 'The management dashboard', text: 'Leads, trials, contracts and revenue read from the same database as the app and website. Management looks at one number, and it’s the same one the desk sees.', tiles: [{ l: 'Leads this month', v: 571, d: '+18%' }, { l: 'Active trials', v: 84, d: '+9%' }, { l: 'New contracts', v: 103, d: '+12%' }, { l: 'Conversion', v: 31, suf: '%', d: '+3 pt' }], seriesLabel: 'Leads per week', funnel: [{ l: 'Leads', v: 100 }, { l: 'Contacted', v: 78 }, { l: 'Trial', v: 46 }, { l: 'Joined', v: 31 }] },
-      { ...(it[0].extracts[1] as Extract & { kind: 'phone' }), title: 'The member app', text: 'Book classes, pay, get in with the wallet badge and follow the Athlon Health Score. A web app today, the same codebase for the App Store and Google Play.', hello: 'Hi Giulia', next: 'Your next class', nextClass: 'Aqua gym', nextWhen: 'Tomorrow · 6:30 pm · Pool 2', badge: 'Access badge', tabs: ['Home', 'Calendar', 'Training', 'Profile'] },
-      { ...(it[0].extracts[2] as Extract & { kind: 'resolve' }), title: 'Failed payments, solved', text: 'When a charge fails, the right email goes out with a link to pay or to change card. The desk only sees what’s left to do.', head: ['Member', 'Fee', 'Amount', 'Status'], rows: [{ n: 'M. R.', what: 'October fee', amt: '€69.00' }, { n: 'L. B.', what: 'October fee', amt: '€89.00' }, { n: 'F. C.', what: 'Swim course', amt: '€120.00' }, { n: 'A. G.', what: 'October fee', amt: '€69.00' }, { n: 'S. P.', what: 'Card expired', amt: '€79.00' }], from: 'Failed', to: 'Paid by link', counter: 'Recovered' },
-      { ...(it[0].extracts[3] as Extract & { kind: 'chat' }), title: 'WhatsApp, with an AI agent', text: 'It answers with the website’s information, points to the right form and hands the conversation to the desk when a person is needed. The history stays in the customer record.', status: 'AI agent on', msgs: [{ me: true, t: 'Hi, do you have adult swim classes in the evening?' }, { ai: true, t: 'Yes! Mondays and Thursdays at 8 pm. Fancy a free trial class? Here’s the form.' }, { me: true, t: 'Great, and for my 8-year-old daughter?' }, { ai: true, t: 'Kids have the Junior courses: I’ll pass you to a colleague for free slots.' }, { team: true, t: 'Hi, Marco from the desk here: Tuesday 5 pm has a spot 👍' }] },
-      { ...(it[0].extracts[4] as Extract & { kind: 'kiosk' }), title: 'The on-site kiosk', text: 'Assisted sales on the club’s panel: pick a membership, continue on your phone with a QR code, sign and pay. Staff guide, they don’t type.', steps: ['Choose', 'Your details', 'Sign & pay'], plan: 'Open annual', price: '€59 / month', qr: 'Continue on your phone' },
+      { ...(it[0].extracts[0] as Extract & { kind: 'dash' }), title: 'Memberships and revenue, live', text: 'Active by type, new and renewed against lapsed, revenue month by month and the payments arriving while you watch. All from the same database the app and website use.', url: 'crm.club.it/dashboard/memberships', tiles: [{ l: 'Active memberships', v: 2412, d: '+6% vs last year' }, { l: 'Revenue this month', v: 186400, eur: true, d: '+11%' }, { l: 'Renewals this month', v: 214 }, { l: 'New this month', v: 103, d: '+12%' }], months: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'], mix: [{ l: 'Open', v: 1180 }, { l: 'Fitness', v: 540 }, { l: 'Swimming', v: 412 }, { l: 'Junior', v: 280 }], feed: [{ t: 'Giulia R.', s: 'Renewal · Open annual', amt: '€590.00' }, { t: 'Marco B.', s: 'New · Fitness monthly', amt: '€69.00' }, { t: 'Sara L.', s: 'Swim course · 2nd instalment', amt: '€120.00' }, { t: 'Luca V.', s: '7-day Guest Pass', amt: '€19.00' }, { t: 'Anna P.', s: 'Renewal · Junior', amt: '€95.00' }, { t: 'Davide C.', s: 'New · Open monthly', amt: '€89.00' }], legend: { revenue: 'Monthly revenue (€)', mix: 'Active memberships by type', active: 'active', new: 'New', renewed: 'Renewed', lapsed: 'Lapsed', feed: 'Latest payments' } },
+      {
+        kind: 'agentBook',
+        title: 'The AI agent books the class',
+        text: 'Inside the app the member writes as they would to a person. The agent understands, suggests the right slot and books it: no menus to learn.',
+        who: 'Athlon assistant',
+        ask: 'I’d like to do aqua gym tomorrow evening',
+        reply: 'Tomorrow evening there’s Aqua gym at 6:30 pm, with spots left. Shall I book it?',
+        slot: { cls: 'Aqua gym', when: 'Tomorrow · 6:30 pm', where: 'Pool 2', spots: '4 spots left' },
+        btn: 'Book',
+        booked: 'Booked',
+        calendar: 'It’s in your calendar, with a reminder an hour before.',
+        tabs: ['Home', 'Calendar', 'Payments', 'Profile'],
+      },
+      {
+        kind: 'agentPay',
+        title: 'The AI agent adds the card',
+        text: '“I need to change my card”: the agent takes you to the right place, the card is saved with the back office and the next fees go through it. No calls to the desk.',
+        who: 'Athlon assistant',
+        ask: 'I need to change the card for my fees',
+        reply: 'Opening your payment method: enter the new card and I’ll use it from the next fee.',
+        card: { brand: 'VISA', num: '4242 4242 4242 4242', holder: 'GIULIA ROSSI', exp: '09/29' },
+        save: 'Save card',
+        saved: 'Card saved',
+        done: 'Done: the fee due on 1 December will go through the new card.',
+        tabs: ['Home', 'Calendar', 'Payments', 'Profile'],
+      },
+      {
+        kind: 'agentCall',
+        title: 'The AI agent prepares the call',
+        text: 'Before the operator calls, the agent reads the record and sets the table: what the person did, why call them, which sentence to open with. The call starts informed.',
+        url: 'crm.club.it/contacts/…',
+        contact: {
+          n: 'Marco Bianchi',
+          s: 'Opportunity · Guest Pass expired · Rome Talenti',
+          events: [
+            { d: 'Today', t: 'Website visit', s: '“Adult swimming” page, twice' },
+            { d: 'Yesterday', t: 'WhatsApp', s: '“Do you have evening classes?” · answered by the agent' },
+            { d: '3 d', t: 'Guest Pass expired', s: '7 days · 4 check-ins · 2 swim classes' },
+            { d: '10 d', t: 'Trial form', s: 'Interests: swimming, gym floor' },
+          ],
+        },
+        panelTitle: 'Prepare the call',
+        points: ['Tried the club for 7 days: 4 check-ins, 2 adult swim classes.', 'Asked about evening classes yesterday: Monday and Thursday at 8 pm fit.', 'No membership yet. Pass expired 3 days ago: the right moment.'],
+        goalLabel: 'Goal',
+        goal: 'Offer the monthly Open with the two evening swim classes, first class this Thursday.',
+        openingLabel: 'Suggested opening',
+        opening: '“Hi Marco, Giulia from Athlon. I saw you enjoyed evening swimming: Thursday at 8 has a spot, shall I hold it?”',
+        call: 'Call Marco',
+      },
+      { ...(it[0].extracts[4] as Extract & { kind: 'kpi' }), title: 'The management dashboard', text: 'Leads, trials, contracts and revenue read from the same database as the app and website. Management looks at one number, and it’s the same one the desk sees.', tiles: [{ l: 'Leads this month', v: 571, d: '+18%' }, { l: 'Active trials', v: 84, d: '+9%' }, { l: 'New contracts', v: 103, d: '+12%' }, { l: 'Conversion', v: 31, suf: '%', d: '+3 pt' }], seriesLabel: 'Leads per week', funnel: [{ l: 'Leads', v: 100 }, { l: 'Contacted', v: 78 }, { l: 'Trial', v: 46 }, { l: 'Joined', v: 31 }] },
+      { ...(it[0].extracts[5] as Extract & { kind: 'phone' }), title: 'The member app', text: 'Book classes, pay, get in with the wallet badge and follow the Athlon Health Score. A web app today, the same codebase for the App Store and Google Play.', hello: 'Hi Giulia', next: 'Your next class', nextClass: 'Aqua gym', nextWhen: 'Tomorrow · 6:30 pm · Pool 2', badge: 'Access badge', tabs: ['Home', 'Calendar', 'Training', 'Profile'] },
+      { ...(it[0].extracts[6] as Extract & { kind: 'resolve' }), title: 'Failed payments, solved', text: 'When a charge fails, the right email goes out with a link to pay or to change card. The desk only sees what’s left to do.', head: ['Member', 'Fee', 'Amount', 'Status'], rows: [{ n: 'M. R.', what: 'October fee', amt: '€69.00' }, { n: 'L. B.', what: 'October fee', amt: '€89.00' }, { n: 'F. C.', what: 'Swim course', amt: '€120.00' }, { n: 'A. G.', what: 'October fee', amt: '€69.00' }, { n: 'S. P.', what: 'Card expired', amt: '€79.00' }], from: 'Failed', to: 'Paid by link', counter: 'Recovered' },
+      { ...(it[0].extracts[7] as Extract & { kind: 'chat' }), title: 'WhatsApp, with an AI agent', text: 'It answers with the website’s information, points to the right form and hands the conversation to the desk when a person is needed. The history stays in the customer record.', status: 'AI agent on', msgs: [{ me: true, t: 'Hi, do you have adult swim classes in the evening?' }, { ai: true, t: 'Yes! Mondays and Thursdays at 8 pm. Fancy a free trial class? Here’s the form.' }, { me: true, t: 'Great, and for my 8-year-old daughter?' }, { ai: true, t: 'Kids have the Junior courses: I’ll pass you to a colleague for free slots.' }, { team: true, t: 'Hi, Marco from the desk here: Tuesday 5 pm has a spot 👍' }] },
+      { ...(it[0].extracts[8] as Extract & { kind: 'kiosk' }), title: 'The on-site kiosk', text: 'Assisted sales on the club’s panel: pick a membership, continue on your phone with a QR code, sign and pay. Staff guide, they don’t type.', steps: ['Choose', 'Your details', 'Sign & pay'], plan: 'Open annual', price: '€59 / month', qr: 'Continue on your phone' },
     ],
   },
   {
@@ -444,10 +626,11 @@ const en: Case[] = [
     ],
     dots: ['The data was already there.', 'It just needed connecting.'],
     extracts: [
-      { ...(it[1].extracts[0] as Extract & { kind: 'alert' }), title: 'No deal is left without an owner', text: 'A request arrives from the website and nobody takes it? The CRM says so right away, to every salesperson. One tap and the deal has an owner.', rows: [{ n: 'Family enquiry', ch: 'Website' }, { n: 'Adult tennis', ch: 'Phone' }, { n: 'Young School', ch: 'Email' }, { n: 'Club membership', ch: 'WhatsApp' }], take: 'Take it', taken: 'In progress', ago: 'for' },
-      { ...(it[1].extracts[1] as Extract & { kind: 'flow' }), title: 'From back office to CRM, no VPN', text: 'A scheduled script on the club’s server reads the back-office database read-only and sends only what’s new. It can be re-run any time: it never creates duplicates.', nodes: [{ t: 'SQL Server', s: 'On-site Windows server' }, { t: 'Scheduled script', s: 'Read-only' }, { t: 'Cloud database', s: 'One customer record' }, { t: 'CRM', s: 'Memberships & renewals' }], counter: 'sales synced' },
-      { ...(it[1].extracts[2] as Extract & { kind: 'agenda' }), title: 'Today’s tasks', text: 'Everyone’s on-site and phone appointments, but only your own to-dos. Every task is closed on the spot: done, rescheduled, cancelled.', items: [{ h: '09:30', t: 'Club visit', s: 'B. family · from website', tag: 'On site' }, { h: '11:00', t: 'Call back', s: 'Tennis renewal · R. M.', tag: 'Phone' }, { h: '15:00', t: 'Padel trial', s: 'G. L. + 3 friends', tag: 'On site' }, { h: '17:30', t: 'Young School', s: 'Sign-up · 2 kids', tag: 'On site' }], done: 'Reminder sent' },
-      { ...(it[1].extracts[3] as Extract & { kind: 'bars' }), title: 'Membership trends', text: 'New and lapsed, month by month, read from the back office. Management sees where customers are lost before it becomes a problem.', tiles: [{ l: 'Active today', v: 1240, d: '+6%' }, { l: 'Expiring (30 days)', v: 96 }, { l: 'Renewed', v: 78, suf: '%' }], months: MONTHS_EN, legend: ['New', 'Lapsed'] },
+      { ...(it[1].extracts[0] as Extract & { kind: 'dash' }), title: 'Memberships and revenue', text: 'Trends read from the back office: active by area, new and renewed against lapsed, revenue month by month. Management sees where a member is lost before it becomes a problem.', url: 'crm.club.it/memberships/trends', tiles: [{ l: 'Active memberships', v: 1240, d: '+6%' }, { l: 'Collected this month', v: 97800, eur: true, d: '+8%' }, { l: 'Expiring (30 days)', v: 96 }, { l: 'Renewed', v: 78, suf: '%' }], months: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'], mix: [{ l: 'Club', v: 520 }, { l: 'Gym & Swim', v: 310 }, { l: 'Tennis', v: 240 }, { l: 'Young School', v: 170 }], feed: [{ t: 'B. family', s: 'Club renewal', amt: '€1,250.00' }, { t: 'Elena M.', s: 'New · Gym & Swim', amt: '€640.00' }, { t: 'Tommaso R.', s: 'Young School tennis', amt: '€380.00' }, { t: 'Chiara F.', s: 'Padel · course fee', amt: '€220.00' }, { t: 'Paolo G.', s: 'Tennis renewal', amt: '€890.00' }], legend: { revenue: 'Monthly revenue (€)', mix: 'Active memberships by type', active: 'active', new: 'New', renewed: 'Renewed', lapsed: 'Lapsed', feed: 'Latest payments' } },
+      { ...(it[1].extracts[1] as Extract & { kind: 'alert' }), title: 'No deal is left without an owner', text: 'A request arrives from the website and nobody takes it? The CRM says so right away, to every salesperson. One tap and the deal has an owner.', rows: [{ n: 'Family enquiry', ch: 'Website' }, { n: 'Adult tennis', ch: 'Phone' }, { n: 'Young School', ch: 'Email' }, { n: 'Club membership', ch: 'WhatsApp' }], take: 'Take it', taken: 'In progress', ago: 'for' },
+      { ...(it[1].extracts[2] as Extract & { kind: 'flow' }), title: 'From back office to CRM, no VPN', text: 'A scheduled script on the club’s server reads the back-office database read-only and sends only what’s new. It can be re-run any time: it never creates duplicates.', nodes: [{ t: 'SQL Server', s: 'On-site Windows server' }, { t: 'Scheduled script', s: 'Read-only' }, { t: 'Cloud database', s: 'One customer record' }, { t: 'CRM', s: 'Memberships & renewals' }], counter: 'sales synced' },
+      { ...(it[1].extracts[3] as Extract & { kind: 'agenda' }), title: 'Today’s tasks', text: 'Everyone’s on-site and phone appointments, but only your own to-dos. Every task is closed on the spot: done, rescheduled, cancelled.', items: [{ h: '09:30', t: 'Club visit', s: 'B. family · from website', tag: 'On site' }, { h: '11:00', t: 'Call back', s: 'Tennis renewal · R. M.', tag: 'Phone' }, { h: '15:00', t: 'Padel trial', s: 'G. L. + 3 friends', tag: 'On site' }, { h: '17:30', t: 'Young School', s: 'Sign-up · 2 kids', tag: 'On site' }], done: 'Reminder sent' },
+      { ...(it[1].extracts[4] as Extract & { kind: 'bars' }), title: 'Membership trends', text: 'New and lapsed, month by month, read from the back office. Management sees where customers are lost before it becomes a problem.', tiles: [{ l: 'Active today', v: 1240, d: '+6%' }, { l: 'Expiring (30 days)', v: 96 }, { l: 'Renewed', v: 78, suf: '%' }], months: MONTHS_EN, legend: ['New', 'Lapsed'] },
     ],
   },
   {
@@ -474,9 +657,10 @@ const en: Case[] = [
     ],
     dots: ['Three requests, three different names.', 'One person.'],
     extracts: [
-      { ...(it[2].extracts[0] as Extract & { kind: 'merge' }), title: 'The same person, only once', text: 'A website form, a tennis-school sign-up, a contact from the archive: three rows, one person. The system recognises and merges them; staff see it already done.', records: [{ src: 'Website form', f: ['Luca Verdi', 'luca.verdi@…', '—'] }, { src: 'Tennis school', f: ['VERDI LUCA', '—', '+39 347 …12'] }, { src: 'Archive', f: ['L. Verdi', 'luca.verdi@…', '347 …12'] }], merged: { src: 'Single record', f: ['Luca Verdi', 'luca.verdi@…', '+39 347 …12'] }, label: 'Merged' },
-      { ...(it[2].extracts[1] as Extract & { kind: 'timeline' }), title: 'The person’s record', text: 'Everything that happened with a person, in order: requests, sign-ups, events, who followed up. The office answers without searching three places.', meta: 'Member · Verdi family (3) · Tennis school', events: [{ d: 'Oct', t: 'Event sign-up', s: 'Club doubles tournament' }, { d: 'Jul', t: 'Summer camp', s: 'Son · 2 weeks' }, { d: 'May', t: 'Invite a friend', s: 'Invited 2 people' }, { d: 'Sep', t: 'Tennis school', s: 'Adult course · Tuesday' }, { d: '2023', t: 'First contact', s: 'From the imported archive' }] },
-      { ...(it[2].extracts[2] as Extract & { kind: 'bars' }), title: 'Where people come from', text: 'Junior and adult requests, month by month, after de-duplication: finally people, not forms.', tiles: [{ l: 'Unique people', v: 220 }, { l: 'Duplicates avoided', v: 192 }, { l: 'Events in the archive', v: 353 }], months: MONTHS_EN, legend: ['Junior', 'Adults'] },
+      { ...(it[2].extracts[0] as Extract & { kind: 'dash' }), title: 'Members, tennis school and revenue', text: 'How many members, how many in the tennis school and summer camp, how much comes in month by month: after de-duplication these are people, not forms.', url: 'crm.club.it/analytics', tiles: [{ l: 'Active members', v: 860, d: '+4%' }, { l: 'Revenue this month', v: 64200, eur: true, d: '+9%' }, { l: 'Tennis school sign-ups', v: 212 }, { l: 'Events this month', v: 14 }], months: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'], mix: [{ l: 'Members', v: 420 }, { l: 'Tennis school', v: 212 }, { l: 'Summer camp', v: 96 }, { l: 'Events', v: 132 }], feed: [{ t: 'Luca V.', s: 'Tennis school · adult course', amt: '€420.00' }, { t: 'S. family', s: 'Membership renewal', amt: '€980.00' }, { t: 'Martina D.', s: 'Club doubles tournament', amt: '€40.00' }, { t: 'Andrea T.', s: 'Summer camp · 2 weeks', amt: '€360.00' }, { t: 'Federica N.', s: 'New member', amt: '€650.00' }], legend: { revenue: 'Monthly revenue (€)', mix: 'Active memberships by type', active: 'active', new: 'New', renewed: 'Renewed', lapsed: 'Lapsed', feed: 'Latest payments' } },
+      { ...(it[2].extracts[1] as Extract & { kind: 'merge' }), title: 'The same person, only once', text: 'A website form, a tennis-school sign-up, a contact from the archive: three rows, one person. The system recognises and merges them; staff see it already done.', records: [{ src: 'Website form', f: ['Luca Verdi', 'luca.verdi@…', '—'] }, { src: 'Tennis school', f: ['VERDI LUCA', '—', '+39 347 …12'] }, { src: 'Archive', f: ['L. Verdi', 'luca.verdi@…', '347 …12'] }], merged: { src: 'Single record', f: ['Luca Verdi', 'luca.verdi@…', '+39 347 …12'] }, label: 'Merged' },
+      { ...(it[2].extracts[2] as Extract & { kind: 'timeline' }), title: 'The person’s record', text: 'Everything that happened with a person, in order: requests, sign-ups, events, who followed up. The office answers without searching three places.', meta: 'Member · Verdi family (3) · Tennis school', events: [{ d: 'Oct', t: 'Event sign-up', s: 'Club doubles tournament' }, { d: 'Jul', t: 'Summer camp', s: 'Son · 2 weeks' }, { d: 'May', t: 'Invite a friend', s: 'Invited 2 people' }, { d: 'Sep', t: 'Tennis school', s: 'Adult course · Tuesday' }, { d: '2023', t: 'First contact', s: 'From the imported archive' }] },
+      { ...(it[2].extracts[3] as Extract & { kind: 'bars' }), title: 'Where people come from', text: 'Junior and adult requests, month by month, after de-duplication: finally people, not forms.', tiles: [{ l: 'Unique people', v: 220 }, { l: 'Duplicates avoided', v: 192 }, { l: 'Events in the archive', v: 353 }], months: MONTHS_EN, legend: ['Junior', 'Adults'] },
     ],
   },
   {
@@ -502,10 +686,11 @@ const en: Case[] = [
     ],
     dots: ['Two truths about the same customers.', 'Now there’s one.'],
     extracts: [
-      { ...(it[3].extracts[0] as Extract & { kind: 'bars' }), title: 'The membership dashboard', text: 'Active today versus a year ago, new and lapsed over recent months. The rules live in the database, not in someone’s spreadsheet: membership, renewal and trial are defined once.', tiles: [{ l: 'Active today', v: 1530, d: '+14% vs last year' }, { l: 'Trials → members', v: 34, suf: '%' }, { l: '12-month retention', v: 61, suf: '%' }], months: MONTHS_EN, legend: ['New', 'Lapsed'] },
-      { ...(it[3].extracts[1] as Extract & { kind: 'mirror' }), title: 'The back office, in-house', text: 'The first download: every back-office table copied in 24 minutes. From then on it updates itself, and every CRM page reads instantly instead of asking the back office.', tables: [{ n: 'Club check-ins', rows: 359000 }, { n: 'Class bookings', rows: 185000 }, { n: 'Contracts', rows: 21400 }, { n: 'Payments', rows: 96800 }, { n: 'People', rows: 18900 }], totalLabel: 'rows copied', time: '119 entities · 24 minutes · zero errors' },
-      { ...(it[3].extracts[2] as Extract & { kind: 'flow' }), title: 'From Meta lead to back office', text: 'Whoever fills a form on Instagram or the website lands in the CRM with a consultant already assigned, and is created in the back office too. Nobody retypes anything.', nodes: [{ t: 'Meta · Website', s: 'Forms and Lead Ads' }, { t: 'CRM', s: 'Lead with consultant' }, { t: 'Back office', s: 'Record created' }, { t: 'Trial', s: 'Booked and followed' }], counter: 'leads in on their own' },
-      { ...(it[3].extracts[3] as Extract & { kind: 'weight' }), title: 'A website at a tenth of the weight', text: 'Images and loading treated as a requirement, not a detail to fix later.', before: 'Before', after: 'After' },
+      { ...(it[3].extracts[0] as Extract & { kind: 'dash' }), title: 'The membership dashboard', text: 'Active today versus a year ago, new and renewed against lapsed, revenue month by month. The rules live in the database, not in someone’s spreadsheet: membership, renewal and trial are defined once.', url: 'crm.gym.it/memberships', tiles: [{ l: 'Active today', v: 1530, d: '+14% vs last year' }, { l: 'Revenue this month', v: 118600, eur: true, d: '+10%' }, { l: 'Trials → members', v: 34, suf: '%' }, { l: '12-month retention', v: 61, suf: '%' }], months: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'], mix: [{ l: 'Open', v: 720 }, { l: 'Gym + classes', v: 410 }, { l: 'Reformer', v: 240 }, { l: 'Under 25', v: 160 }], feed: [{ t: 'Alessia P.', s: 'New · Open annual', amt: '€549.00' }, { t: 'Simone G.', s: 'Monthly renewal', amt: '€59.00' }, { t: 'Valentina C.', s: 'Reformer Club · 10 classes', amt: '€190.00' }, { t: 'Matteo R.', s: 'Under 25 · quarterly', amt: '€129.00' }, { t: 'Ilaria B.', s: 'Trial pass → member', amt: '€449.00' }], legend: { revenue: 'Monthly revenue (€)', mix: 'Active memberships by type', active: 'active', new: 'New', renewed: 'Renewed', lapsed: 'Lapsed', feed: 'Latest payments' } },
+      { ...(it[3].extracts[1] as Extract & { kind: 'bars' }), title: 'The membership dashboard', text: 'Active today versus a year ago, new and lapsed over recent months. The rules live in the database, not in someone’s spreadsheet: membership, renewal and trial are defined once.', tiles: [{ l: 'Active today', v: 1530, d: '+14% vs last year' }, { l: 'Trials → members', v: 34, suf: '%' }, { l: '12-month retention', v: 61, suf: '%' }], months: MONTHS_EN, legend: ['New', 'Lapsed'] },
+      { ...(it[3].extracts[2] as Extract & { kind: 'mirror' }), title: 'The back office, in-house', text: 'The first download: every back-office table copied in 24 minutes. From then on it updates itself, and every CRM page reads instantly instead of asking the back office.', tables: [{ n: 'Club check-ins', rows: 359000 }, { n: 'Class bookings', rows: 185000 }, { n: 'Contracts', rows: 21400 }, { n: 'Payments', rows: 96800 }, { n: 'People', rows: 18900 }], totalLabel: 'rows copied', time: '119 entities · 24 minutes · zero errors' },
+      { ...(it[3].extracts[3] as Extract & { kind: 'flow' }), title: 'From Meta lead to back office', text: 'Whoever fills a form on Instagram or the website lands in the CRM with a consultant already assigned, and is created in the back office too. Nobody retypes anything.', nodes: [{ t: 'Meta · Website', s: 'Forms and Lead Ads' }, { t: 'CRM', s: 'Lead with consultant' }, { t: 'Back office', s: 'Record created' }, { t: 'Trial', s: 'Booked and followed' }], counter: 'leads in on their own' },
+      { ...(it[3].extracts[4] as Extract & { kind: 'weight' }), title: 'A website at a tenth of the weight', text: 'Images and loading treated as a requirement, not a detail to fix later.', before: 'Before', after: 'After' },
     ],
   },
 ];
