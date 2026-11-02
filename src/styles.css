@@ -3813,19 +3813,6 @@ button {
 .menu__nav a.is-active {
   color: var(--orange);
 }
-.menu__sub {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 16px;
-  margin: 4px 0 12px 44px;
-}
-.menu__nav .menu__sub a {
-  font-family: var(--body);
-  font-size: 15px;
-  font-weight: 500;
-  text-transform: none;
-  color: var(--muted);
-}
 .wipe {
   position: fixed;
   inset: 0;
@@ -4833,5 +4820,35 @@ img[src*='passion-mark'] {
   }
   .extract {
     padding-block: clamp(40px, 7vw, 110px);
+  }
+}
+
+/* Phone and tablet header: the full logo, and the bar never hides. */
+.brand__logo {
+  display: none;
+  height: 30px;
+  width: auto;
+}
+@media (max-width: 1100px) {
+  .brand__mark,
+  .brand__name {
+    display: none;
+  }
+  .brand__logo {
+    display: block;
+  }
+  .header.is-hidden:not(.is-menu) {
+    transform: none;
+  }
+  .header.is-solid {
+    background: rgba(13, 13, 13, 0.92);
+  }
+  .header__inner {
+    height: 68px;
+  }
+}
+@media (max-width: 560px) {
+  .brand__logo {
+    height: 26px;
   }
 }
