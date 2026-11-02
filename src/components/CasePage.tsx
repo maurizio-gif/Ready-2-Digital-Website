@@ -8,6 +8,7 @@ import { ExtractView } from './Mocks';
 import { Mark } from './Mark';
 import { CaseTech } from './Tech';
 import { Link } from './Nav';
+import { RealScreens } from './RealScreens';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -96,6 +97,8 @@ export function CasePage({ c, lang }: { c: Case; lang: Lang }) {
           </div>
         </div>
       </section>
+
+      <RealScreens slug={c.slug} lang={lang} />
 
       <Dots variant="gooey" lines={c.dots} />
 
