@@ -6294,6 +6294,11 @@ img[src*='passion-mark'] {
 .logo--lockup {
   aspect-ratio: 1.6;
 }
+.logo--lume {
+  background: #141414;
+  padding: 3px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
 .case__head .logo {
   --logo-h: 44px;
 }
