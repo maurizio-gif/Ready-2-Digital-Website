@@ -1,6 +1,7 @@
 // Copy that belongs to the multi-page structure: the menu, the page headers,
 // the home teasers, the "next page" links and the About page.
 
+import { COMPANY } from './legal';
 import type { Lang } from './content';
 import type { Page } from './router';
 
@@ -79,6 +80,22 @@ const it = {
       { t: 'GDPR by design', d: 'Consensi separati per scopo, versionati, e revocabili. I dati sulla salute si usano solo dietro un consenso esplicito.' },
       { t: 'Accessi per ruolo', d: 'Ogni operatore vede quello che il suo ruolo gli permette, con regole scritte nel database e un registro di chi fa cosa.' },
       { t: 'File privati', d: 'Certificati, documenti e video stanno in archivi privati e si aprono solo con link firmati e temporanei.' },
+    ],
+  },
+  faq: {
+    kicker: 'Domande frequenti',
+    title: 'Le domande che ci fanno più spesso.',
+    items: [
+      { q: 'Che cosa fa Ready 2 Digital?', a: 'Ready 2 Digital è un’agenzia digitale di Roma. Progetta e costruisce automazioni dei processi, agenti di intelligenza artificiale, CRM, ERP, app iOS e Android, siti e integrazioni su misura, collegandoli ai sistemi che l’azienda ha già.' },
+      { q: 'Per quali aziende lavorate?', a: 'Per imprenditori e gestori di aziende e centri sportivi. I casi raccontati nel sito sono Athlon Club, Tennis Club Ambrosiano, Ronchiverdi e Passion Fitness; altri lavori riguardano palestre multi-sede, club e l’amministrazione e il fisco.' },
+      { q: 'Devo cambiare il gestionale che uso già?', a: 'Non per forza. I sistemi che costruiamo possono affiancarsi a quello già presente in azienda oppure sostituirlo, in parte o del tutto, senza il disagio di adottare una nuova tecnologia, che è il limite principale di qualsiasi SaaS. Il principio è che il gestionale che c’è si collega, non si butta.' },
+      { q: 'Come lavorate?', a: 'In sei passi, sempre gli stessi: ascolto e audit, processo, database, UX e UI, sviluppo e certificazione, adozione. Prima il processo, poi il codice.' },
+      { q: 'Quali tecnologie usate?', a: 'Supabase, Next.js, Astro, Expo, n8n e modelli di intelligenza artificiale, collegati a sistemi come PerfectGym, SQL Server, Stripe, Adyen, GoCardless e WhatsApp Business.' },
+      { q: 'Fate app per iPhone e Android?', a: 'Sì. Le app iOS e Android sono pubblicate su App Store e Google Play seguendo le regole degli store: permessi spiegati, dati dichiarati, account eliminabile dall’app.' },
+      { q: 'Che cosa fanno gli agenti AI?', a: 'Leggono i tuoi dati, agiscono sui tuoi strumenti e passano la mano a una persona quando serve. Li costruiamo per vendita, assistenza clienti, analisi dati e supporto al CRM.' },
+      { q: 'Come vengono trattati i dati personali?', a: 'Con il GDPR fin dalla progettazione: i consensi sono divisi per scopo, versionati e revocabili, e i dati sulla salute si usano solo con consenso esplicito.' },
+      { q: 'Chi ha fondato Ready 2 Digital?', a: 'Maurizio Taruggi, titolare e CEO di Athlon Club Roma dal 2010 (un club attivo dal 1973) e fondatore di Ready 2 Digital Srl nel 2022. Laurea magistrale in Economia e Gestione delle Imprese alla LUISS, master in International Marketing alla European School of Economics di New York, Direttore Sportivo FIN e Master in Management dello Sport.' },
+      { q: 'Dove siete e come si inizia?', a: 'La sede è in ' + COMPANY.address + '. Per iniziare basta raccontarci, dalla pagina Contatti, il processo che oggi ti fa perdere tempo: ti diciamo se e come possiamo semplificarlo. Siamo anche su LinkedIn.' },
     ],
   },
   about: {
@@ -209,6 +226,22 @@ const en: typeof it = {
       { t: 'GDPR by design', d: 'Consent split by purpose, versioned and revocable. Health data is used only with explicit consent.' },
       { t: 'Role-based access', d: 'Each operator sees what their role allows, with rules written in the database and a log of who did what.' },
       { t: 'Private files', d: 'Certificates, documents and videos live in private storage and open only through signed, temporary links.' },
+    ],
+  },
+  faq: {
+    kicker: 'Frequently asked questions',
+    title: 'The questions we get most often.',
+    items: [
+      { q: 'What does Ready 2 Digital do?', a: 'Ready 2 Digital is a digital agency based in Rome. It designs and builds process automation, AI agents, CRM, ERP, iOS and Android apps, websites and custom integrations, connecting them to the systems a business already has.' },
+      { q: 'Which businesses do you work for?', a: 'For owners and managers of businesses and sports centres. The cases told on the site are Athlon Club, Tennis Club Ambrosiano, Ronchiverdi and Passion Fitness; other work covers multi-site gyms, clubs, and administration and tax.' },
+      { q: 'Do I have to replace the back-office system I already use?', a: 'Not necessarily. The systems we build can sit alongside the one a business already has, or replace it, partly or entirely, without the disruption of adopting a new technology, which is the main limit of any SaaS. The principle is that the back office you have gets connected, not thrown away.' },
+      { q: 'How do you work?', a: 'In six steps, always the same: listening and audit, process, database, UX and UI, build and certification, adoption. Process first, code second.' },
+      { q: 'Which technologies do you use?', a: 'Supabase, Next.js, Astro, Expo, n8n and AI models, connected to systems such as PerfectGym, SQL Server, Stripe, Adyen, GoCardless and WhatsApp Business.' },
+      { q: 'Do you build iPhone and Android apps?', a: 'Yes. The iOS and Android apps are published on the App Store and Google Play by their rules: permissions explained, data declared, account deletable from the app.' },
+      { q: 'What do the AI agents do?', a: 'They read your data, act in your tools and hand over to a person when needed. We build them for sales, customer support, data analysis and CRM support.' },
+      { q: 'How is personal data handled?', a: 'With GDPR by design: consent is split by purpose, versioned and revocable, and health data is used only with explicit consent.' },
+      { q: 'Who founded Ready 2 Digital?', a: 'Maurizio Taruggi, owner and CEO of Athlon Club Roma since 2010 (a club open since 1973) and founder of Ready 2 Digital Srl in 2022. Master’s degree in Economics and Business Management from LUISS, a master in International Marketing at the European School of Economics in New York, FIN Sports Director certification and a Master in Sports Management.' },
+      { q: 'Where are you based, and how do we start?', a: 'The office is at ' + COMPANY.address + '. To start, just tell us on the Contact page about the process that wastes your time today: we’ll tell you whether and how we can simplify it. We are also on LinkedIn.' },
     ],
   },
   about: {

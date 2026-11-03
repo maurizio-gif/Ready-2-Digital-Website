@@ -5,7 +5,8 @@
 
 import { renderToString } from 'react-dom/server';
 import App from './App';
-import { allRoutes, headTags, llmsTxt, robotsTxt, seoFor, shellSeo, sitemapXml } from './seo';
+import { allRoutes, headTags, robotsTxt, seoFor, shellSeo, sitemapXml } from './seo';
+import { llmsFullTxt, llmsTxt } from './llms';
 import { pathFor } from './router';
 
 function render(path: string): string {
@@ -23,4 +24,4 @@ export function prerenderAll() {
 /** The head of the 404 page: the shell with nothing to say, and not to be indexed. */
 export const notFoundHead = () => headTags(shellSeo());
 
-export const files = () => ({ 'sitemap.xml': sitemapXml(), 'robots.txt': robotsTxt(), 'llms.txt': llmsTxt() });
+export const files = () => ({ 'sitemap.xml': sitemapXml(), 'robots.txt': robotsTxt(), 'llms.txt': llmsTxt(), 'llms-full.txt': llmsFullTxt() });

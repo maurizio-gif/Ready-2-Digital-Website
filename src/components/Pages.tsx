@@ -9,6 +9,7 @@ import { privacyText } from '../legal';
 import { AgentsTeaser } from './Agents';
 
 import { SocialLinks } from './Social';
+import { FaqSection } from './Faq';
 
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
 
@@ -90,6 +91,8 @@ export function HomePage({ t, lang, ready }: { t: Copy; lang: Lang; ready: boole
       </section>
 
       <Dots variant="converge" lines={t.dots.c} />
+
+      <FaqSection kicker={p.faq.kicker} title={p.faq.title} items={p.faq.items} />
 
       <section className="section cta-band">
         <div className="container cta-band__inner">
