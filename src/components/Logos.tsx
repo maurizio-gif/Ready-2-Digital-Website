@@ -22,8 +22,9 @@ import { reducedMotion } from '../lib/env';
 import { ATHLON_FORME, ATHLON_H, ATHLON_W, percorso, perimetro, puntoSu } from '../lib/logo-athlon';
 import { RV_CUCITURA, RV_SCRITTA, RV_SPESSORE, RV_SPORT_CLUB } from '../lib/logo-ronchiverdi';
 import { PASSION_FRAME, PASSION_I, PASSION_LETTERS, PASSION_VB } from '../lib/logo-passion';
+import { ASPRESSO_CONTORNI, ASPRESSO_H, ASPRESSO_W } from '../lib/logo-aspresso';
 
-export type LogoKey = 'athlon' | 'ronchiverdi' | 'tca' | 'passion' | 'lume';
+export type LogoKey = 'athlon' | 'ronchiverdi' | 'tca' | 'passion' | 'lume' | 'be' | 'enjoy' | 'aspresso';
 
 /** Il logo di ogni cliente, dal nome con cui compare nelle carte e nei casi. */
 export const LOGO_OF: Record<string, LogoKey> = {
@@ -33,6 +34,9 @@ export const LOGO_OF: Record<string, LogoKey> = {
   'Tennis Club Ambrosiano': 'tca',
   'Passion Fitness': 'passion',
   'Lume Fitness': 'lume',
+  'Body Energie': 'be',
+  'Enjoy Club': 'enjoy',
+  Aspresso: 'aspresso',
 };
 
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
@@ -686,9 +690,125 @@ function Lume({ t }: { t: number }) {
   );
 }
 
+// ───────────────────────────────────────────────────────────── Body Energie
+
+// Il pittogramma «BE» di Body Energie (dal logo del cliente, 03/11/2026), ridisegnato in vettori: la «B»
+// e la «E» sono due serie di tratti a semicerchio, nere, con una barretta arancione ciascuna (in alto a
+// sinistra e in basso a destra). Si disegnano da fuori, poi le due metà arrivano da lati opposti e si
+// incastrano (come nelle forme di Athlon), e le barrette arancioni scivolano al loro posto.
+const BE_NERO = '#111111';
+const BE_ARANCIO = '#EC7511';
+const BE_TRATTI = [
+  { d: 'M380 48 H401 A105 105 0 0 1 401 258 H36', lato: -1, da: 0, dur: 760 },
+  { d: 'M401 258 A104.5 104.5 0 0 1 401 467 H36', lato: -1, da: 260, dur: 700 },
+  { d: 'M1095 48 H729 A105 105 0 0 0 729 258 H1095', lato: 1, da: 120, dur: 760 },
+  { d: 'M729 258 A105 105 0 0 0 729 467 H751', lato: 1, da: 380, dur: 640 },
+];
+const BE_T = 2100;
+
+function BodyEnergie({ t }: { t: number }) {
+  const volo = rimbalzo(fase(t, 650, 650));
+  const colpo = 1 + 0.035 * impulso(t, 1500, 160);
+  const barra = (da: number) => rallenta(fase(t, da, 520));
+  return (
+    <svg viewBox="12 0 1107 520" className="logo__svg" aria-hidden="true">
+      <g transform={`translate(565 260) scale(${colpo}) translate(-565 -260)`}>
+        {BE_TRATTI.map((tr, i) => {
+          const dx = tr.lato * 46 * (1 - volo);
+          const fatto = dolce(fase(t, tr.da, tr.dur));
+          return (
+            <path key={i} d={tr.d} fill="none" stroke={BE_NERO} strokeWidth={53} strokeLinejoin="round" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - fatto} transform={`translate(${dx} 0)`} opacity={fatto > 0.001 ? 1 : 0} />
+          );
+        })}
+        <rect x={36 - 190 * (1 - barra(900))} y={22} width={294} height={55} fill={BE_ARANCIO} opacity={barra(900)} />
+        <rect x={792 + 190 * (1 - barra(1050))} y={444} width={303} height={54} fill={BE_ARANCIO} opacity={barra(1050)} />
+      </g>
+    </svg>
+  );
+}
+
+// ───────────────────────────────────────────────────────────── Enjoy Club
+
+// Lo smile di Enjoy Club (dal logo del cliente): un cerchio sottile con dentro un sorriso, un semicerchio
+// concentrico. Il cerchio si traccia, poi il sorriso, che alla fine «sorride» davvero: si allarga un
+// momento e torna. Il tratto è appena più spesso del file originale per leggersi anche a 44 px.
+const ENJOY_T = 2000;
+
+function Enjoy({ t }: { t: number }) {
+  const cerchio = dolce(fase(t, 0, 900));
+  const sorriso = dolce(fase(t, 700, 650));
+  const largo = 1 + 0.16 * impulso(t, 1560, 170) + 0.05 * impulso(t, 1780, 120);
+  const respiro = 1 + 0.03 * impulso(t, 1560, 200);
+  return (
+    <svg viewBox="0 0 100 100" className="logo__svg" aria-hidden="true">
+      <g transform={`translate(50 50) scale(${respiro}) translate(-50 -50)`}>
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#111" strokeWidth={2.8} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - cerchio} transform="rotate(-90 50 50)" strokeLinecap="round" opacity={cerchio > 0.001 ? 1 : 0} />
+        <g transform={`translate(50 50) scale(${1 + (largo - 1) * 0.35} ${largo}) translate(-50 -50)`}>
+          <path d="M19.5 50 A30.5 30.5 0 0 0 80.5 50" fill="none" stroke="#111" strokeWidth={2.8} strokeLinecap="round" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - sorriso} opacity={sorriso > 0.001 ? 1 : 0} />
+        </g>
+      </g>
+    </svg>
+  );
+}
+
+// ───────────────────────────────────────────────────────────── Aspresso
+
+// La bandierina di Aspresso (dal logo del cliente, bianca su verde): il bordo si disegna con la punta
+// luminosa, il bianco la riempie, la bandiera ondeggia una volta attorno all'asta e un riflesso la
+// attraversa. Geometria tracciata dal pittogramma (src/lib/logo-aspresso.ts).
+const ASP_T = 2400;
+const ASP_L = ASPRESSO_CONTORNI.map((c) => perimetro(c));
+const ASP_D = ASPRESSO_CONTORNI.map((c) => percorso(c));
+
+function Aspresso({ t }: { t: number }) {
+  const id = useId().replace(/:/g, '');
+  const W = ASPRESSO_W;
+  const H = ASPRESSO_H;
+  const pad = 6;
+  const riempimento = rallenta(fase(t, 800, 500));
+  const onda = Math.sin(((t - 1250) / 760) * Math.PI * 2) * 4.2 * (1 - fase(t, 1250, 760)) * (t > 1250 ? 1 : 0);
+  const scala = 0.94 + 0.06 * rallenta(fase(t, 0, 700));
+  const lama = fase(t, 1550, 750);
+  return (
+    <svg viewBox={`${-pad} ${-pad} ${W + 2 * pad} ${H + 2 * pad}`} className="logo__svg" aria-hidden="true">
+      <defs>
+        <linearGradient id={`${id}-lama`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#fff" stopOpacity="0" />
+          <stop offset="0.5" stopColor="#9fe6b5" stopOpacity="0.9" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </linearGradient>
+        <clipPath id={`${id}-forma`}>
+          <path d={ASP_D.join(' ')} clipRule="evenodd" />
+        </clipPath>
+      </defs>
+      <g transform={`translate(${W / 2} ${H / 2}) scale(${scala}) translate(${-W / 2} ${-H / 2}) rotate(${onda} 3 ${H})`}>
+        <path d={ASP_D.join(' ')} fill="#fff" fillRule="evenodd" fillOpacity={riempimento} />
+        {ASP_D.map((d, i) => {
+          const dis = rallenta(fase(t, i === 0 ? 100 : 560, i === 0 ? 950 : 600));
+          const punta = puntoSu(ASPRESSO_CONTORNI[i], dis * ASP_L[i]);
+          return (
+            <g key={i}>
+              <path d={d} fill="none" stroke="#fff" strokeWidth={0.9} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={`${ASP_L[i]} ${ASP_L[i]}`} strokeDashoffset={ASP_L[i] * (1 - dis)} opacity={dis > 0.002 ? 1 - 0.4 * rallenta(fase(t, 1000, 400)) : 0} />
+              {i === 0 && dis > 0.005 && dis < 0.995 ? (
+                <>
+                  <circle cx={punta[0]} cy={punta[1]} r={2.6} fill="#9fe6b5" opacity={0.35} />
+                  <circle cx={punta[0]} cy={punta[1]} r={1.1} fill="#fff" />
+                </>
+              ) : null}
+            </g>
+          );
+        })}
+        <g clipPath={`url(#${id}-forma)`}>
+          <rect x={-14 + 80 * rallenta(lama)} y={-8} width={12} height={H + 16} fill={`url(#${id}-lama)`} transform="skewX(-22)" opacity={fase(t, 1550, 80) * (1 - fase(t, 2150, 150))} />
+        </g>
+      </g>
+    </svg>
+  );
+}
+
 // ───────────────────────────────────────────────────────────── il logo
 
-const DURATA: Record<LogoKey, number> = { athlon: ATH_T, ronchiverdi: RV_T_TILE, tca: TCA_T, passion: PASSION_T, lume: LUME_T };
+const DURATA: Record<LogoKey, number> = { athlon: ATH_T, ronchiverdi: RV_T_TILE, tca: TCA_T, passion: PASSION_T, lume: LUME_T, be: BE_T, enjoy: ENJOY_T, aspresso: ASP_T };
 
 type Props = {
   /** Il nome del cliente, com'è nelle carte e nei casi. */
@@ -712,6 +832,9 @@ export function ClientLogo({ client, size = 'tile', className = '' }: Props) {
       {key === 'tca' && <Tca t={t} />}
       {key === 'passion' && <Passion t={t} />}
       {key === 'lume' && <Lume t={t} />}
+      {key === 'be' && <BodyEnergie t={t} />}
+      {key === 'enjoy' && <Enjoy t={t} />}
+      {key === 'aspresso' && <Aspresso t={t} />}
     </span>
   );
 }
