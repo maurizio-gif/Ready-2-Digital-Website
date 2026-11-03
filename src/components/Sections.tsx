@@ -19,6 +19,8 @@ const SLUG: Record<string, string> = {
 
 gsap.registerPlugin(ScrollTrigger);
 
+import { ClientLogo, hasLogo } from './Logos';
+
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
 
 /* ------------------------------------------------------------------ */
@@ -461,7 +463,7 @@ export function Work({ t, lang, head = true, only }: { t: Copy; lang: Lang; head
         )}
         <div className="work-grid">
           {items.map((w, i) => (
-            <article key={w.c} className={`case card-3d${w.img ? ' case--img' : ''}${i < 3 ? ' case--big' : ''}`} data-card data-tilt="5">
+            <article key={w.c} className={`case card-3d${w.img ? ' case--img' : ''}${i < 3 ? ' case--big' : ''}`} data-card data-tilt="5" data-logo-host>
               {w.img && (
                 <div className="case__media">
                   <img src={asset(w.img)} alt="" loading="lazy" />
@@ -469,7 +471,7 @@ export function Work({ t, lang, head = true, only }: { t: Copy; lang: Lang; head
               )}
               <div className="case__body">
                 <div className="case__head">
-                  {w.logo ? <img className="case__logo" src={asset(w.logo)} alt="" loading="lazy" /> : <span className="case__mono">{w.c.slice(0, 1)}</span>}
+                  {hasLogo(w.c) ? <ClientLogo client={w.c} /> : w.logo ? <img className="case__logo" src={asset(w.logo)} alt="" loading="lazy" /> : <span className="case__mono">{w.c.slice(0, 1)}</span>}
                   <div>
                     <h3 className="case__client">{w.c}</h3>
                     <p className="case__sector">{w.s}</p>

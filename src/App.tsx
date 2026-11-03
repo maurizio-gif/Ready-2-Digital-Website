@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { copy, CONTACT_EMAIL, type Copy, type Lang } from './content';
 import { Mark } from './components/Mark';
+import { ClientLogo, hasLogo } from './components/Logos';
 import { CasePage } from './components/CasePage';
 import { AboutPage, ContactPage, HomePage, MethodPage, PrivacyPage, SolutionsPage, TechPage, WorkPage } from './components/Pages';
 import { AgentsPage } from './components/Agents';
@@ -350,6 +351,11 @@ function Header({ t, route, menu, setMenu }: { t: Copy; route: Route; menu: bool
     return () => st.kill();
   }, []);
   useEffect(() => setOpen(null), [route]);
+  // Quando si apre il menu dei progetti, i loghi dei clienti si compongono (vedi components/Logos.tsx).
+  useEffect(() => {
+    if (open !== 'progetti') return;
+    document.querySelectorAll('.mega__case').forEach((el) => el.dispatchEvent(new Event('logo:play')));
+  }, [open]);
   useEffect(() => {
     const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(null);
     window.addEventListener('keydown', esc);
@@ -441,8 +447,8 @@ function Header({ t, route, menu, setMenu }: { t: Copy; route: Route; menu: bool
         <div className={`mega${open === 'progetti' ? ' is-open' : ''}`} onPointerEnter={() => hover('progetti')}>
           <div className="container mega__inner mega__inner--work">
             {cases[lang].map((c) => (
-              <Link key={c.slug} page="caso" slug={c.slug} lang={lang} className="mega__case" tabIndex={open === 'progetti' ? 0 : -1}>
-                <span className="mega__logo">{c.logo ? <img src={`${import.meta.env.BASE_URL}${c.logo}`} alt="" /> : c.client[0]}</span>
+              <Link key={c.slug} page="caso" slug={c.slug} lang={lang} className="mega__case" tabIndex={open === 'progetti' ? 0 : -1} data-logo-host>
+                <span className={`mega__logo${hasLogo(c.client) ? ' mega__logo--live' : ''}`}>{hasLogo(c.client) ? <ClientLogo client={c.client} /> : c.logo ? <img src={`${import.meta.env.BASE_URL}${c.logo}`} alt="" /> : c.client[0]}</span>
                 <strong>{c.client}</strong>
                 <span>{c.sector}</span>
               </Link>

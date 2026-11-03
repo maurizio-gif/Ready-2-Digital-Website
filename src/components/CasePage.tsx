@@ -8,6 +8,7 @@ import { ExtractView } from './Mocks';
 import { Mark } from './Mark';
 import { CaseTech } from './Tech';
 import { Link } from './Nav';
+import { ClientLogo, hasLogo } from './Logos';
 import { RealScreens } from './RealScreens';
 import { Ecosystem } from './Scenes';
 
@@ -49,8 +50,8 @@ export function CasePage({ c, lang }: { c: Case; lang: Lang }) {
           <Link page="progetti" lang={lang} className="case-back" data-fade>
             ← {ui.back}
           </Link>
-          <div className="case-hero__client" data-fade>
-            {c.logo ? <img src={asset(c.logo)} alt="" /> : <span className="case__mono">{c.client.slice(0, 1)}</span>}
+          <div className="case-hero__client" data-fade data-logo-host>
+            {hasLogo(c.client) ? <ClientLogo client={c.client} size="hero" /> : c.logo ? <img src={asset(c.logo)} alt="" /> : <span className="case__mono">{c.client.slice(0, 1)}</span>}
             <div>
               <strong>{c.client}</strong>
               <span>{c.sector}</span>
