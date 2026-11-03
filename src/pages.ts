@@ -91,8 +91,8 @@ const it = {
       'Proprio dentro Athlon ha avviato un percorso di digitalizzazione che ha toccato marketing, vendite, iscrizioni, prenotazioni, pagamenti e organizzazione operativa. Più che adottare strumenti nuovi, si trattava di capire come ciascun processo potesse diventare più semplice, più controllabile e più vicino alle esigenze di chi lo utilizza. Da questa esperienza è nata una competenza particolare: tenere insieme la visione manageriale e la comprensione dei sistemi tecnologici, sapendo che una piattaforma è utile solo quando si inserisce davvero nel modo di lavorare di un’azienda.',
       'Nel 2022 Maurizio ha fondato Ready 2 Digital Srl per mettere questa esperienza al servizio di altre imprese del settore. L’attività di agenzia comprende strategia digitale, siti web, campagne pubblicitarie, acquisizione di contatti e sviluppo dei percorsi commerciali. Il punto di partenza però non è mai la comunicazione fine a sé stessa: è la capacità dell’azienda di accogliere i contatti, seguirli e trasformarli in clienti. Marketing e vendite vengono letti come parti dello stesso processo.',
       'Accanto all’agenzia c’è il lavoro di consulenza: analizzare i processi, individuare le inefficienze, scegliere gli strumenti più adatti e affiancare i team nel cambiamento. È una consulenza che nasce dalla conoscenza diretta del lavoro nei club. Per questo tiene insieme organizzazione, sostenibilità economica, esperienza dell’utente e tecnologia, senza separare ciò che nella realtà di una struttura procede insieme.',
-      'Il suo percorso ha incluso anche la collaborazione come partner con Perfect Gym Italia e, dal 2025, una partnership commerciale con ABC Fitness / Glofox. Sono state occasioni di confronto con piattaforme internazionali e con le esigenze di realtà sportive molto diverse tra loro, che hanno allargato lo sguardo su cosa serve davvero a un club per crescere.',
-      'Da qui il passo verso lo sviluppo di soluzioni proprietarie: software, CRM, applicazioni e automazioni capaci di integrare strumenti e dati che altrimenti resterebbero separati. Oggi Ready 2 Digital riunisce esperienza di gestione, competenze di agenzia, consulenza e sviluppo tecnologico.',
+      'Il suo percorso ha incluso anche l’esperienza sul campo con i gestionali del settore. Per tre anni ha commercializzato in Italia il software gestionale Perfect Gym, occupandosi di implementazione, formazione e supporto. Si è occupato inoltre, per tre anni, della formazione e dell’onboarding delle app eGym in Italia, in collaborazione con Matrix. Dal 2025 c’è anche una partnership commerciale con ABC Fitness / Glofox. Sono esperienze che hanno dato una conoscenza profonda dei software gestionali e di ciò che serve davvero a club molto diversi tra loro.',
+      'Questa conoscenza, unita alla passione manageriale e imprenditoriale, ha reso possibile il passo successivo: sviluppare sistemi end-to-end, fatti di software, CRM, applicazioni e automazioni, che possono affiancarsi al sistema già presente in azienda oppure sostituirlo, in parte o del tutto. Senza il disagio di adottare una nuova tecnologia, che è il limite principale di qualsiasi SaaS. Oggi Ready 2 Digital riunisce esperienza di gestione, competenze di agenzia, consulenza e sviluppo tecnologico.',
       'Il filo che lega tutto è la capacità di guardare ogni progetto da più prospettive: quella dell’imprenditore che investe, del manager che organizza, del consulente che analizza e del partner che accompagna l’implementazione. Ne derivano un modo di lavorare concreto e trasparente, linguaggi chiari e un’attenzione costante ai risultati che contano per chi guida un’azienda.',
     ],
     facts: [
@@ -100,6 +100,25 @@ const it = {
       { v: '2010', l: 'Titolare e CEO di Athlon' },
       { v: '2022', l: 'Nasce Ready 2 Digital Srl' },
     ],
+    cv: {
+      kicker: 'Curriculum',
+      title: 'Formazione ed esperienza',
+      educationTitle: 'Formazione',
+      education: [
+        { y: '2009', t: 'Laurea magistrale in Economia e Gestione delle Imprese', w: 'LUISS' },
+        { y: '2009', t: 'Master in International Marketing', w: 'European School of Economics · New York City, Manhattan' },
+        { y: '2012', t: 'Certificazione di Direttore Sportivo', w: 'FIN · Federazione Italiana Nuoto' },
+        { y: '2014', t: 'Master in Management dello Sport', w: 'LUISS · CONI' },
+      ],
+      experienceTitle: 'Esperienza',
+      experience: [
+        { y: 'Dal 2010', t: 'Titolare e CEO', w: 'Athlon Club Roma' },
+        { y: 'Dal 2022', t: 'Fondatore', w: 'Ready 2 Digital Srl' },
+        { y: '3 anni', t: 'Commercializzazione di Perfect Gym in Italia', w: 'Implementazione, formazione e supporto' },
+        { y: '3 anni', t: 'Formazione e onboarding delle app eGym in Italia', w: 'In collaborazione con Matrix' },
+        { y: 'Dal 2025', t: 'Partnership commerciale', w: 'ABC Fitness / Glofox' },
+      ],
+    },
     lensesTitle: 'Un progetto, quattro prospettive',
     lenses: [
       { t: 'Imprenditore', d: 'che investe' },
@@ -203,8 +222,8 @@ const en: typeof it = {
       'Inside Athlon he led a digital transformation that touched marketing, sales, sign-ups, bookings, payments and day-to-day operations. More than adopting new tools, it meant understanding how each process could become simpler, easier to control and closer to the needs of the people using it. That experience produced a particular skill: holding together a manager’s view and an understanding of technology systems, knowing that a platform is only useful when it truly fits the way a business works.',
       'In 2022 Maurizio founded Ready 2 Digital Srl to put this experience at the service of other businesses in the sector. The agency work covers digital strategy, websites, advertising campaigns, lead generation and the design of sales journeys. The starting point, though, is never communication for its own sake: it is a company’s ability to welcome leads, follow them up and turn them into customers. Marketing and sales are read as parts of the same process.',
       'Alongside the agency there is consulting: analysing processes, spotting inefficiencies, choosing the right tools and supporting teams through change. It is consulting that comes from first-hand knowledge of how clubs work. That is why it keeps organisation, financial sustainability, user experience and technology together, without separating what in a real facility moves as one.',
-      'His path has also included working as a partner with Perfect Gym Italia and, since 2025, a commercial partnership with ABC Fitness / Glofox. Both have been opportunities to engage with international platforms and with the needs of very different sports organisations, widening his view of what a club really needs to grow.',
-      'From there came the step to building proprietary solutions: software, CRMs, apps and automations able to bring together tools and data that would otherwise stay apart. Today Ready 2 Digital combines management experience, agency skills, consulting and technology development.',
+      'His path has also included hands-on experience with the industry’s management software. For three years he commercialised the Perfect Gym management software in Italy, handling implementation, training and support. He also spent three years on the training and onboarding of the eGym apps in Italy, in collaboration with Matrix. Since 2025 there has also been a commercial partnership with ABC Fitness / Glofox. These experiences gave him a deep knowledge of management software and of what very different clubs really need.',
+      'That knowledge, combined with a managerial and entrepreneurial passion, made the next step possible: building end-to-end systems — software, CRMs, apps and automations — that can sit alongside the system a business already has, or replace it, partly or entirely. Without the disruption of adopting a new technology, which is the main limit of any SaaS. Today Ready 2 Digital combines management experience, agency skills, consulting and technology development.',
       'The thread running through it all is the ability to look at every project from several perspectives: that of the entrepreneur who invests, the manager who organises, the consultant who analyses and the partner who supports the implementation. The result is a way of working that is concrete and transparent, clear in its language and constantly focused on the results that matter to the people running a business.',
     ],
     facts: [
@@ -212,6 +231,25 @@ const en: typeof it = {
       { v: '2010', l: 'Owner and CEO of Athlon' },
       { v: '2022', l: 'Ready 2 Digital Srl is founded' },
     ],
+    cv: {
+      kicker: 'Curriculum',
+      title: 'Education and experience',
+      educationTitle: 'Education',
+      education: [
+        { y: '2009', t: 'Master’s degree in Economics and Business Management', w: 'LUISS' },
+        { y: '2009', t: 'Master in International Marketing', w: 'European School of Economics · New York City, Manhattan' },
+        { y: '2012', t: 'Sports Director certification', w: 'FIN · Italian Swimming Federation' },
+        { y: '2014', t: 'Master in Sports Management', w: 'LUISS · CONI' },
+      ],
+      experienceTitle: 'Experience',
+      experience: [
+        { y: 'Since 2010', t: 'Owner and CEO', w: 'Athlon Club Roma' },
+        { y: 'Since 2022', t: 'Founder', w: 'Ready 2 Digital Srl' },
+        { y: '3 years', t: 'Commercialising Perfect Gym in Italy', w: 'Implementation, training and support' },
+        { y: '3 years', t: 'Training and onboarding of the eGym apps in Italy', w: 'In collaboration with Matrix' },
+        { y: 'Since 2025', t: 'Commercial partnership', w: 'ABC Fitness / Glofox' },
+      ],
+    },
     lensesTitle: 'One project, four perspectives',
     lenses: [
       { t: 'Entrepreneur', d: 'who invests' },

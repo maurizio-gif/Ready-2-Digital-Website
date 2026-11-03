@@ -219,6 +219,35 @@ export function AboutPage({ t, lang }: { t: Copy; lang: Lang }) {
           </article>
         </div>
       </section>
+      <section className="section cv">
+        <div className="container">
+          <p className="kicker" data-reveal>
+            {a.cv.kicker}
+          </p>
+          <h2 className="h-xl cv__title" data-split>
+            {a.cv.title}
+          </h2>
+          <div className="cv__cols">
+            {[
+              { h: a.cv.educationTitle, items: a.cv.education },
+              { h: a.cv.experienceTitle, items: a.cv.experience },
+            ].map((col) => (
+              <div key={col.h} className="cv__col">
+                <h3 data-reveal>{col.h}</h3>
+                <ul className="cv__list">
+                  {col.items.map((it) => (
+                    <li key={it.y + it.t} data-reveal>
+                      <span className="cv__y">{it.y}</span>
+                      <span className="cv__t">{it.t}</span>
+                      <span className="cv__w">{it.w}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
       <section className="section lenses">
         <div className="container">
           <p className="kicker" data-reveal>
