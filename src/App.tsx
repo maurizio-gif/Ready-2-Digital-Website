@@ -382,11 +382,7 @@ function Header({ t, route, menu, setMenu }: { t: Copy; route: Route; menu: bool
       <header className={`header${menu ? ' is-menu' : ''}${open ? ' is-open' : ''}`} ref={ref} onPointerLeave={() => hover(null)}>
         <div className="container header__inner">
           <Link page="home" lang={lang} className="brand" aria-label="Ready2Digital">
-            {/* Desktop: the mark plus the wordmark in text. Phone and tablet: the full logo image. */}
-            <Mark size={26} dot="#F4F1EA" className="brand__mark" />
-            <span className="brand__name">
-              Ready<span className="accent">2</span>Digital
-            </span>
+            {/* The full logo (mark plus wordmark) on every screen size. */}
             <img className="brand__logo" src={`${import.meta.env.BASE_URL}images/logo_ready2digital_dark.png`} alt="Ready2Digital" width="993" height="192" />
           </Link>
           <nav className="nav" aria-label="Main">
