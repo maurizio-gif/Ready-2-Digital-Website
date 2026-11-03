@@ -23,7 +23,7 @@ import { ATHLON_FORME, ATHLON_H, ATHLON_W, percorso, perimetro, puntoSu } from '
 import { RV_CUCITURA, RV_SCRITTA, RV_SPESSORE, RV_SPORT_CLUB } from '../lib/logo-ronchiverdi';
 import { PASSION_FRAME, PASSION_I, PASSION_LETTERS, PASSION_VB } from '../lib/logo-passion';
 
-export type LogoKey = 'athlon' | 'ronchiverdi' | 'tca' | 'passion';
+export type LogoKey = 'athlon' | 'ronchiverdi' | 'tca' | 'passion' | 'lume';
 
 /** Il logo di ogni cliente, dal nome con cui compare nelle carte e nei casi. */
 export const LOGO_OF: Record<string, LogoKey> = {
@@ -32,6 +32,7 @@ export const LOGO_OF: Record<string, LogoKey> = {
   Ronchiverdi: 'ronchiverdi',
   'Tennis Club Ambrosiano': 'tca',
   'Passion Fitness': 'passion',
+  'Lume Fitness': 'lume',
 };
 
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
@@ -623,9 +624,88 @@ function Passion({ t }: { t: number }) {
   );
 }
 
+// ───────────────────────────────────────────────────────────── Lume
+
+// Il logo Lume (dal file «Logo Lume Corto.png» del cliente, 03/11/2026): il disco cremisi con l'anello
+// bianco e il battito, e la scritta «LUMe» a tratto tondo. Ridisegnato in vettori per animarlo: il
+// battito si disegna come un tracciato ECG con la punta luminosa, il disco batte una volta, poi le
+// lettere si scrivono una dopo l'altra e il punto della «e» appare per ultimo.
+const LUME_ROSSO = '#E2003B';
+const LUME_BATTITO: readonly (readonly [number, number])[] = [
+  [3, 62], [14, 62], [18, 54], [21, 62], [25.5, 62], [27.5, 17], [33, 62], [36, 70], [41, 70], [48, 36], [55, 70], [62, 36], [68, 70], [73, 46], [78, 70], [82, 62], [97, 62],
+];
+const LUME_T = 2500;
+const LUME_LETTERE = [
+  'M10 20 V80 H42', // L
+  'M55 20 V65 a15 15 0 0 0 30 0 V20', // U
+  'M100 80 V20 L120 68 L140 20 V80', // M
+  'M158 80 V37 a17 17 0 0 1 34 0 V52', // e
+];
+const LUME_L = (() => {
+  let l = 0;
+  for (let i = 0; i < LUME_BATTITO.length - 1; i++) l += Math.hypot(LUME_BATTITO[i + 1][0] - LUME_BATTITO[i][0], LUME_BATTITO[i + 1][1] - LUME_BATTITO[i][1]);
+  return l;
+})();
+function lumePunta(d: number): [number, number] {
+  let resta = d;
+  for (let i = 0; i < LUME_BATTITO.length - 1; i++) {
+    const a = LUME_BATTITO[i];
+    const b = LUME_BATTITO[i + 1];
+    const l = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (resta <= l) return [a[0] + ((b[0] - a[0]) * resta) / (l || 1), a[1] + ((b[1] - a[1]) * resta) / (l || 1)];
+    resta -= l;
+  }
+  const u = LUME_BATTITO[LUME_BATTITO.length - 1];
+  return [u[0], u[1]];
+}
+
+function Lume({ t, lockup }: { t: number; lockup: boolean }) {
+  const id = useId().replace(/:/g, '');
+  const disco = rallenta(fase(t, 0, 450));
+  const anello = dolce(fase(t, 150, 650));
+  const battito = dolce(fase(t, 420, 950));
+  const punta = lumePunta(battito * LUME_L);
+  const penna = battito > 0.01 && battito < 0.99;
+  const colpo = 1 + 0.06 * impulso(t, 1380, 150) + 0.03 * impulso(t, 1560, 120);
+  const scalaDisco = disco * colpo;
+  const lettere = LUME_LETTERE.map((_, i) => dolce(fase(t, 1150 + i * 220, 480)));
+  const punto = rimbalzo(fase(t, 2050, 300));
+  const W = lockup ? 320 : 100;
+  return (
+    <svg viewBox={`0 0 ${W} 100`} className="logo__svg" aria-hidden="true">
+      <defs>
+        <clipPath id={`${id}-disco`}>
+          <circle cx="50" cy="50" r="47" />
+        </clipPath>
+        <radialGradient id={`${id}-penna`} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#fff" stopOpacity="0.95" />
+          <stop offset="0.3" stopColor="#fff" stopOpacity="0.45" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <g transform={`translate(50 50) scale(${scalaDisco}) translate(-50 -50)`}>
+        <circle cx="50" cy="50" r="47" fill={LUME_ROSSO} />
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#fff" strokeWidth="6" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - anello} transform="rotate(-90 50 50)" strokeLinecap="round" />
+        <g clipPath={`url(#${id}-disco)`}>
+          <polyline points={LUME_BATTITO.map((p) => p.join(',')).join(' ')} fill="none" stroke="#fff" strokeWidth="5" strokeLinejoin="round" strokeLinecap="round" strokeDasharray={`${LUME_L} ${LUME_L}`} strokeDashoffset={LUME_L * (1 - battito)} />
+          {penna ? <circle cx={punta[0]} cy={punta[1]} r="11" fill={`url(#${id}-penna)`} /> : null}
+        </g>
+      </g>
+      {lockup ? (
+        <g transform="translate(112 0)" fill="none" stroke={LUME_ROSSO} strokeWidth="7" strokeLinecap="round" strokeLinejoin="round">
+          {LUME_LETTERE.map((d, i) => (
+            <path key={d} d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - lettere[i]} />
+          ))}
+          <circle cx="183" cy="70" r={5.5 * Math.max(0, punto)} fill={LUME_ROSSO} stroke="none" />
+        </g>
+      ) : null}
+    </svg>
+  );
+}
+
 // ───────────────────────────────────────────────────────────── il logo
 
-const DURATA: Record<LogoKey, number> = { athlon: ATH_T, ronchiverdi: RV_T_TILE, tca: TCA_T, passion: PASSION_T };
+const DURATA: Record<LogoKey, number> = { athlon: ATH_T, ronchiverdi: RV_T_TILE, tca: TCA_T, passion: PASSION_T, lume: LUME_T };
 
 type Props = {
   /** Il nome del cliente, com'è nelle carte e nei casi. */
@@ -639,7 +719,7 @@ type Props = {
 export function ClientLogo({ client, size = 'tile', className = '' }: Props) {
   const key = LOGO_OF[client];
   const ref = useRef<HTMLSpanElement>(null);
-  const lockup = key === 'ronchiverdi' && size === 'hero';
+  const lockup = (key === 'ronchiverdi' || key === 'lume') && size === 'hero';
   const t = useLogoClock(ref, key ? (lockup ? RV_T_LOCKUP : DURATA[key]) : 0);
   if (!key) return null;
   return (
@@ -648,6 +728,7 @@ export function ClientLogo({ client, size = 'tile', className = '' }: Props) {
       {key === 'ronchiverdi' && <Ronchiverdi t={t} lockup={lockup} />}
       {key === 'tca' && <Tca t={t} />}
       {key === 'passion' && <Passion t={t} />}
+      {key === 'lume' && <Lume t={t} lockup={lockup} />}
     </span>
   );
 }
