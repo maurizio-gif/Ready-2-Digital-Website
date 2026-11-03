@@ -125,7 +125,8 @@ e `/en/…`) e GitHub Pages (`.github/workflows/deploy.yml`, con `BASE_PATH`).
   `CONTACT_ENDPOINT` (in `src/legal.ts`): la funzione `api/contact.js`, che la manda per email con
   SendGrid (vedi sotto). Il sito non mostra nessun indirizzo email: le richieste passano dal modulo,
   e i profili LinkedIn (`SOCIAL`, sempre in `src/legal.ts`) sono nel footer, in «Contatti» e in «Chi siamo».
-- **Dati societari** (dalla visura del 14/01/2025) in `COMPANY` (`src/legal.ts`): li usano
+- **Dati societari** in `COMPANY` (`src/legal.ts`; P.IVA e REA dalla visura del 14/01/2025, la sede legale è
+  quella attuale, cambiata dopo la visura): li usano
   l'informativa e il footer.
 - **Cookie:** il sito non installa cookie propri; il banner sarà CookieYes, da aggiungere con il suo
   script in `index.html` una volta attivo sul dominio.

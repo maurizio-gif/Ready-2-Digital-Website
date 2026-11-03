@@ -12,7 +12,8 @@
 
 import type { Lang } from './content';
 
-// From the company registry extract (visura camerale, 14/01/2025); the address is the current office, given by the owner on 03/11/2026.
+// VAT number and REA come from the company registry extract (visura camerale, 14/01/2025). The registered
+// office has moved since: the address is the current one, given by the owner on 03/11/2026.
 export const COMPANY = {
   name: 'Ready 2 Digital S.r.l.',
   street: 'Via Ugo Ojetti 134',
@@ -134,7 +135,7 @@ type Section = { h: string; p: string[] };
 function controller(lang: Lang) {
   const c = COMPANY;
   const parts = [c.name];
-  if (c.address) parts.push(lang === 'it' ? `sede in ${c.address}` : `office at ${c.address}`);
+  if (c.address) parts.push(lang === 'it' ? `sede legale in ${c.address}` : `registered office at ${c.address}`);
   if (c.vat) parts.push(lang === 'it' ? `P.IVA e C.F. ${c.vat}` : `VAT and tax code ${c.vat}`);
   if (c.rea) parts.push(`REA ${c.rea}`);
   if (c.pec) parts.push(`PEC ${c.pec}`);

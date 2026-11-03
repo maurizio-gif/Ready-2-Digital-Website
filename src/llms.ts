@@ -24,7 +24,7 @@ const L = {
     summary:
       'Ready 2 Digital S.r.l. è un’agenzia digitale di Roma. Progetta e costruisce automazioni dei processi, agenti di intelligenza artificiale (vendita, assistenza, analisi dati, supporto al CRM), CRM, ERP, app iOS e Android, siti e integrazioni su misura, collegandoli ai sistemi che l’azienda ha già. Il metodo è nato in Athlon Club, un club sportivo di Roma digitalizzato dall’interno.',
     facts: 'Fatti in breve',
-    f: { name: 'Ragione sociale', brand: 'Marchio', office: 'Sede', founded: 'Fondata nel', founder: 'Fondatore', vat: 'Partita IVA', rea: 'REA', pec: 'PEC', site: 'Sito', langs: 'Lingue del sito', contact: 'Come contattarci' },
+    f: { name: 'Ragione sociale', brand: 'Marchio', office: 'Sede legale', founded: 'Fondata nel', founder: 'Fondatore', vat: 'Partita IVA', rea: 'REA', pec: 'PEC', site: 'Sito', langs: 'Lingue del sito', contact: 'Come contattarci' },
     langs: 'italiano (/), inglese (/en)',
     contact: 'dal modulo nella pagina Contatti, oppure su LinkedIn',
     pagesH: 'Pagine',
@@ -57,7 +57,7 @@ const L = {
     summary:
       'Ready 2 Digital S.r.l. is a digital agency based in Rome. It designs and builds process automation, AI agents (sales, support, data analysis, CRM support), CRM, ERP, iOS and Android apps, websites and custom integrations, connecting them to the systems a business already has. The method was born at Athlon Club, a sports club in Rome digitised from the inside.',
     facts: 'Key facts',
-    f: { name: 'Legal name', brand: 'Brand', office: 'Office', founded: 'Founded in', founder: 'Founder', vat: 'VAT number', rea: 'REA', pec: 'PEC', site: 'Website', langs: 'Site languages', contact: 'How to reach us' },
+    f: { name: 'Legal name', brand: 'Brand', office: 'Registered office', founded: 'Founded in', founder: 'Founder', vat: 'VAT number', rea: 'REA', pec: 'PEC', site: 'Website', langs: 'Site languages', contact: 'How to reach us' },
     langs: 'Italian (/), English (/en)',
     contact: 'through the form on the Contact page, or on LinkedIn',
     pagesH: 'Pages',
