@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { CONTACT_EMAIL, type Copy } from '../content';
+import type { Copy } from '../content';
 import { Mark } from './Mark';
 import { Link } from './Nav';
 import { ContactForm } from './ContactForm';
@@ -20,6 +20,7 @@ const SLUG: Record<string, string> = {
 gsap.registerPlugin(ScrollTrigger);
 
 import { ClientLogo, hasLogo } from './Logos';
+import { SocialLinks } from './Social';
 
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
 
@@ -564,12 +565,10 @@ export function Contact({ t, lang }: { t: Copy; lang: Lang }) {
           <p className="lead" data-reveal>
             {t.contact.sub}
           </p>
-          <p className="contact__mail" data-reveal>
-            {t.contact.or}{' '}
-            <a href={`mailto:${CONTACT_EMAIL}`} className="link">
-              {CONTACT_EMAIL}
-            </a>
-          </p>
+          <div className="contact__mail" data-reveal>
+            <p>{t.contact.or}</p>
+            <SocialLinks lang={lang} names />
+          </div>
         </div>
         <div data-reveal>
           <ContactForm lang={lang} />

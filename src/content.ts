@@ -176,7 +176,7 @@ const it = {
     email: 'Email',
     message: 'Il tuo processo, in due righe',
     send: 'Invia',
-    or: 'oppure scrivi a',
+    or: 'oppure trovaci su',
     mailSubject: 'Nuovo progetto dal sito',
   },
   footer: {
@@ -184,16 +184,6 @@ const it = {
     privacy: 'Privacy',
     rights: 'Tutti i diritti riservati.',
     top: 'Torna su',
-  },
-  privacy: {
-    title: 'Privacy',
-    body: [
-      ['Cosa raccogliamo', 'Questo sito non ha un backend che conserva dati: il modulo di contatto apre il tuo programma di posta con un’email già compilata per info@ready2digital.it. Quello che scrivi resta nella tua posta in uscita e nella nostra casella.'],
-      ['Cookie e tracciamento', 'Il sito non installa cookie di analisi né di marketing e non chiama servizi esterni: anche i font sono serviti dal sito stesso. Ricordiamo solo la lingua scelta, nel tuo browser.'],
-      ['Titolare del trattamento', 'Ready2Digital — info@ready2digital.it'],
-      ['I tuoi diritti', 'Puoi chiedere in qualsiasi momento la cancellazione di un’email che ci hai inviato scrivendo a info@ready2digital.it.'],
-    ],
-    close: 'Chiudi',
   },
 };
 
@@ -360,7 +350,7 @@ const en: Copy = {
     email: 'Email',
     message: 'Your process, in a couple of lines',
     send: 'Send',
-    or: 'or write to',
+    or: 'or find us on',
     mailSubject: 'New project from the website',
   },
   footer: {
@@ -369,17 +359,6 @@ const en: Copy = {
     rights: 'All rights reserved.',
     top: 'Back to top',
   },
-  privacy: {
-    title: 'Privacy',
-    body: [
-      ['What we collect', 'This site has no backend storing data: the contact form opens your mail app with a pre-filled email to info@ready2digital.it. What you write stays in your outbox and in our inbox.'],
-      ['Cookies and tracking', 'The site sets no analytics or marketing cookies and calls no external services: even the fonts are served by the site itself. We only remember your chosen language, in your browser.'],
-      ['Data controller', 'Ready2Digital — info@ready2digital.it'],
-      ['Your rights', 'You can ask at any time for an email you sent us to be deleted by writing to info@ready2digital.it.'],
-    ],
-    close: 'Close',
-  },
 };
 
 export const copy = { it, en };
-export const CONTACT_EMAIL = 'info@ready2digital.it';

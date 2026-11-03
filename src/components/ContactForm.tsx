@@ -5,7 +5,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import type { Lang } from '../content';
-import { CONTACT_ENDPOINT, COMPANY, form } from '../legal';
+import { CONTACT_ENDPOINT, form } from '../legal';
 import { metaball } from '../lib/metaball';
 import { MARK, NECKS, NECK_OPTS, R } from '../lib/mark';
 import { href, pathFor } from '../router';
@@ -43,7 +43,6 @@ export function ContactForm({ lang }: { lang: Lang }) {
   const [d, setD] = useState<Data>(EMPTY);
   const [err, setErr] = useState<Record<string, string>>({});
   const [state, setState] = useState<'form' | 'sending' | 'done'>('form');
-  const [via, setVia] = useState<'mail' | 'post'>('mail');
   const body = useRef<HTMLDivElement>(null);
   const trap = useRef('');
   const dir = useRef(1);
@@ -105,38 +104,15 @@ export function ContactForm({ lang }: { lang: Lang }) {
       // A field no person sees: if a bot fills it in, the server drops the request.
       ufficio_riferimento: trap.current,
     };
-    if (CONTACT_ENDPOINT) {
-      setState('sending');
-      try {
-        const r = await fetch(CONTACT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-        if (r.ok) {
-          setVia('post');
-          setState('done');
-          return;
-        }
-        // 404/405: nothing answers at this address (the local dev server, a static preview):
-        // fall back to the visitor's mail app, below. Anything else is a real failure.
-        if (r.status !== 404 && r.status !== 405) throw new Error(String(r.status));
-      } catch {
-        setState('form');
-        setErr({ send: t.err.send });
-        return;
-      }
+    setState('sending');
+    try {
+      const r = await fetch(CONTACT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!r.ok) throw new Error(String(r.status));
+      setState('done');
+    } catch {
+      setState('form');
+      setErr({ send: t.err.send });
     }
-    const lines = [
-      `${t.f.nome}: ${payload.nome} ${payload.cognome}`,
-      `${t.f.email}: ${payload.email}`,
-      `${t.f.cellulare}: ${payload.cellulare}`,
-      payload.azienda && `${t.f.azienda}: ${payload.azienda}`,
-      payload.interessi.length > 0 && `${t.q[3]} ${payload.interessi.join(', ')}`,
-      '',
-      payload.progetto,
-      '',
-      `Privacy: ${lang === 'it' ? 'consenso dato' : 'consent given'} · Marketing: ${payload.consenso_marketing ? (lang === 'it' ? 'sì' : 'yes') : 'no'}`,
-    ].filter((l) => l !== false && l !== undefined) as string[];
-    window.location.href = `mailto:${COMPANY.email}?subject=${encodeURIComponent(`${t.subject} — ${payload.nome} ${payload.cognome}`)}&body=${encodeURIComponent(lines.join('\n'))}`;
-    setVia('mail');
-    setState('done');
   };
 
   const next = () => {
@@ -172,7 +148,7 @@ export function ContactForm({ lang }: { lang: Lang }) {
         <ProgressMark done={6} current={6} complete />
         <div ref={body} className="cform__done">
           <h3>{t.done.title(d.nome.trim())}</h3>
-          <p>{via === 'mail' ? t.done.mail : t.done.sent}</p>
+          <p>{t.done.sent}</p>
           <button
             type="button"
             className="link"

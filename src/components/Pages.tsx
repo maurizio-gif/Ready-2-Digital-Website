@@ -8,6 +8,8 @@ import { Link, NextPage, PageHero } from './Nav';
 import { privacyText } from '../legal';
 import { AgentsTeaser } from './Agents';
 
+import { SocialLinks } from './Social';
+
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
 
 /* ------------------------------------------------------------------ */
@@ -198,6 +200,9 @@ export function AboutPage({ t, lang }: { t: Copy; lang: Lang }) {
                 <span>{a.role}</span>
               </div>
             </div>
+            <p className="founder__social" data-reveal>
+              <SocialLinks lang={lang} only="founder" names />
+            </p>
             <dl className="founder__facts" data-reveal>
               {a.facts.map((f) => (
                 <div key={f.v}>

@@ -8,11 +8,11 @@
 // reader moves between pages without a reload. Plain data in, plain strings out:
 // nothing here touches the DOM except `applyHead`, which only runs in the browser.
 
-import { copy, CONTACT_EMAIL, type Lang } from './content';
+import { copy, type Lang } from './content';
 import { pages, SERVICE_IDS } from './pages';
 import { cases } from './cases';
 import { agents } from './agents';
-import { COMPANY, privacyText } from './legal';
+import { COMPANY, SOCIAL, privacyText } from './legal';
 import { PATHS, pathFor, type Page, type Route } from './router';
 import { OG, SITE_URL, abs } from './site';
 
@@ -151,14 +151,14 @@ function organization(lang: Lang) {
     url: abs('/'),
     logo: { '@type': 'ImageObject', url: abs('/images/logo_ready2digital.png'), width: 993, height: 192 },
     image: abs(OG.default),
-    email: CONTACT_EMAIL,
+    sameAs: [SOCIAL.company],
     vatID: `IT${COMPANY.vat}`,
     foundingDate: '2022',
     description:
       lang === 'it'
         ? 'Agenzia digitale: automazione dei processi, agenti di intelligenza artificiale, CRM, ERP, app, siti e integrazioni su misura.'
         : 'Digital agency: process automation, AI agents, CRM, ERP, apps, websites and custom integrations.',
-    address: { '@type': 'PostalAddress', streetAddress: 'Via Giuseppe De Nittis 4', postalCode: '00125', addressLocality: 'Roma', addressRegion: 'RM', addressCountry: 'IT' },
+    address: { '@type': 'PostalAddress', streetAddress: COMPANY.street, postalCode: COMPANY.zip, addressLocality: COMPANY.city, addressRegion: COMPANY.province, addressCountry: 'IT' },
     founder: { '@id': ID.founder },
     areaServed: { '@type': 'Country', name: 'Italia' },
     knowsAbout: KNOWS_ABOUT,
@@ -173,6 +173,7 @@ function founder(lang: Lang) {
     name: a.name,
     jobTitle: a.role,
     image: abs('/images/maurizio-taruggi.jpg'),
+    sameAs: [SOCIAL.founder],
     worksFor: { '@id': ID.org },
   };
 }
@@ -483,7 +484,8 @@ export function llmsTxt(): string {
     '',
     '## Contatti',
     '',
-    `- Email: ${CONTACT_EMAIL}`,
+    `- LinkedIn: ${SOCIAL.company}`,
+    `- LinkedIn (Maurizio Taruggi): ${SOCIAL.founder}`,
     `- Sede: ${COMPANY.address}`,
     `- P.IVA: ${COMPANY.vat}`,
     '',
