@@ -6,25 +6,34 @@
 // CONTACT_ENDPOINT: where the form POSTs the request as JSON. On Vercel it is the
 // function in api/contact.js, which sends the email through SendGrid (the keys and
 // addresses are environment variables: see the comment at the top of that file).
-// Where nothing answers at that address (the local dev server, a static preview)
-// the form falls back to the visitor's mail app with the message ready. Empty
-// means always the mail app. Nothing is stored by the site.
+// The site shows no public email address on purpose: requests come through the
+// form. Where nothing answers at that address (the local dev server, a static
+// preview) the form says it could not send. Nothing is stored by the site.
 
 import type { Lang } from './content';
 
-// From the company registry extract (visura camerale, 14/01/2025).
+// From the company registry extract (visura camerale, 14/01/2025); the address is the current office, given by the owner on 03/11/2026.
 export const COMPANY = {
   name: 'Ready 2 Digital S.r.l.',
-  address: 'Via Giuseppe De Nittis 4, 00125 Roma (RM)',
+  street: 'Via Ugo Ojetti 134',
+  zip: '00137',
+  city: 'Roma',
+  province: 'RM',
+  address: 'Via Ugo Ojetti 134, 00137 Roma (RM)',
   vat: '16573891005',
   rea: 'RM-1664181',
   pec: 'ready2digital@pec.it',
-  email: 'info@ready2digital.it',
+};
+
+// Public profiles.
+export const SOCIAL = {
+  company: 'https://www.linkedin.com/company/ready-2-digital/',
+  founder: 'https://www.linkedin.com/in/maurizio-taruggi/',
 };
 
 export const CONTACT_ENDPOINT = '/api/contact';
 
-export const PRIVACY_UPDATED = '2 novembre 2026';
+export const PRIVACY_UPDATED = '3 novembre 2026';
 
 type Form = {
   steps: string[];
@@ -41,8 +50,7 @@ type Form = {
   sending: string;
   enter: string;
   err: { required: string; email: string; phone: string; short: string; consent: string; send: string };
-  done: { title: (n: string) => string; mail: string; sent: string; again: string };
-  subject: string;
+  done: { title: (n: string) => string; sent: string; again: string };
 };
 
 export const form: Record<Lang, Form> = {
@@ -73,15 +81,13 @@ export const form: Record<Lang, Form> = {
       phone: 'Controlla il numero di cellulare.',
       short: 'Raccontaci qualcosa in più (almeno qualche parola).',
       consent: 'Per inviare la richiesta serve il consenso all’informativa.',
-      send: 'Non siamo riusciti a inviare la richiesta. Riprova, o scrivici a info@ready2digital.it.',
+      send: 'Non siamo riusciti a inviare la richiesta. Riprova tra qualche minuto, o contattaci su LinkedIn.',
     },
     done: {
       title: (n) => `Grazie, ${n}.`,
-      mail: 'Si è aperto il tuo programma di posta con il messaggio già pronto: premi Invia lì e la richiesta arriva a noi.',
       sent: 'La tua richiesta è arrivata. Ti rispondiamo al più presto.',
       again: 'Scrivi un’altra richiesta',
     },
-    subject: 'Nuovo progetto dal sito',
   },
   en: {
     steps: ['You', 'Contact', 'Company', 'Needs', 'Project', 'Consent'],
@@ -110,15 +116,13 @@ export const form: Record<Lang, Form> = {
       phone: 'Please check the mobile number.',
       short: 'Tell us a little more (a few words at least).',
       consent: 'To send the request we need your consent to the privacy notice.',
-      send: 'We couldn’t send your request. Try again, or write to info@ready2digital.it.',
+      send: 'We couldn’t send your request. Try again in a few minutes, or contact us on LinkedIn.',
     },
     done: {
       title: (n) => `Thank you, ${n}.`,
-      mail: 'Your mail app has opened with the message ready: press Send there and the request reaches us.',
       sent: 'Your request has arrived. We’ll get back to you soon.',
       again: 'Write another request',
     },
-    subject: 'New project from the website',
   },
 };
 
@@ -130,10 +134,9 @@ type Section = { h: string; p: string[] };
 function controller(lang: Lang) {
   const c = COMPANY;
   const parts = [c.name];
-  if (c.address) parts.push(lang === 'it' ? `sede legale in ${c.address}` : `registered office at ${c.address}`);
+  if (c.address) parts.push(lang === 'it' ? `sede in ${c.address}` : `office at ${c.address}`);
   if (c.vat) parts.push(lang === 'it' ? `P.IVA e C.F. ${c.vat}` : `VAT and tax code ${c.vat}`);
   if (c.rea) parts.push(`REA ${c.rea}`);
-  parts.push(`email ${c.email}`);
   if (c.pec) parts.push(`PEC ${c.pec}`);
   return parts.join(', ');
 }
@@ -185,7 +188,7 @@ export function privacyText(lang: Lang): { title: string; intro: string; updated
         {
           h: '7. Your rights',
           p: [
-            'You can ask at any time for access to your data, its rectification or erasure, restriction of processing, data portability, and you can object to processing (arts. 15–22 GDPR). You can withdraw your marketing consent at any time. Just write to ' + COMPANY.email + '.',
+            'You can ask at any time for access to your data, its rectification or erasure, restriction of processing, data portability, and you can object to processing (arts. 15–22 GDPR). You can withdraw your marketing consent at any time. Just write to us through the contact form or by certified email (PEC) to ' + COMPANY.pec + '.',
             'You also have the right to lodge a complaint with the Italian Data Protection Authority (Garante per la protezione dei dati personali, www.garanteprivacy.it).',
           ],
         },
@@ -243,7 +246,7 @@ export function privacyText(lang: Lang): { title: string; intro: string; updated
       {
         h: '7. I tuoi diritti',
         p: [
-          'Puoi chiedere in ogni momento l’accesso ai tuoi dati, la rettifica o la cancellazione, la limitazione del trattamento, la portabilità, e puoi opporti al trattamento (artt. 15–22 GDPR). Puoi revocare in qualsiasi momento il consenso al marketing. Basta scrivere a ' + COMPANY.email + '.',
+          'Puoi chiedere in ogni momento l’accesso ai tuoi dati, la rettifica o la cancellazione, la limitazione del trattamento, la portabilità, e puoi opporti al trattamento (artt. 15–22 GDPR). Puoi revocare in qualsiasi momento il consenso al marketing. Basta scriverci dal modulo di contatto o via PEC a ' + COMPANY.pec + '.',
           'Hai inoltre il diritto di proporre reclamo al Garante per la protezione dei dati personali (www.garanteprivacy.it).',
         ],
       },

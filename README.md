@@ -121,9 +121,10 @@ e `/en/…`) e GitHub Pages (`.github/workflows/deploy.yml`, con `BASE_PATH`).
 - Il modulo (`src/components/ContactForm.tsx`) chiede una cosa per volta: nome e cognome, email e
   cellulare, azienda, bisogni, progetto, consensi (privacy obbligatorio, marketing facoltativo).
   Il marchio fa da barra di avanzamento.
-- **Dove arrivano le richieste:** con `CONTACT_ENDPOINT` vuoto (in `src/legal.ts`) il modulo apre il
-  programma di posta con il messaggio pronto per info@ready2digital.it. Impostandolo su un webhook
-  (per esempio n8n) il modulo invia la richiesta in JSON, consensi compresi.
+- **Dove arrivano le richieste:** il modulo invia la richiesta in JSON, consensi compresi, a
+  `CONTACT_ENDPOINT` (in `src/legal.ts`): la funzione `api/contact.js`, che la manda per email con
+  SendGrid (vedi sotto). Il sito non mostra nessun indirizzo email: le richieste passano dal modulo,
+  e i profili LinkedIn (`SOCIAL`, sempre in `src/legal.ts`) sono nel footer, in «Contatti» e in «Chi siamo».
 - **Dati societari** (dalla visura del 14/01/2025) in `COMPANY` (`src/legal.ts`): li usano
   l'informativa e il footer.
 - **Cookie:** il sito non installa cookie propri; il banner sarà CookieYes, da aggiungere con il suo

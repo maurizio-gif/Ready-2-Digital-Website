@@ -8,11 +8,11 @@
 // reader moves between pages without a reload. Plain data in, plain strings out:
 // nothing here touches the DOM except `applyHead`, which only runs in the browser.
 
-import { copy, CONTACT_EMAIL, type Lang } from './content';
+import { copy, type Lang } from './content';
 import { pages, SERVICE_IDS } from './pages';
 import { cases } from './cases';
 import { agents } from './agents';
-import { COMPANY, privacyText } from './legal';
+import { COMPANY, SOCIAL, privacyText } from './legal';
 import { PATHS, pathFor, type Page, type Route } from './router';
 import { OG, SITE_URL, abs } from './site';
 
@@ -37,7 +37,7 @@ const ID = {
 // under 160, so search engines show them whole.
 type Meta = { title: string; description: string };
 
-const META: Record<Lang, Record<Exclude<Page, 'caso' | 'privacy'>, Meta>> = {
+export const META: Record<Lang, Record<Exclude<Page, 'caso' | 'privacy'>, Meta>> = {
   it: {
     home: { title: copy.it.meta.title, description: copy.it.meta.description },
     soluzioni: {
@@ -151,14 +151,21 @@ function organization(lang: Lang) {
     url: abs('/'),
     logo: { '@type': 'ImageObject', url: abs('/images/logo_ready2digital.png'), width: 993, height: 192 },
     image: abs(OG.default),
-    email: CONTACT_EMAIL,
+    sameAs: [SOCIAL.company],
+    slogan: copy[lang].footer.tagline,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: lang === 'it' ? 'richieste commerciali' : 'sales enquiries',
+      url: abs(pathFor('contatti', lang)),
+      availableLanguage: ['it', 'en'],
+    },
     vatID: `IT${COMPANY.vat}`,
     foundingDate: '2022',
     description:
       lang === 'it'
         ? 'Agenzia digitale: automazione dei processi, agenti di intelligenza artificiale, CRM, ERP, app, siti e integrazioni su misura.'
         : 'Digital agency: process automation, AI agents, CRM, ERP, apps, websites and custom integrations.',
-    address: { '@type': 'PostalAddress', streetAddress: 'Via Giuseppe De Nittis 4', postalCode: '00125', addressLocality: 'Roma', addressRegion: 'RM', addressCountry: 'IT' },
+    address: { '@type': 'PostalAddress', streetAddress: COMPANY.street, postalCode: COMPANY.zip, addressLocality: COMPANY.city, addressRegion: COMPANY.province, addressCountry: 'IT' },
     founder: { '@id': ID.founder },
     areaServed: { '@type': 'Country', name: 'Italia' },
     knowsAbout: KNOWS_ABOUT,
@@ -173,7 +180,17 @@ function founder(lang: Lang) {
     name: a.name,
     jobTitle: a.role,
     image: abs('/images/maurizio-taruggi.jpg'),
-    worksFor: { '@id': ID.org },
+    description: lang === 'it'
+      ? 'Fondatore di Ready 2 Digital Srl e, dal 2010, titolare e CEO di Athlon Club Roma. Laurea magistrale in Economia e Gestione delle Imprese alla LUISS, master in International Marketing, Direttore Sportivo FIN, Master in Management dello Sport.'
+      : 'Founder of Ready 2 Digital Srl and, since 2010, owner and CEO of Athlon Club Roma. Master’s degree in Economics and Business Management from LUISS, master in International Marketing, FIN Sports Director, Master in Sports Management.',
+    url: abs(pathFor('chisiamo', lang)),
+    sameAs: [SOCIAL.founder],
+    alumniOf: [
+      { '@type': 'CollegeOrUniversity', name: 'LUISS' },
+      { '@type': 'CollegeOrUniversity', name: 'European School of Economics', address: { '@type': 'PostalAddress', addressLocality: 'New York', addressCountry: 'US' } },
+    ],
+    knowsAbout: KNOWS_ABOUT,
+    worksFor: [{ '@id': ID.org }, { '@type': 'Organization', name: 'Athlon Club Roma' }],
   };
 }
 
@@ -297,11 +314,20 @@ export function seoFor(route: Route): Seo {
     extra.push(...agentsGraph(lang));
   }
   if (route.page === 'soluzioni') extra.push(servicesCatalog(lang));
+  if (route.page === 'home') {
+    extra.push({
+      '@type': 'FAQPage',
+      '@id': `${abs(pathFor('home', lang))}#faq`,
+      inLanguage: IN_LANGUAGE[lang],
+      mainEntity: pages[lang].faq.items.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.a } })),
+    });
+  }
   if (route.page === 'chisiamo') webPageType = 'AboutPage';
   if (route.page === 'contatti') webPageType = 'ContactPage';
   if (route.page === 'progetti') webPageType = 'CollectionPage';
 
   const url = abs(pathFor(route.page, lang, route.slug));
+  const caseClient = route.page === 'caso' ? cases[lang].find((x) => x.slug === route.slug) : undefined;
   // The short name of the section for the breadcrumb ("Soluzioni"), not the long SEO title.
   const crumbTitle =
     route.page === 'caso' ? (cases[lang].find((x) => x.slug === route.slug)?.client ?? meta.title) : route.page === 'privacy' ? privacyText(lang).title : (pages[lang].heroes[route.page]?.kicker ?? meta.title);
@@ -314,7 +340,7 @@ export function seoFor(route: Route): Seo {
     description: snippet(meta.description),
     inLanguage: IN_LANGUAGE[lang],
     isPartOf: { '@id': ID.site },
-    about: { '@id': ID.org },
+    about: caseClient ? [{ '@id': ID.org }, { '@type': 'Organization', name: caseClient.client, description: caseClient.sector }] : { '@id': ID.org },
     primaryImageOfPage: { '@type': 'ImageObject', url: abs(image) },
     breadcrumb: breadcrumb(route, crumbTitle),
     ...(route.page === 'chisiamo' ? { mainEntity: { '@id': ID.founder } } : {}),
@@ -443,49 +469,39 @@ export function sitemapXml(): string {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${allRoutes().map(url).join('\n')}\n</urlset>\n`;
 }
 
-export function robotsTxt(): string {
-  // Everything is public and meant to be found, by search engines and by AI
-  // assistants alike: no rule to write, only the way to the sitemap.
-  return `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
-}
+/** The crawlers of AI assistants and AI search engines: named, so that nobody has to guess that they are welcome. */
+const AI_CRAWLERS = [
+  'GPTBot',
+  'OAI-SearchBot',
+  'ChatGPT-User',
+  'ClaudeBot',
+  'Claude-SearchBot',
+  'Claude-User',
+  'anthropic-ai',
+  'PerplexityBot',
+  'Perplexity-User',
+  'Google-Extended',
+  'Applebot',
+  'Applebot-Extended',
+  'Bingbot',
+  'DuckAssistBot',
+  'Meta-ExternalAgent',
+  'Amazonbot',
+  'MistralAI-User',
+  'CCBot',
+];
 
-/** llms.txt: a plain map of the site for AI assistants (llmstxt.org). */
-export function llmsTxt(): string {
-  const line = (page: Page, desc: string) => `- [${pages.it.heroes[page].kicker}](${abs(pathFor(page, 'it'))}): ${desc}`;
+export function robotsTxt(): string {
+  // Everything is public and meant to be found, by search engines and by AI assistants alike.
   return [
-    '# Ready2Digital',
+    '# Everything on this site is public and meant to be found and cited, by search engines and AI assistants.',
+    '# A plain-text map of the site: /llms.txt. The whole content in one file: /llms-full.txt.',
     '',
-    '> Ready 2 Digital S.r.l. è un’agenzia digitale di Roma. Progetta e costruisce automazioni dei processi, agenti di intelligenza artificiale (vendita, assistenza, analisi dati, supporto al CRM), CRM, ERP, app iOS e Android, siti e integrazioni su misura, collegandoli ai sistemi che l’azienda ha già. Il metodo è nato in Athlon Club, un club sportivo di Roma digitalizzato dall’interno.',
+    'User-agent: *',
+    'Allow: /',
     '',
-    '## Servizi',
-    '',
-    line('agenti', META.it.agenti.description),
-    line('soluzioni', META.it.soluzioni.description),
-    line('tecnologia', META.it.tecnologia.description),
-    '',
-    '## Casi e metodo',
-    '',
-    line('progetti', META.it.progetti.description),
-    ...cases.it.map((c) => `- [${c.client}](${abs(pathFor('caso', 'it', c.slug))}): ${c.title}`),
-    line('metodo', META.it.metodo.description),
-    '',
-    '## Azienda',
-    '',
-    line('chisiamo', META.it.chisiamo.description),
-    line('contatti', META.it.contatti.description),
-    '',
-    '## English',
-    '',
-    `- [AI agents](${abs(pathFor('agenti', 'en'))}): ${META.en.agenti.description}`,
-    `- [Solutions](${abs(pathFor('soluzioni', 'en'))}): ${META.en.soluzioni.description}`,
-    `- [Work](${abs(pathFor('progetti', 'en'))}): ${META.en.progetti.description}`,
-    `- [Contact](${abs(pathFor('contatti', 'en'))}): ${META.en.contatti.description}`,
-    '',
-    '## Contatti',
-    '',
-    `- Email: ${CONTACT_EMAIL}`,
-    `- Sede: ${COMPANY.address}`,
-    `- P.IVA: ${COMPANY.vat}`,
+    ...AI_CRAWLERS.flatMap((bot) => [`User-agent: ${bot}`, 'Allow: /', '']),
+    `Sitemap: ${SITE_URL}/sitemap.xml`,
     '',
   ].join('\n');
 }

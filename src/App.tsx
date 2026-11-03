@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { copy, CONTACT_EMAIL, type Copy, type Lang } from './content';
+import { copy, type Copy, type Lang } from './content';
 import { Mark } from './components/Mark';
 import { ClientLogo, hasLogo } from './components/Logos';
+import { SocialLinks } from './components/Social';
 import { CasePage } from './components/CasePage';
 import { AboutPage, ContactPage, HomePage, MethodPage, PrivacyPage, SolutionsPage, TechPage, WorkPage } from './components/Pages';
 import { AgentsPage } from './components/Agents';
@@ -301,7 +302,7 @@ function Footer({ t, lang }: { t: Copy; lang: Lang }) {
           </Link>
         </nav>
         <div className="footer__links">
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+          <SocialLinks lang={lang} names />
           <Link page="privacy" lang={lang}>
             {t.footer.privacy}
           </Link>
