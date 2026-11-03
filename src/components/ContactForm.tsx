@@ -45,6 +45,7 @@ export function ContactForm({ lang }: { lang: Lang }) {
   const [state, setState] = useState<'form' | 'sending' | 'done'>('form');
   const [via, setVia] = useState<'mail' | 'post'>('mail');
   const body = useRef<HTMLDivElement>(null);
+  const trap = useRef('');
   const dir = useRef(1);
   const last = t.q.length - 1;
 
@@ -101,19 +102,26 @@ export function ContactForm({ lang }: { lang: Lang }) {
       consenso_marketing: d.marketing,
       lingua: lang,
       inviato_il: new Date().toISOString(),
+      // A field no person sees: if a bot fills it in, the server drops the request.
+      ufficio_riferimento: trap.current,
     };
     if (CONTACT_ENDPOINT) {
       setState('sending');
       try {
         const r = await fetch(CONTACT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-        if (!r.ok) throw new Error(String(r.status));
-        setVia('post');
-        setState('done');
+        if (r.ok) {
+          setVia('post');
+          setState('done');
+          return;
+        }
+        // 404/405: nothing answers at this address (the local dev server, a static preview):
+        // fall back to the visitor's mail app, below. Anything else is a real failure.
+        if (r.status !== 404 && r.status !== 405) throw new Error(String(r.status));
       } catch {
         setState('form');
         setErr({ send: t.err.send });
+        return;
       }
-      return;
     }
     const lines = [
       `${t.f.nome}: ${payload.nome} ${payload.cognome}`,
@@ -189,6 +197,7 @@ export function ContactForm({ lang }: { lang: Lang }) {
         next();
       }}
     >
+      <input type="text" name="ufficio_riferimento" className="cform__trap" tabIndex={-1} autoComplete="off" aria-hidden="true" onChange={(e) => (trap.current = e.target.value)} />
       <div className="cform__top">
         <ProgressMark done={step} current={step} complete={false} />
         <ol className="cform__steps" aria-label="Steps">

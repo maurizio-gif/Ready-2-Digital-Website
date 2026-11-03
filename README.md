@@ -128,3 +128,15 @@ e `/en/…`) e GitHub Pages (`.github/workflows/deploy.yml`, con `BASE_PATH`).
   l'informativa e il footer.
 - **Cookie:** il sito non installa cookie propri; il banner sarà CookieYes, da aggiungere con il suo
   script in `index.html` una volta attivo sul dominio.
+
+## Contact form → email (SendGrid)
+
+The form POSTs its JSON to `/api/contact` (`api/contact.js`, a Vercel serverless function), which sends the request by email through SendGrid. Nothing is stored. Environment variables, set in Vercel → Settings → Environment Variables (Production and Preview), then redeploy:
+
+| Variable | What | Secret |
+| --- | --- | --- |
+| `SENDGRID_API_KEY` | SendGrid API key with the «Mail Send» permission | yes |
+| `CONTACT_TO_EMAIL` | where the requests arrive | no |
+| `CONTACT_FROM_EMAIL` | sender shown on the email; must be a sender verified in SendGrid (Single Sender or an authenticated domain). Optional: defaults to `CONTACT_TO_EMAIL` | no |
+
+Without the function (local dev server, a static preview) the form falls back to the visitor's mail app. A hidden field (`ufficio_riferimento`) catches simple bots, and the function only accepts requests from its own origin.

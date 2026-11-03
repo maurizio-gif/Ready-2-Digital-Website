@@ -3,9 +3,12 @@
 // COMPANY: fill in the registered office, VAT number and PEC. The privacy
 // notice only shows the fields that are filled in.
 //
-// CONTACT_ENDPOINT: empty means the form opens the visitor's mail app with the
-// message ready (nothing is stored by the site). Set it to a webhook (e.g. n8n)
-// and the form POSTs the request as JSON instead.
+// CONTACT_ENDPOINT: where the form POSTs the request as JSON. On Vercel it is the
+// function in api/contact.js, which sends the email through SendGrid (the keys and
+// addresses are environment variables: see the comment at the top of that file).
+// Where nothing answers at that address (the local dev server, a static preview)
+// the form falls back to the visitor's mail app with the message ready. Empty
+// means always the mail app. Nothing is stored by the site.
 
 import type { Lang } from './content';
 
@@ -19,7 +22,7 @@ export const COMPANY = {
   email: 'info@ready2digital.it',
 };
 
-export const CONTACT_ENDPOINT = '';
+export const CONTACT_ENDPOINT = '/api/contact';
 
 export const PRIVACY_UPDATED = '2 novembre 2026';
 
