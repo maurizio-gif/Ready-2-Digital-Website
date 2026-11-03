@@ -37,7 +37,14 @@ const WINDOWS_MOBILE: [number, number][] = [
 // point where its picture is complete (see .hero__snap in the stylesheet).
 export const SNAPS = [0, 0.34, 0.65, 0.96];
 
-function layouts(W: number, H: number) {
+// The header is 68px tall on phones; the mark keeps this much clear below it, and this much above the
+// headline block (whose top is measured: on a phone it is anchored to the bottom, so it moves with the
+// length of the copy and the height of the screen).
+const MOBILE_HEADER = 72;
+const MOBILE_GAP = 26;
+const MOBILE_MIN_SCALE = 0.4;
+
+function layouts(W: number, H: number, introTop: number | null) {
   const mobile = W <= 820;
   const area = mobile
     ? { x: W * 0.12, y: H * 0.13, w: W * 0.76, h: H * 0.44 }
@@ -45,8 +52,15 @@ function layouts(W: number, H: number) {
   const u = clamp(Math.min(W, H) / 900, 0.62, 1.25);
 
   // Opening pose: the mark, big, beside (desktop) or above (mobile) the headline.
-  const s0 = mobile ? Math.min((W * 0.62) / 256, (H * 0.28) / 192) : Math.min((W * 0.36) / 256, (H * 0.5) / 192);
-  const c0: P = mobile ? [W * 0.5, H * 0.27] : [W * 0.7, H * 0.47];
+  let s0 = mobile ? Math.min((W * 0.62) / 256, (H * 0.28) / 192) : Math.min((W * 0.36) / 256, (H * 0.5) / 192);
+  let c0: P = mobile ? [W * 0.5, H * 0.27] : [W * 0.7, H * 0.47];
+  if (mobile && introTop !== null) {
+    // The mark lives in the free band between the header and the top of the headline block.
+    const room = introTop - MOBILE_GAP - MOBILE_HEADER;
+    s0 = Math.min(s0, Math.max(MOBILE_MIN_SCALE, room / 192));
+    // Centred in the band; with no room at all (a very short screen) it sits right under the header.
+    c0 = [W * 0.5, MOBILE_HEADER + 96 * s0 + Math.max(0, (room - 192 * s0) / 2)];
+  }
   // Closing pose: the mark again, centred in the stage area.
   const s3 = mobile ? Math.min((W * 0.56) / 256, (H * 0.3) / 192) : Math.min((W * 0.3) / 256, (H * 0.44) / 192);
   const c3: P = [area.x + area.w / 2, area.y + area.h / 2];
@@ -104,16 +118,21 @@ export function Hero({ t, ready }: { t: Copy; ready: boolean }) {
 
     let W = 0;
     let H = 0;
-    let L = layouts(1, 1);
+    let L = layouts(1, 1, null);
     const measure = () => {
       W = sticky.clientWidth;
       // The stage is 100svh tall: on phones that stays put while the address bar
       // comes and goes, unlike window.innerHeight.
       H = sticky.clientHeight || window.innerHeight;
       root.setAttribute('viewBox', `0 0 ${W} ${H}`);
-      L = layouts(W, H);
+      // Where the headline block starts (offsetTop ignores the transform the intro gets while it fades).
+      const eyebrow = intro.current?.querySelector<HTMLElement>('.eyebrow');
+      const introTop = eyebrow && intro.current ? intro.current.offsetTop + eyebrow.offsetTop : null;
+      L = layouts(W, H, introTop);
     };
     measure();
+    // The copy reflows when the web fonts arrive: measure again then.
+    void document.fonts?.ready.then(measure);
     const resize = () => {
       // On a phone the only resize worth a new layout is a real one (rotation):
       // the address bar showing or hiding must not make the mark jump.
