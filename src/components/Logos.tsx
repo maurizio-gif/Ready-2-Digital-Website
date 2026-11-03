@@ -626,21 +626,15 @@ function Passion({ t }: { t: number }) {
 
 // ───────────────────────────────────────────────────────────── Lume
 
-// Il logo Lume (dal file «Logo Lume Corto.png» del cliente, 03/11/2026): il disco cremisi con l'anello
-// bianco e il battito, e la scritta «LUMe» a tratto tondo. Ridisegnato in vettori per animarlo: il
-// battito si disegna come un tracciato ECG con la punta luminosa, il disco batte una volta, poi le
-// lettere si scrivono una dopo l'altra e il punto della «e» appare per ultimo.
+// Il logo Lume (dal file «Logo Lume Corto.png» del cliente, 03/11/2026): solo il pittogramma, il disco
+// cremisi con l'anello bianco e il battito, senza la scritta (scelta di Maurizio). Ridisegnato in vettori
+// per animarlo: l'anello si chiude, il battito si disegna come un tracciato ECG con la punta luminosa e
+// il disco batte una volta.
 const LUME_ROSSO = '#E2003B';
 const LUME_BATTITO: readonly (readonly [number, number])[] = [
   [3, 62], [14, 62], [18, 54], [21, 62], [25.5, 62], [27.5, 17], [33, 62], [36, 70], [41, 70], [48, 36], [55, 70], [62, 36], [68, 70], [73, 46], [78, 70], [82, 62], [97, 62],
 ];
-const LUME_T = 2500;
-const LUME_LETTERE = [
-  'M10 20 V80 H42', // L
-  'M55 20 V65 a15 15 0 0 0 30 0 V20', // U
-  'M100 80 V20 L120 68 L140 20 V80', // M
-  'M158 80 V37 a17 17 0 0 1 34 0 V52', // e
-];
+const LUME_T = 1900;
 const LUME_L = (() => {
   let l = 0;
   for (let i = 0; i < LUME_BATTITO.length - 1; i++) l += Math.hypot(LUME_BATTITO[i + 1][0] - LUME_BATTITO[i][0], LUME_BATTITO[i + 1][1] - LUME_BATTITO[i][1]);
@@ -659,7 +653,7 @@ function lumePunta(d: number): [number, number] {
   return [u[0], u[1]];
 }
 
-function Lume({ t, lockup }: { t: number; lockup: boolean }) {
+function Lume({ t }: { t: number }) {
   const id = useId().replace(/:/g, '');
   const disco = rallenta(fase(t, 0, 450));
   const anello = dolce(fase(t, 150, 650));
@@ -668,11 +662,8 @@ function Lume({ t, lockup }: { t: number; lockup: boolean }) {
   const penna = battito > 0.01 && battito < 0.99;
   const colpo = 1 + 0.06 * impulso(t, 1380, 150) + 0.03 * impulso(t, 1560, 120);
   const scalaDisco = disco * colpo;
-  const lettere = LUME_LETTERE.map((_, i) => dolce(fase(t, 1150 + i * 220, 480)));
-  const punto = rimbalzo(fase(t, 2050, 300));
-  const W = lockup ? 320 : 100;
   return (
-    <svg viewBox={`0 0 ${W} 100`} className="logo__svg" aria-hidden="true">
+    <svg viewBox="0 0 100 100" className="logo__svg" aria-hidden="true">
       <defs>
         <clipPath id={`${id}-disco`}>
           <circle cx="50" cy="50" r="47" />
@@ -691,14 +682,6 @@ function Lume({ t, lockup }: { t: number; lockup: boolean }) {
           {penna ? <circle cx={punta[0]} cy={punta[1]} r="11" fill={`url(#${id}-penna)`} /> : null}
         </g>
       </g>
-      {lockup ? (
-        <g transform="translate(112 0)" fill="none" stroke={LUME_ROSSO} strokeWidth="7" strokeLinecap="round" strokeLinejoin="round">
-          {LUME_LETTERE.map((d, i) => (
-            <path key={d} d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - lettere[i]} />
-          ))}
-          <circle cx="183" cy="70" r={5.5 * Math.max(0, punto)} fill={LUME_ROSSO} stroke="none" />
-        </g>
-      ) : null}
     </svg>
   );
 }
@@ -719,7 +702,7 @@ type Props = {
 export function ClientLogo({ client, size = 'tile', className = '' }: Props) {
   const key = LOGO_OF[client];
   const ref = useRef<HTMLSpanElement>(null);
-  const lockup = (key === 'ronchiverdi' || key === 'lume') && size === 'hero';
+  const lockup = key === 'ronchiverdi' && size === 'hero';
   const t = useLogoClock(ref, key ? (lockup ? RV_T_LOCKUP : DURATA[key]) : 0);
   if (!key) return null;
   return (
@@ -728,7 +711,7 @@ export function ClientLogo({ client, size = 'tile', className = '' }: Props) {
       {key === 'ronchiverdi' && <Ronchiverdi t={t} lockup={lockup} />}
       {key === 'tca' && <Tca t={t} />}
       {key === 'passion' && <Passion t={t} />}
-      {key === 'lume' && <Lume t={t} lockup={lockup} />}
+      {key === 'lume' && <Lume t={t} />}
     </span>
   );
 }
