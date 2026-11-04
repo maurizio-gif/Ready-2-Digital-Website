@@ -23,6 +23,9 @@
 // The conversation lives in sessionStorage: it survives moving between pages and a
 // reload, and ends with the tab. Nothing is written to localStorage or cookies.
 // Other parts of the site open the chat with openChat(), optionally with a question.
+//
+// The chat is a pure conversation: answers carry no links to the site's pages, only suggested
+// replies to tap (and, when the visitor wants it, the hand-over to the team).
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Lang } from '../content';
@@ -653,22 +656,10 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
                   )}
                 </button>
               )}
-              {m.ruolo === 'agente' && ((m.link && m.link.length > 0) || m.azione === 'contatti') && (
+              {/* Pure conversation: no links to the site's pages, even if the workflow sent some. The only
+                  button is the hand-over to the team, which opens the contact form with the summary. */}
+              {m.ruolo === 'agente' && m.azione === 'contatti' && (
                 <div className="chat__actions">
-                  {m.link?.map((l) => (
-                    <a
-                      key={l.url}
-                      href={href(l.url)}
-                      className="chat__link"
-                      onClick={(e) => {
-                        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-                        e.preventDefault();
-                        follow(l.url);
-                      }}
-                    >
-                      {l.titolo} <span aria-hidden="true">→</span>
-                    </a>
-                  ))}
                   {m.azione === 'contatti' && (
                     <button type="button" className="chat__link chat__link--cta" onClick={() => toContact(m)}>
                       {t.contact} <span aria-hidden="true">→</span>
