@@ -10,6 +10,7 @@
 //   dist/404.html        the shell, noindex (also GitHub Pages' fallback)
 //   dist/sitemap.xml     every address, with its language alternates
 //   dist/robots.txt, dist/llms.txt, dist/llms-full.txt
+//   dist/assistente.json the rules and knowledge of the site's AI agent (src/assistant.ts)
 //
 // The browser then starts the app over the rendered HTML, as before.
 //
@@ -57,4 +58,4 @@ for (const p of rendered) {
 for (const [name, content] of Object.entries(mod.files())) write(name, content);
 
 rmSync(ssr, { recursive: true, force: true });
-console.log(`prerender: ${rendered.length} pages, sitemap.xml, robots.txt, llms.txt, llms-full.txt`);
+console.log(`prerender: ${rendered.length} pages, sitemap.xml, robots.txt, llms.txt, llms-full.txt, assistente.json`);

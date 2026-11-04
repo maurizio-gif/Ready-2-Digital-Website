@@ -16,6 +16,20 @@ const EMPTY: Data = { nome: '', cognome: '', email: '', cellulare: '', azienda: 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE = /^\+?[\d\s().-]{6,20}$/;
 
+/**
+ * When the visitor comes from the site's AI agent (components/Chat.tsx), the agent has
+ * written a short summary of what they said: it starts the «project» field, to edit or
+ * delete. Removed once the form has mounted (not here: StrictMode calls this twice).
+ */
+function chatDraft(): string {
+  if (typeof window === 'undefined') return '';
+  try {
+    return (sessionStorage.getItem('r2d:progetto') || '').slice(0, 4000);
+  } catch {
+    return '';
+  }
+}
+
 function ProgressMark({ done, current, complete }: { done: number; current: number; complete: boolean }) {
   const necks = useMemo(() => NECKS.map(([a, b]) => metaball(R, R, MARK[a], MARK[b], NECK_OPTS)), []);
   const lit = (i: number) => complete || i < done;
@@ -40,13 +54,21 @@ function ProgressMark({ done, current, complete }: { done: number; current: numb
 export function ContactForm({ lang }: { lang: Lang }) {
   const t = form[lang];
   const [step, setStep] = useState(0);
-  const [d, setD] = useState<Data>(EMPTY);
+  const [d, setD] = useState<Data>(() => ({ ...EMPTY, progetto: chatDraft() }));
   const [err, setErr] = useState<Record<string, string>>({});
   const [state, setState] = useState<'form' | 'sending' | 'done'>('form');
   const body = useRef<HTMLDivElement>(null);
   const trap = useRef('');
   const dir = useRef(1);
   const last = t.q.length - 1;
+
+  useEffect(() => {
+    try {
+      sessionStorage.removeItem('r2d:progetto');
+    } catch {
+      /* nothing stored, nothing to remove */
+    }
+  }, []);
 
   const set = <K extends keyof Data>(k: K, v: Data[K]) => {
     setD((x) => ({ ...x, [k]: v }));

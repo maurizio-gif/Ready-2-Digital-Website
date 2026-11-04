@@ -6,7 +6,7 @@
 //                    crawling twenty-six pages
 //
 // Everything here is read from the same data the pages are built from (content.ts, pages.ts,
-// cases.ts, agents.ts, legal.ts): there is no second copy of the facts to keep in step.
+// cases.ts, agents.ts, legal.ts, approach.ts): there is no second copy of the facts to keep in step.
 
 import { copy, type Lang } from './content';
 import { pages } from './pages';
@@ -17,6 +17,7 @@ import { COMPANY, SOCIAL } from './legal';
 import { pathFor, type Page } from './router';
 import { SITE_URL, abs } from './site';
 import { META } from './seo';
+import { approachMarkdown } from './approach';
 
 const ORDER: Exclude<Page, 'caso' | 'home' | 'privacy'>[] = ['agenti', 'soluzioni', 'tecnologia', 'progetti', 'metodo', 'chisiamo', 'contatti'];
 
@@ -139,8 +140,8 @@ export function llmsTxt(): string {
   return out.join('\n');
 }
 
-/** One language of llms-full.txt. */
-function fullFor(lang: Lang): string[] {
+/** One language of llms-full.txt (also the knowledge base of the site assistant, src/assistant.ts). */
+export function fullFor(lang: Lang): string[] {
   const l = L[lang];
   const t = copy[lang];
   const p = pages[lang];
@@ -168,6 +169,7 @@ function fullFor(lang: Lang): string[] {
   h2(l.method);
   out.push(t.method.title, '');
   t.method.steps.forEach((s, i) => out.push(`${i + 1}. **${s.t}**: ${s.d}`));
+  out.push('', ...approachMarkdown(lang));
 
   h2(l.tech);
   p.compliance.items.forEach((c) => out.push(`- **${c.t}**: ${c.d}`));

@@ -9,6 +9,7 @@ import { SocialLinks } from './components/Social';
 import { CasePage } from './components/CasePage';
 import { AboutPage, ContactPage, HomePage, MethodPage, PrivacyPage, SolutionsPage, TechPage, WorkPage } from './components/Pages';
 import { AgentsPage } from './components/Agents';
+import { Chat } from './components/Chat';
 import { COMPANY } from './legal';
 import { applyHead, seoFor, shellSeo } from './seo';
 import { Link } from './components/Nav';
@@ -279,6 +280,7 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
       <Header t={t} route={route} menu={menu} setMenu={setMenu} />
       <main key={routeKey}>{page}</main>
       <Footer t={t} lang={lang} />
+      <Chat lang={lang} />
     </>
   );
 }
