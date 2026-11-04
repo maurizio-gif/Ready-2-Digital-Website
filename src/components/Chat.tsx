@@ -15,6 +15,11 @@
 // once per visit (on a phone only the launcher's question appears); while closed, the
 // launcher waves every few seconds to draw the eye.
 //
+// The speaker reads answers aloud with the browser's own speech synthesis (speechSynthesis): a button
+// on every answer, a switch in the header that reads every new answer, and an answer to a dictated
+// question is read by itself, so one can talk to the agent without looking at the screen. Nothing
+// leaves the browser for it. Where there is no synthesis, the buttons are not shown.
+//
 // The conversation lives in sessionStorage: it survives moving between pages and a
 // reload, and ends with the tab. Nothing is written to localStorage or cookies.
 // Other parts of the site open the chat with openChat(), optionally with a question.
@@ -37,6 +42,7 @@ const AUTO = 'r2d:chat-auto'; // set once the chat has opened by itself, or the 
 // Pages where the chat never opens by itself: the contact form and the privacy notice need the whole screen.
 const NO_AUTO: Page[] = ['home', 'contatti', 'privacy'];
 const AUTO_DELAY = 3000;
+const VOICE = 'r2d:chat-voce'; // the «read every answer aloud» switch, for this visit
 
 const flag = (k: string) => {
   try {
@@ -104,6 +110,32 @@ function recognitionCtor(): RecognitionCtor | null {
   if (typeof window === 'undefined') return null;
   const w = window as unknown as { SpeechRecognition?: RecognitionCtor; webkitSpeechRecognition?: RecognitionCtor };
   return w.SpeechRecognition || w.webkitSpeechRecognition || null;
+}
+
+/* ------------------------------------------------------------------ */
+/* Speech synthesis: reading answers aloud                             */
+/* ------------------------------------------------------------------ */
+
+const synth = () => (typeof window !== 'undefined' && 'speechSynthesis' in window ? window.speechSynthesis : null);
+
+/** The answer as it should be heard: no asterisks, list items as sentences. */
+const spoken = (text: string) =>
+  text
+    .replace(/\*\*/g, '')
+    .split('\n')
+    .map((l) => l.trim().replace(/^[-•*]\s+/, ''))
+    .filter(Boolean)
+    .map((l) => (/[.!?:;]$/.test(l) ? l : `${l}.`))
+    .join(' ');
+
+/** The best voice for the language: a natural or online one if the system has it. */
+function voiceFor(lang: Lang): SpeechSynthesisVoice | null {
+  const s = synth();
+  if (!s) return null;
+  const code = lang === 'en' ? 'en' : 'it';
+  const all = s.getVoices().filter((v) => v.lang.toLowerCase().startsWith(code));
+  const score = (v: SpeechSynthesisVoice) => (/natural|neural|premium|enhanced|google|online/i.test(v.name) ? 2 : 0) + (v.localService ? 0 : 1) + (lang === 'en' && /en-(gb|us)/i.test(v.lang) ? 1 : 0);
+  return all.sort((a, b) => score(b) - score(a))[0] || null;
 }
 
 /* ------------------------------------------------------------------ */
@@ -189,6 +221,10 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
   const [canTalk, setCanTalk] = useState(false);
   const [listening, setListening] = useState(false);
   const [micError, setMicError] = useState(false);
+  const [canSpeak, setCanSpeak] = useState(false);
+  const [speaking, setSpeaking] = useState<number | null>(null);
+  const [autoVoice, setAutoVoice] = useState(false);
+  const dictated = useRef(false); // the text in the field came from the microphone
   const list = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
@@ -198,12 +234,24 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
   const busyRef = useRef(false);
   const openRef = useRef(open);
   openRef.current = open;
+  const autoVoiceRef = useRef(false);
   const auto = useRef(false); // the panel was opened by the site, not by the visitor: don't take the focus
   const lastPage = useRef<Page | null>(null);
+  autoVoiceRef.current = autoVoice;
 
   useEffect(() => {
     setState(load());
     setCanTalk(!!recognitionCtor());
+    const sy = synth();
+    if (sy) {
+      setCanSpeak(true);
+      sy.getVoices(); // voices load late in Chrome: asking once starts the loading
+      try {
+        setAutoVoice(sessionStorage.getItem(VOICE) === '1');
+      } catch {
+        /* off by default */
+      }
+    }
   }, []);
 
   const update = useCallback((fn: (s: Saved) => Saved) => {
@@ -218,11 +266,55 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
     rec.current?.stop();
   }, []);
 
+  const stopSpeaking = useCallback(() => {
+    synth()?.cancel();
+    setSpeaking(null);
+  }, []);
+
+  // Read one answer aloud. Chrome cuts long utterances after about fifteen seconds,
+  // so the text goes in sentence by sentence.
+  const speak = useCallback(
+    (i: number, text: string) => {
+      const sy = synth();
+      if (!sy) return;
+      sy.cancel();
+      const parts = spoken(text).match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [];
+      if (!parts.length) return;
+      const voice = voiceFor(lang);
+      setSpeaking(i);
+      parts.forEach((part, k) => {
+        const u = new SpeechSynthesisUtterance(part.trim());
+        u.lang = lang === 'en' ? 'en-US' : 'it-IT';
+        if (voice) u.voice = voice;
+        u.rate = 1.03;
+        if (k === parts.length - 1) u.onend = () => setSpeaking((x) => (x === i ? null : x));
+        u.onerror = () => setSpeaking((x) => (x === i ? null : x));
+        sy.speak(u);
+      });
+    },
+    [lang],
+  );
+
+  const toggleVoice = () => {
+    const next = !autoVoice;
+    setAutoVoice(next);
+    try {
+      sessionStorage.setItem(VOICE, next ? '1' : '0');
+    } catch {
+      /* the switch still works on this page */
+    }
+    if (!next) stopSpeaking();
+  };
+
   const send = useCallback(
     async (text: string) => {
       const testo = text.trim().slice(0, 1200);
       if (!testo || busyRef.current) return;
       rec.current?.abort();
+      synth()?.cancel();
+      setSpeaking(null);
+      const wasDictated = dictated.current;
+      dictated.current = false;
       busyRef.current = true;
       setBusy(true);
       setDraft('');
@@ -257,14 +349,16 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
       } catch {
         reply = { ruolo: 'agente', testo: t.error, azione: 'contatti', errore: true };
       }
+      const at = (stateRef.current.messaggi || []).length;
       update((s) => {
         setFresh(s.messaggi.length);
         return { ...s, messaggi: [...s.messaggi, reply] };
       });
+      if (!reply.errore && (autoVoiceRef.current || wasDictated)) speak(at, reply.testo);
       busyRef.current = false;
       setBusy(false);
     },
-    [lang, t, update],
+    [lang, t, update, speak],
   );
 
   const listen = () => {
@@ -281,6 +375,7 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
       let said = '';
       for (let i = 0; i < e.results.length; i++) said += e.results[i][0].transcript;
       setDraft((before + said).slice(0, 1200));
+      dictated.current = true;
     };
     r.onerror = (e) => {
       if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture') setMicError(true);
@@ -352,6 +447,8 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
     document.documentElement.classList.toggle('chat-open', open);
     if (!open) {
       rec.current?.abort();
+      synth()?.cancel();
+      setSpeaking(null);
       return;
     }
     setTeaser(false);
@@ -380,9 +477,16 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
     else el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
   }, [state.messaggi.length, busy, open]);
 
-  useEffect(() => () => rec.current?.abort(), []);
+  useEffect(
+    () => () => {
+      rec.current?.abort();
+      synth()?.cancel();
+    },
+    [],
+  );
 
   const reset = () => {
+    stopSpeaking();
     update(() => ({ sessione: newSession(), messaggi: [] }));
     setFresh(-1);
     input.current?.focus();
@@ -443,7 +547,7 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
         </button>
       </div>
 
-      <section id="chat-panel" className={`chat${open ? ' is-open' : ''}`} role="dialog" aria-modal="false" aria-label={t.title} inert={!open} data-lenis-prevent>
+      <section id="chat-panel" className={`chat${open ? ' is-open' : ''}`} role="dialog" aria-modal="false" aria-label={`${t.launcherShort} ${t.title}`} inert={!open} data-lenis-prevent>
         <span className="chat__glow" aria-hidden="true" />
         <header className="chat__head">
           <span className="chat__avatar" aria-hidden="true">
@@ -456,6 +560,25 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
               {busy ? `${t.thinking}…` : t.status}
             </span>
           </div>
+          {canSpeak && (
+            <button
+              type="button"
+              className={`chat__icon chat__icon--voice${autoVoice ? ' is-on' : ''}`}
+              onClick={toggleVoice}
+              aria-pressed={autoVoice}
+              title={autoVoice ? t.voice.autoOn : t.voice.autoOff}
+              aria-label={autoVoice ? t.voice.autoOn : t.voice.autoOff}
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M4 9v6h4l5 4V5L8 9H4z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                {autoVoice ? (
+                  <path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                ) : (
+                  <path d="M17 10l4 4M21 10l-4 4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                )}
+              </svg>
+            </button>
+          )}
           {msgs.length > 0 && (
             <button type="button" className="chat__icon" onClick={reset} title={t.reset} aria-label={t.reset}>
               <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -507,6 +630,29 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
           {msgs.map((m, i) => (
             <div key={i} className={`chat__msg chat__msg--${m.ruolo}${m.errore ? ' is-error' : ''}`}>
               <Rich text={m.testo} fresh={m.ruolo === 'agente' && i === fresh} />
+              {canSpeak && m.ruolo === 'agente' && !m.errore && (
+                <button
+                  type="button"
+                  className={`chat__speak${speaking === i ? ' is-on' : ''}`}
+                  onClick={() => (speaking === i ? stopSpeaking() : speak(i, m.testo))}
+                  aria-pressed={speaking === i}
+                  aria-label={speaking === i ? t.voice.stop : t.voice.read}
+                  title={speaking === i ? t.voice.stop : t.voice.read}
+                >
+                  {speaking === i ? (
+                    <span className="chat__speak-bars" aria-hidden="true">
+                      <i />
+                      <i />
+                      <i />
+                      <i />
+                    </span>
+                  ) : (
+                    <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+                      <path d="M4 9v6h4l5 4V5L8 9H4z M16 9a4 4 0 0 1 0 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" />
+                    </svg>
+                  )}
+                </button>
+              )}
               {m.ruolo === 'agente' && ((m.link && m.link.length > 0) || m.azione === 'contatti') && (
                 <div className="chat__actions">
                   {m.link?.map((l) => (
@@ -570,7 +716,10 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
             maxLength={1200}
             placeholder={listening ? t.mic.listening : t.placeholder}
             aria-label={t.placeholder}
-            onChange={(e) => setDraft(e.target.value)}
+            onChange={(e) => {
+              setDraft(e.target.value);
+              if (!e.target.value.trim()) dictated.current = false;
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
                 e.preventDefault();

@@ -149,6 +149,11 @@ components/Chat.tsx → /api/chat (api/chat.js, Vercel) → n8n «R2D CHAT SITO�
 - **Il microfono** usa il riconoscimento vocale del browser (Chrome, Edge, Safari): il testo compare nel campo
   mentre si parla e lo si manda a mano. Dove il browser non lo ha (Firefox) il pulsante non c'è. A noi arriva solo
   il testo.
+- **L'altoparlante** legge le risposte con la sintesi vocale del browser: un pulsante su ogni risposta, un
+  interruttore nell'intestazione che le legge tutte, e la risposta a una domanda dettata si legge da sola.
+  Niente esce dal browser per farlo.
+- **Apertura automatica**: lasciando la home, dopo 3 secondi sull'altra pagina la chat si apre da sola, una volta
+  per visita (non su Contatti e Privacy; su telefono compare solo il fumetto del pulsante).
 - **Variabili d'ambiente su Vercel** (produzione e anteprime): `CHAT_WEBHOOK_URL` (il webhook di produzione del
   workflow) e `CHAT_WEBHOOK_KEY` (la chiave che il workflow controlla, segreta). Senza, `/api/chat` risponde 503 e
   la chat propone il modulo dei contatti: il sito non si rompe mai per colpa dell'agente.

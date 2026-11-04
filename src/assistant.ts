@@ -50,6 +50,7 @@ export type ChatCopy = {
   welcome: string;
   teaser: string;
   mic: { start: string; stop: string; listening: string; denied: string };
+  voice: { read: string; stop: string; autoOn: string; autoOff: string };
   tryIt: { kicker: string; title: string; text: string; btn: string };
 };
 
@@ -57,7 +58,7 @@ export const chatCopy: Record<Lang, ChatCopy> = {
   it: {
     launcher: 'Chiedi all’assistente AI',
     launcherShort: 'Assistente AI',
-    title: 'Assistente Ready 2 Digital',
+    title: 'Ready 2 Digital',
     status: 'Assistente AI · risponde dal sito',
     greeting:
       'Ciao, sono l’assistente AI di Ready 2 Digital. Possiamo ragionare su come semplificare il lavoro del tuo club e migliorare l’esperienza dei clienti. Da quale problema concreto vuoi partire?',
@@ -67,7 +68,7 @@ export const chatCopy: Record<Lang, ChatCopy> = {
     close: 'Chiudi la chat',
     reset: 'Nuova conversazione',
     typing: 'Sto scrivendo',
-    note: ['Assistente virtuale: può sbagliare. Non scrivere dati personali o riservati; le conversazioni sono conservate per migliorare il servizio e la dettatura usa il riconoscimento vocale del browser (', 'informativa', ').'],
+    note: ['Assistente virtuale: può sbagliare. Non scrivere dati personali o riservati; le conversazioni sono conservate per migliorare il servizio e dettatura e lettura ad alta voce usano le funzioni vocali del browser (', 'informativa', ').'],
     contact: 'Scrivi al team',
     error: 'Non sono riuscito a rispondere. Riprova fra poco, oppure scrivi al team dal modulo.',
     limit: 'Mi hai fatto molte domande in poco tempo: riprova fra un po’, oppure scrivi al team dal modulo.',
@@ -75,6 +76,7 @@ export const chatCopy: Record<Lang, ChatCopy> = {
     welcome: 'Da dove partiamo?',
     teaser: 'Troppe attività manuali o contatti che si perdono? Parliamone.',
     mic: { start: 'Detta la domanda', stop: 'Ferma la dettatura', listening: 'Ti ascolto…', denied: 'Non riesco a usare il microfono: controlla i permessi del browser, oppure scrivi.' },
+    voice: { read: 'Ascolta la risposta', stop: 'Ferma la lettura', autoOn: 'Lettura ad alta voce attiva: tocca per spegnerla', autoOff: 'Leggi le risposte ad alta voce' },
     tryIt: {
       kicker: 'Provalo adesso',
       title: 'Questo sito ha il suo assistente AI.',
@@ -85,7 +87,7 @@ export const chatCopy: Record<Lang, ChatCopy> = {
   en: {
     launcher: 'Ask the AI assistant',
     launcherShort: 'AI assistant',
-    title: 'Ready 2 Digital assistant',
+    title: 'Ready 2 Digital',
     status: 'AI assistant · answers from the site',
     greeting: 'Hi, I’m the Ready 2 Digital AI assistant. We can think together about how to simplify the work of your club and improve your customers’ experience. Which concrete problem would you like to start from?',
     suggestions: ['Too many manual tasks', 'Leads that don’t become members', 'Software that doesn’t talk to each other', 'I’d like to know where to start'],
@@ -94,7 +96,7 @@ export const chatCopy: Record<Lang, ChatCopy> = {
     close: 'Close the chat',
     reset: 'New conversation',
     typing: 'Typing',
-    note: ['Virtual assistant: it can make mistakes. Don’t share personal or confidential data; conversations are kept to improve the service and dictation uses the browser’s speech recognition (', 'privacy notice', ').'],
+    note: ['Virtual assistant: it can make mistakes. Don’t share personal or confidential data; conversations are kept to improve the service and dictation and reading aloud use the browser’s speech features (', 'privacy notice', ').'],
     contact: 'Write to the team',
     error: 'I couldn’t answer. Please try again shortly, or write to the team through the form.',
     limit: 'You’ve asked a lot of questions in a short time: please try again in a while, or write to the team through the form.',
@@ -102,6 +104,7 @@ export const chatCopy: Record<Lang, ChatCopy> = {
     welcome: 'Where shall we start?',
     teaser: 'Too many manual tasks, or leads that get lost? Let’s talk.',
     mic: { start: 'Dictate your question', stop: 'Stop dictation', listening: 'Listening…', denied: 'I can’t use the microphone: check the browser’s permissions, or type instead.' },
+    voice: { read: 'Listen to the answer', stop: 'Stop reading', autoOn: 'Reading aloud is on: tap to turn it off', autoOff: 'Read the answers aloud' },
     tryIt: {
       kicker: 'Try it now',
       title: 'This website has its own AI assistant.',
