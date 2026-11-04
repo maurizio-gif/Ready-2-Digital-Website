@@ -260,6 +260,7 @@ export const stack: Record<Lang, { kicker: string; title: string; sub: string; l
           { t: 'API REST e webhook', d: 'Gestionali, pagamenti, WhatsApp, Meta, email: ci parliamo direttamente.' },
           { t: 'SQL Server', d: 'Anche il database su un server Windows in sede, in sola lettura, senza VPN.' },
           { t: 'Pagamenti', d: 'Stripe, Adyen, GoCardless: carte, SEPA, link per pagare.' },
+          { t: 'Controllo accessi', d: 'Il telefono come tessera: pass in Apple Wallet e Google Wallet, lettori VTAP di Dot Origin.' },
         ],
       },
     ],
@@ -306,8 +307,134 @@ export const stack: Record<Lang, { kicker: string; title: string; sub: string; l
           { t: 'REST APIs & webhooks', d: 'Back offices, payments, WhatsApp, Meta, email: we talk to them directly.' },
           { t: 'SQL Server', d: 'Even an on-site database on a Windows server, read-only, no VPN.' },
           { t: 'Payments', d: 'Stripe, Adyen, GoCardless: cards, SEPA, pay-by-link.' },
+          { t: 'Access control', d: 'The phone as a badge: Apple Wallet and Google Wallet passes, Dot Origin VTAP readers.' },
         ],
       },
     ],
+  },
+};
+
+/* Access control with a pass in the phone's Wallet: a section of the Technology page. */
+export type Access = {
+  kicker: string;
+  title: string;
+  lead: string;
+  /** Alt text of the two partner images (public/images/partners). */
+  partners: { dot: string; vtap: string };
+  /** The chain, left to right: pass, reader, system, gate. */
+  chain: { t: string; d: string }[];
+  how: string;
+  steps: { t: string; role: string; d: string }[];
+  note: string;
+};
+
+export const access: Record<Lang, Access> = {
+  it: {
+    kicker: 'Controllo accessi',
+    title: 'Il telefono al posto del badge.',
+    lead: 'Un pass salvato in Apple Wallet o Google Wallet, un lettore accanto alla porta: avvicini il telefono e il varco si apre. Lavoriamo con Dot Origin, che produce i lettori VTAP compatibili con entrambi i Wallet, e siamo partner per l’emissione dei pass virtuali.',
+    partners: { dot: 'Dot Origin', vtap: 'Lettore VTAP di Dot Origin' },
+    chain: [
+      { t: 'Il pass', d: 'Nel Wallet dello smartphone' },
+      { t: 'Il lettore', d: 'VTAP di Dot Origin' },
+      { t: 'Il sistema', d: 'Decide chi può entrare' },
+      { t: 'Il varco', d: 'Porta, tornello, check-in' },
+    ],
+    how: 'Come funziona un pass sul tuo smartphone',
+    steps: [
+      {
+        t: 'Lo salvi',
+        role: 'Un tocco, nessuna app',
+        d: 'Dopo l’iscrizione o l’acquisto emettiamo il tuo pass personale e te lo mandiamo con un link o un QR code. Tocchi «Aggiungi al Wallet»: si salva in Apple Wallet su iPhone o in Google Wallet su Android, accanto alle tue carte. Dentro c’è un identificativo firmato da chi lo emette, custodito dal telefono.',
+      },
+      {
+        t: 'Lo avvicini',
+        role: 'Pochi centimetri, via NFC',
+        d: 'Lettore e telefono si parlano con la stessa tecnologia dei pagamenti contactless, e al telefono non serve la connessione. Di solito non devi aprire nulla: il pass lo presenta il telefono. A seconda di come lo configuriamo, può bastare il telefono bloccato oppure può chiedere Face ID, impronta o codice.',
+      },
+      {
+        t: 'Il sistema decide',
+        role: 'La regola sta nel sistema, non nel pass',
+        d: 'Il lettore passa l’identificativo al sistema di controllo accessi: i VTAP si collegano ai controllori di porte e tornelli già in uso (Wiegand, OSDP/RS-485, USB). Il sistema verifica che l’abbonamento sia valido, l’orario, la prenotazione, e apre il varco o registra il check-in.',
+      },
+      {
+        t: 'Resta aggiornato',
+        role: 'Niente tessere da ritirare',
+        d: 'Quando l’abbonamento si rinnova, scade o cambia, il pass si aggiorna o si revoca da remoto, direttamente sul telefono, senza ritirare né stampare nulla. Se il telefono si perde, basta disattivare quel pass.',
+      },
+    ],
+    note: 'Apple Wallet, Google Wallet e VTAP sono marchi dei rispettivi proprietari.',
+  },
+  en: {
+    kicker: 'Access control',
+    title: 'Your phone instead of a badge.',
+    lead: 'A pass saved in Apple Wallet or Google Wallet, a reader next to the door: hold your phone up and the gate opens. We work with Dot Origin, which makes the VTAP readers compatible with both Wallets, and we are a partner for issuing the virtual passes.',
+    partners: { dot: 'Dot Origin', vtap: 'Dot Origin VTAP reader' },
+    chain: [
+      { t: 'The pass', d: 'In the phone’s Wallet' },
+      { t: 'The reader', d: 'Dot Origin VTAP' },
+      { t: 'The system', d: 'Decides who gets in' },
+      { t: 'The gate', d: 'Door, turnstile, check-in' },
+    ],
+    how: 'How a pass on your smartphone works',
+    steps: [
+      {
+        t: 'You save it',
+        role: 'One tap, no app',
+        d: 'After you sign up or buy, we issue your personal pass and send it with a link or QR code. Tap “Add to Wallet”: it is saved in Apple Wallet on iPhone or Google Wallet on Android, next to your cards. Inside is an identifier signed by whoever issues it, kept safe by the phone.',
+      },
+      {
+        t: 'You hold it up',
+        role: 'A few centimetres, over NFC',
+        d: 'Reader and phone talk using the same technology as contactless payments, and the phone needs no connection. Usually you open nothing: the phone presents the pass itself. Depending on how we configure it, a locked phone may be enough, or it may ask for Face ID, a fingerprint or a passcode.',
+      },
+      {
+        t: 'The system decides',
+        role: 'The rule lives in the system, not in the pass',
+        d: 'The reader passes the identifier to the access control system: VTAP readers connect to the door and turnstile controllers already in use (Wiegand, OSDP/RS-485, USB). The system checks the membership is valid, the time and the booking, then opens the gate or logs the check-in.',
+      },
+      {
+        t: 'It stays up to date',
+        role: 'No cards to collect',
+        d: 'When a membership renews, expires or changes, the pass is updated or revoked remotely, right on the phone, with nothing to collect or print. If a phone is lost, that pass is simply switched off.',
+      },
+    ],
+    note: 'Apple Wallet, Google Wallet and VTAP are trademarks of their respective owners.',
+  },
+};
+
+/* The systems we connect to, with the way we connect: a section of the Technology page. */
+export type Integration = {
+  id: string;
+  name: string;
+  /** Who it belongs to, one line under the name. */
+  by?: Record<Lang, string>;
+  via: 'api' | 'sql';
+  /** The official logo file in public/images/partners. Without one the tile shows the initial. */
+  logo?: { src: string; w: number; h: number; /** The logo already spells the name. */ wordmark?: boolean; /** Drawn for a light ground (dark ink): shown on a light plate. */ onLight?: boolean };
+};
+
+export const integrationList: Integration[] = [
+  { id: 'perfectgym', name: 'PerfectGym', by: { it: 'Parte di Sport Alliance', en: 'Part of Sport Alliance' }, via: 'api', logo: { src: 'images/partners/perfectgym.svg', w: 515, h: 472 } },
+  { id: 'abc-glofox', name: 'ABC Glofox', by: { it: 'Gruppo ABC Fitness', en: 'ABC Fitness group' }, via: 'api', logo: { src: 'images/partners/abc-glofox.png', w: 507, h: 160, wordmark: true, onLight: true } },
+  { id: 'sportrick', name: 'SportRick', by: { it: 'Prodotto Zucchetti', en: 'A Zucchetti product' }, via: 'api', logo: { src: 'images/partners/sportrick-white.svg', w: 305, h: 61, wordmark: true } },
+  { id: 'gymnasium', name: 'InforYou Gymnasium', by: { it: 'TeamSystem', en: 'TeamSystem' }, via: 'sql', logo: { src: 'images/partners/teamsystem.png', w: 120, h: 120 } },
+  { id: 'technogym', name: 'Technogym', by: { it: 'Anche Technogym App', en: 'Technogym App too' }, via: 'api', logo: { src: 'images/partners/technogym.png', w: 372, h: 103, wordmark: true } },
+];
+
+export const integrations: Record<Lang, { kicker: string; title: string; lead: string; via: { api: string; sql: string }; note: string }> = {
+  it: {
+    kicker: 'Sistemi che integriamo',
+    title: 'Il software che hai già, collegato.',
+    lead: 'Non serve cambiare gestionale: ci colleghiamo a quello che usi e i dati arrivano nello stesso posto. Con la maggior parte di questi sistemi passiamo dalle loro API; con InforYou Gymnasium la connessione la facciamo dal server SQL.',
+    via: { api: 'Via API', sql: 'Da server SQL' },
+    note: 'Marchi e loghi appartengono ai rispettivi proprietari.',
+  },
+  en: {
+    kicker: 'Systems we integrate',
+    title: 'The software you already have, connected.',
+    lead: 'No need to change your back office: we connect to what you use and the data lands in the same place. With most of these systems we go through their APIs; with InforYou Gymnasium the connection is made from the SQL server.',
+    via: { api: 'Via API', sql: 'From the SQL server' },
+    note: 'Brands and logos belong to their respective owners.',
   },
 };

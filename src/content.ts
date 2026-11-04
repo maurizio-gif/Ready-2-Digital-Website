@@ -166,7 +166,7 @@ const it = {
     b: ['I dati entrano da una parte,', 'escono decisioni dall’altra.'] as [string, string],
     c: ['Tanti punti.', 'Un disegno solo.'] as [string, string],
   },
-  stack: ['App Store', 'Google Play', 'GDPR', 'SQL Server', 'REST · SOAP', 'Supabase', 'n8n', 'Stripe', 'Adyen', 'GoCardless', 'WhatsApp Business', 'PerfectGym', 'Airtable', 'React', 'Next.js', 'Expo'],
+  stack: ['App Store', 'Google Play', 'GDPR', 'SQL Server', 'REST · SOAP', 'Supabase', 'n8n', 'Stripe', 'Adyen', 'GoCardless', 'WhatsApp Business', 'PerfectGym', 'ABC Glofox', 'SportRick', 'InforYou Gymnasium', 'Technogym', 'Airtable', 'Apple Wallet', 'Google Wallet', 'Dot Origin VTAP', 'React', 'Next.js', 'Expo'],
   contact: {
     kicker: 'Contatti',
     title: ['Pronti', 'quando lo sei tu.'],
