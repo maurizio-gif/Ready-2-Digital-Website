@@ -6929,8 +6929,51 @@ img[src*='passion-mark'] {
   pointer-events: none;
 }
 .chat-launch:hover {
+  animation: none;
   transform: translateY(-3px);
   box-shadow: 0 28px 60px -18px rgba(255, 96, 0, 0.75), 0 10px 30px -12px rgba(0, 0, 0, 0.8);
+}
+/* While closed, the launcher waves every few seconds: a small hop, and the circles of the face light up in a wave. */
+.chat-launch {
+  animation: chat-nudge 6s var(--ease) infinite;
+}
+.chat-launch .face--idle circle {
+  animation: face-hello 6s ease-in-out infinite;
+}
+@keyframes chat-nudge {
+  0%,
+  80%,
+  100% {
+    transform: none;
+  }
+  84% {
+    transform: translateY(-8px) rotate(-3deg);
+  }
+  88% {
+    transform: translateY(0) rotate(2deg);
+  }
+  92% {
+    transform: translateY(-4px) rotate(-1deg);
+  }
+  96% {
+    transform: none;
+  }
+}
+@keyframes face-hello {
+  0%,
+  78%,
+  100% {
+    transform: scale(1);
+  }
+  84% {
+    transform: scale(1.35);
+  }
+  90% {
+    transform: scale(0.7);
+  }
+  95% {
+    transform: scale(1.1);
+  }
 }
 .chat-launch__orb {
   position: relative;
@@ -7527,6 +7570,8 @@ img[src*='passion-mark'] {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .chat-launch,
+  .chat-launch .face--idle circle,
   .chat-launch::before,
   .chat::before,
   .chat-launch__orb::after,
