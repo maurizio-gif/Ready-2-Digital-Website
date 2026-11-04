@@ -242,8 +242,16 @@ function targets(lang: Lang): Target[] {
   return out;
 }
 
+/**
+ * The model on OpenRouter. The workflow accepts only the names in its own list (node
+ * «Componi la richiesta», MODELLI): a name it doesn't know falls back to its first one.
+ * Sonnet because the conversation is the product on show here: Haiku, tried on the same
+ * conversations, broke the one-question rule and slipped into compliments and jargon.
+ */
+export const MODEL = 'anthropic/claude-sonnet-4.5';
+
 /** The file /assistente.json: what the workflow reads at every message. */
 export function assistantKb() {
   const lang = (l: Lang) => ({ conoscenza: fullFor(l).join('\n'), pagine: targets(l) });
-  return { versione: 1, regole: RULES, it: lang('it'), en: lang('en') };
+  return { versione: 1, modello: MODEL, regole: RULES, it: lang('it'), en: lang('en') };
 }
