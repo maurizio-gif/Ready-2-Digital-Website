@@ -3676,8 +3676,16 @@ button {
   max-width: 100%;
 }
 .sys__mark img.is-wordmark {
-  height: auto;
-  width: min(100%, 210px);
+  height: 40px;
+  width: auto;
+  max-width: 100%;
+}
+/* A logo drawn for a light ground goes on a light plate, with its own colours untouched. */
+.sys__mark--plate {
+  box-sizing: border-box;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: var(--paper);
 }
 /* No logo file yet: the initial, as the menu does for a client without one. */
 .sys__mark--initial span {

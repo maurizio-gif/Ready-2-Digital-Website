@@ -411,12 +411,12 @@ export type Integration = {
   by?: Record<Lang, string>;
   via: 'api' | 'sql';
   /** The official logo file in public/images/partners. Without one the tile shows the initial. */
-  logo?: { src: string; w: number; h: number; /** The logo already spells the name. */ wordmark?: boolean };
+  logo?: { src: string; w: number; h: number; /** The logo already spells the name. */ wordmark?: boolean; /** Drawn for a light ground (dark ink): shown on a light plate. */ onLight?: boolean };
 };
 
 export const integrationList: Integration[] = [
   { id: 'perfectgym', name: 'PerfectGym', by: { it: 'Parte di Sport Alliance', en: 'Part of Sport Alliance' }, via: 'api', logo: { src: 'images/partners/perfectgym.svg', w: 515, h: 472 } },
-  { id: 'abc-glofox', name: 'ABC Glofox', by: { it: 'Gruppo ABC Fitness', en: 'ABC Fitness group' }, via: 'api' },
+  { id: 'abc-glofox', name: 'ABC Glofox', by: { it: 'Gruppo ABC Fitness', en: 'ABC Fitness group' }, via: 'api', logo: { src: 'images/partners/abc-glofox.png', w: 507, h: 160, wordmark: true, onLight: true } },
   { id: 'sportrick', name: 'SportRick', by: { it: 'Prodotto Zucchetti', en: 'A Zucchetti product' }, via: 'api', logo: { src: 'images/partners/sportrick-white.svg', w: 305, h: 61, wordmark: true } },
   { id: 'gymnasium', name: 'InforYou Gymnasium', by: { it: 'TeamSystem', en: 'TeamSystem' }, via: 'sql', logo: { src: 'images/partners/teamsystem.png', w: 120, h: 120 } },
   { id: 'technogym', name: 'Technogym', by: { it: 'Anche Technogym App', en: 'Technogym App too' }, via: 'api' },

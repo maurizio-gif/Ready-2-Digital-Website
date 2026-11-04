@@ -86,7 +86,7 @@ export function Integrations({ lang }: { lang: Lang }) {
         <ul className="systems__grid">
           {integrationList.map((s) => (
             <li key={s.id} className="sys card-3d" data-card data-tilt="6">
-              <span className={`sys__mark${s.logo ? '' : ' sys__mark--initial'}`}>
+              <span className={`sys__mark${s.logo ? '' : ' sys__mark--initial'}${s.logo?.onLight ? ' sys__mark--plate' : ''}`}>
                 {s.logo ? (
                   <img src={`${import.meta.env.BASE_URL}${s.logo.src}`} alt={s.logo.wordmark ? s.name : ''} width={s.logo.w} height={s.logo.h} loading="lazy" className={s.logo.wordmark ? 'is-wordmark' : undefined} />
                 ) : (
