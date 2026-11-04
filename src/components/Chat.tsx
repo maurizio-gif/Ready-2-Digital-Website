@@ -199,6 +199,18 @@ function Rich({ text, fresh }: { text: string; fresh?: boolean }) {
   return <>{blocks}</>;
 }
 
+/**
+ * A suggested reply is something the VISITOR would send. A question addressed to the visitor
+ * («Quanti lead ti arrivano?», «What tools do you use?») is the agent's own question: tapped, it
+ * would be asked back to the agent and the conversation would loop. Those are dropped.
+ */
+const TO_VISITOR = /\b(ti|tu|tuo|tua|tuoi|tue|te|hai|sei|puoi|vuoi|usi|usate|fai|gestisci|avete|siete|vi|vostro|vostra|you|your|yours)\b/i;
+function asVisitor(d: unknown): d is string {
+  if (typeof d !== 'string') return false;
+  const s = d.trim();
+  return !!s && s.length <= 60 && !(s.endsWith('?') && TO_VISITOR.test(s));
+}
+
 function go(url: string) {
   const [path, hash] = url.split('#');
   const here = parse(window.location.pathname);
@@ -344,7 +356,7 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
             link: Array.isArray(data.link) ? data.link.filter((l: Link) => l && typeof l.url === 'string' && l.url.startsWith('/')).slice(0, 2) : [],
             azione: data.azione === 'contatti' ? 'contatti' : null,
             riassunto: typeof data.riassunto === 'string' ? data.riassunto : null,
-            domande: Array.isArray(data.domande) ? data.domande.filter((d: unknown) => typeof d === 'string').slice(0, 3) : [],
+            domande: Array.isArray(data.domande) ? data.domande.filter(asVisitor).slice(0, 2) : [],
           };
         } else {
           reply = { ruolo: 'agente', testo: data && data.limite ? t.limit : t.error, azione: 'contatti', errore: true };
