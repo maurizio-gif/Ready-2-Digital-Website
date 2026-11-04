@@ -50,6 +50,7 @@ const L = {
     built: 'Cosa è stato costruito',
     results: 'Numeri',
     stackOf: 'Tecnologie',
+    site: 'Sito web del cliente',
     does: 'Cosa fa',
     example: 'Esempio',
     contactH: 'Contatti',
@@ -83,6 +84,7 @@ const L = {
     built: 'What was built',
     results: 'Numbers',
     stackOf: 'Technology',
+    site: 'Client website',
     does: 'What it does',
     example: 'Example',
     contactH: 'Contact',
@@ -184,6 +186,7 @@ function fullFor(lang: Lang): string[] {
     if (c.built.length) out.push(`${l.built}:`, ...c.built.map((b) => `- ${b}`), '');
     if (c.metrics.length) out.push(`${l.results}:`, ...c.metrics.map((m) => `- ${m.v} ${m.l}`), '');
     if (c.stack.length) out.push(`${l.stackOf}: ${c.stack.join(', ')}.`, '');
+    if (c.site) out.push(`${l.site}: ${c.site}`, '');
     out.push(`${abs(pathFor('caso', lang, c.slug))}`, '');
   });
 
