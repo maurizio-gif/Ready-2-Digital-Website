@@ -71,7 +71,7 @@ che quasi mai lo fanno — non vedevano niente.
 1. `vite build` — l'app per il browser, come prima.
 2. `vite build --ssr src/entry-server.tsx --outDir dist-ssr` — la stessa app, per il server.
 3. `node scripts/prerender.mjs` — la renderizza una volta per indirizzo e scrive `dist/<percorso>/index.html`
-   (26 pagine: 13 per lingua), più `404.html` (noindex), `sitemap.xml`, `robots.txt` e `llms.txt`. **Fa fallire
+   (26 pagine: 13 per lingua), più `404.html` (noindex), `sitemap.xml`, `robots.txt`, `llms.txt`, `llms-full.txt` e `assistente.json` (l'agente AI, vedi sotto). **Fa fallire
    il build** se una pagina esce senza `<h1>`: pubblicare pagine vuote in silenzio è peggio che non pubblicare.
 
 Il browser poi avvia l'app sopra l'HTML, come prima; la tendina di caricamento copre il passaggio.
@@ -115,6 +115,45 @@ Search Console (e in Bing Webmaster Tools); controllare che `robots.txt` rispond
 
 Deploy: Vercel (root del dominio; `vercel.json` reindirizza i vecchi indirizzi `/it/…`
 e `/en/…`) e GitHub Pages (`.github/workflows/deploy.yml`, con `BASE_PATH`).
+
+## L'agente AI del sito
+
+In ogni pagina, in basso a destra, c'è l'agente AI di Ready2Digital: risponde su quello che facciamo e, soprattutto,
+**fa il colloquio** a chi gestisce un'azienda (settore, problemi, processi che preoccupano, dove si perde tempo, dove
+se ne può guadagnare, strumenti usati), dà una prima lettura e propone di scrivere al team, con il modulo dei contatti
+già precompilato dal riassunto della conversazione. Si apre anche dalla fascia «Provalo adesso» (home e Agenti AI),
+da `openChat()` e con `?chat=1` nell'indirizzo.
+
+```
+components/Chat.tsx → /api/chat (api/chat.js, Vercel) → n8n «R2D CHAT SITO» → OpenRouter
+                                                        ↘ legge /assistente.json (regole + conoscenza)
+                                                        ↘ scrive le tabelle r2d_chat_sito e r2d_chat_diagnosi
+```
+
+- **Regole e conoscenza stanno nel repository, non in n8n.** `src/assistant.ts` contiene le regole dell'agente
+  (`RULES`), i testi della chat e costruisce `/assistente.json` al build: per ogni lingua tutto il contenuto del
+  sito (lo stesso di `llms-full.txt`) e l'elenco degli indirizzi a cui può mandare. Si cambia una pagina o una
+  regola, si pubblica, e l'agente lo sa: nessuna seconda copia da tenere in pari. `src/approach.ts` è «Come
+  lavoriamo, in dettaglio», i principi ricavati dai progetti (senza dati dei clienti), anche in `llms-full.txt`.
+- **n8n fa da motore**: controlla la chiave, applica i limiti (per visitatore e al giorno), legge
+  `/assistente.json` (se non risponde ripiega su `llms-full.txt` con regole minime), chiama il modello su OpenRouter
+  con la riservatezza dei dati (`provider.zdr`) e la cache del prompt, e **controlla la risposta**: un link che non
+  è nell'elenco non diventa mai un pulsante. Il modello si cambia in una riga del nodo «Componi la richiesta».
+- **Dove finiscono le chat** (n8n → Data tables, progetto personale):
+  - `r2d_chat_sito`: una riga per ogni domanda e risposta (sessione, pagina, link, esito, token);
+  - `r2d_chat_diagnosi`: una riga per conversazione, aggiornata a ogni messaggio, con quello che il visitatore ha
+    detto della sua azienda (settore, dimensione, ruolo, problemi, processi, tempo perso, opportunità, strumenti,
+    fase del colloquio, riassunto, contatto proposto). È il materiale per preparare la prima telefonata.
+  - Ogni notte si cancella quello che ha più di 12 mesi, come dice l'informativa. Nessun nome, email o telefono:
+    la chat non li chiede, e il profilo non li deve contenere.
+- **Il microfono** usa il riconoscimento vocale del browser (Chrome, Edge, Safari): il testo compare nel campo
+  mentre si parla e lo si manda a mano. Dove il browser non lo ha (Firefox) il pulsante non c'è. A noi arriva solo
+  il testo.
+- **Variabili d'ambiente su Vercel** (produzione e anteprime): `CHAT_WEBHOOK_URL` (il webhook di produzione del
+  workflow) e `CHAT_WEBHOOK_KEY` (la chiave che il workflow controlla, segreta). Senza, `/api/chat` risponde 503 e
+  la chat propone il modulo dei contatti: il sito non si rompe mai per colpa dell'agente.
+- **Per provare in locale** `npm run dev` non ha `/api/chat`: la chat risponde con il messaggio d'errore. Serve
+  `vercel dev`, oppure una prova diretta del workflow da n8n.
 
 ## Modulo contatti e privacy
 

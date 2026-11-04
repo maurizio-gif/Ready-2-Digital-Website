@@ -7,6 +7,7 @@ import { AccessControl, Integrations, TechStack } from './Tech';
 import { Link, NextPage, PageHero } from './Nav';
 import { privacyText } from '../legal';
 import { AgentsTeaser } from './Agents';
+import { TryAgent } from './Chat';
 
 import { SocialLinks } from './Social';
 import { FaqSection } from './Faq';
@@ -67,6 +68,7 @@ export function HomePage({ t, lang, ready }: { t: Copy; lang: Lang; ready: boole
       </section>
 
       <AgentsTeaser lang={lang} />
+      <TryAgent lang={lang} />
 
       <section className="section teaser">
         <div className="container">

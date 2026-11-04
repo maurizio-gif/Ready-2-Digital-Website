@@ -2,6 +2,7 @@ import type { Lang } from '../content';
 import { agents } from '../agents';
 import { pages, NEXT } from '../pages';
 import { Link, NextPage, PageHero } from './Nav';
+import { TryAgent } from './Chat';
 
 // Line icons for the four families, drawn on the same 24-unit grid as the
 // service icons in Sections.tsx.
@@ -220,6 +221,9 @@ export function AgentsPage({ lang }: { lang: Lang }) {
           </div>
         </div>
       </section>
+
+      {/* This site's own agent: the proof you can try right here. */}
+      <TryAgent lang={lang} />
 
       {/* Where they already run. */}
       <section className="section agents-proof">
