@@ -137,8 +137,11 @@ components/Chat.tsx → /api/chat (api/chat.js, Vercel) → n8n «R2D CHAT SITO�
   lavoriamo, in dettaglio», i principi ricavati dai progetti (senza dati dei clienti), anche in `llms-full.txt`.
 - **n8n fa da motore**: controlla la chiave, applica i limiti (per visitatore e al giorno), legge
   `/assistente.json` (se non risponde ripiega su `llms-full.txt` con regole minime), chiama il modello su OpenRouter
-  con la riservatezza dei dati (`provider.zdr`) e la cache del prompt, e **controlla la risposta**: un link che non
-  è nell'elenco non diventa mai un pulsante. Il modello si cambia in una riga del nodo «Componi la richiesta».
+  con la riservatezza dei dati (`provider.zdr`) e la cache del prompt, e **controlla la risposta** prima di
+  mandarla al sito. Il modello lo sceglie `MODEL` in `src/assistant.ts`, fra quelli che il workflow ammette.
+- **La chat è conversazionale pura**: nessun link alle pagine del sito nelle risposte (il prompt lo vieta e la chat
+  non li disegnerebbe comunque), solo i messaggi suggeriti da toccare e, quando il visitatore lo vuole, il passaggio
+  al team con il modulo già compilato.
 - **Dove finiscono le chat** (n8n → Data tables, progetto personale):
   - `r2d_chat_sito`: una riga per ogni domanda e risposta (sessione, pagina, link, esito, token);
   - `r2d_chat_diagnosi`: una riga per conversazione, aggiornata a ogni messaggio, con quello che il visitatore ha

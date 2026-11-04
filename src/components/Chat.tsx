@@ -23,6 +23,9 @@
 // The conversation lives in sessionStorage: it survives moving between pages and a
 // reload, and ends with the tab. Nothing is written to localStorage or cookies.
 // Other parts of the site open the chat with openChat(), optionally with a question.
+//
+// The chat is a pure conversation: answers carry no links to the site's pages, only suggested
+// replies to tap (and, when the visitor wants it, the hand-over to the team).
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Lang } from '../content';
@@ -196,6 +199,18 @@ function Rich({ text, fresh }: { text: string; fresh?: boolean }) {
   return <>{blocks}</>;
 }
 
+/**
+ * A suggested reply is something the VISITOR would send. A question addressed to the visitor
+ * («Quanti lead ti arrivano?», «What tools do you use?») is the agent's own question: tapped, it
+ * would be asked back to the agent and the conversation would loop. Those are dropped.
+ */
+const TO_VISITOR = /\b(ti|tu|tuo|tua|tuoi|tue|te|hai|sei|puoi|vuoi|usi|usate|fai|gestisci|avete|siete|vi|vostro|vostra|you|your|yours)\b/i;
+function asVisitor(d: unknown): d is string {
+  if (typeof d !== 'string') return false;
+  const s = d.trim();
+  return !!s && s.length <= 60 && !(s.endsWith('?') && TO_VISITOR.test(s));
+}
+
 function go(url: string) {
   const [path, hash] = url.split('#');
   const here = parse(window.location.pathname);
@@ -341,7 +356,7 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
             link: Array.isArray(data.link) ? data.link.filter((l: Link) => l && typeof l.url === 'string' && l.url.startsWith('/')).slice(0, 2) : [],
             azione: data.azione === 'contatti' ? 'contatti' : null,
             riassunto: typeof data.riassunto === 'string' ? data.riassunto : null,
-            domande: Array.isArray(data.domande) ? data.domande.filter((d: unknown) => typeof d === 'string').slice(0, 3) : [],
+            domande: Array.isArray(data.domande) ? data.domande.filter(asVisitor).slice(0, 2) : [],
           };
         } else {
           reply = { ruolo: 'agente', testo: data && data.limite ? t.limit : t.error, azione: 'contatti', errore: true };
@@ -653,22 +668,10 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
                   )}
                 </button>
               )}
-              {m.ruolo === 'agente' && ((m.link && m.link.length > 0) || m.azione === 'contatti') && (
+              {/* Pure conversation: no links to the site's pages, even if the workflow sent some. The only
+                  button is the hand-over to the team, which opens the contact form with the summary. */}
+              {m.ruolo === 'agente' && m.azione === 'contatti' && (
                 <div className="chat__actions">
-                  {m.link?.map((l) => (
-                    <a
-                      key={l.url}
-                      href={href(l.url)}
-                      className="chat__link"
-                      onClick={(e) => {
-                        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-                        e.preventDefault();
-                        follow(l.url);
-                      }}
-                    >
-                      {l.titolo} <span aria-hidden="true">→</span>
-                    </a>
-                  ))}
                   {m.azione === 'contatti' && (
                     <button type="button" className="chat__link chat__link--cta" onClick={() => toContact(m)}>
                       {t.contact} <span aria-hidden="true">→</span>
