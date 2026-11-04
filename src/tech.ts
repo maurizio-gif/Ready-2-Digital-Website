@@ -419,7 +419,7 @@ export const integrationList: Integration[] = [
   { id: 'abc-glofox', name: 'ABC Glofox', by: { it: 'Gruppo ABC Fitness', en: 'ABC Fitness group' }, via: 'api', logo: { src: 'images/partners/abc-glofox.png', w: 507, h: 160, wordmark: true, onLight: true } },
   { id: 'sportrick', name: 'SportRick', by: { it: 'Prodotto Zucchetti', en: 'A Zucchetti product' }, via: 'api', logo: { src: 'images/partners/sportrick-white.svg', w: 305, h: 61, wordmark: true } },
   { id: 'gymnasium', name: 'InforYou Gymnasium', by: { it: 'TeamSystem', en: 'TeamSystem' }, via: 'sql', logo: { src: 'images/partners/teamsystem.png', w: 120, h: 120 } },
-  { id: 'technogym', name: 'Technogym', by: { it: 'Anche Technogym App', en: 'Technogym App too' }, via: 'api' },
+  { id: 'technogym', name: 'Technogym', by: { it: 'Anche Technogym App', en: 'Technogym App too' }, via: 'api', logo: { src: 'images/partners/technogym.png', w: 372, h: 103, wordmark: true } },
 ];
 
 export const integrations: Record<Lang, { kicker: string; title: string; lead: string; via: { api: string; sql: string }; note: string }> = {
