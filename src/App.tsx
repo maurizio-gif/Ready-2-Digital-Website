@@ -276,7 +276,6 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
       <div className="wipe" ref={wipe} aria-hidden="true">
         <Mark size={44} dot="#0D0D0D" color="#FFFFFF" />
       </div>
-      <Cursor />
       <Header t={t} route={route} menu={menu} setMenu={setMenu} />
       <main key={routeKey}>{page}</main>
       <Footer t={t} lang={lang} />
@@ -524,44 +523,5 @@ function Curtain({ ready }: { ready: boolean }) {
     <div className={`curtain${ready ? ' is-up' : ''}`} aria-hidden="true">
       <span className="curtain__dot" />
     </div>
-  );
-}
-
-function Cursor() {
-  const dot = useRef<HTMLDivElement>(null);
-  const ring = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!window.matchMedia('(pointer: fine)').matches) return;
-    document.documentElement.classList.add('has-cursor');
-    const xd = gsap.quickTo(dot.current, 'x', { duration: 0.12, ease: 'power3' });
-    const yd = gsap.quickTo(dot.current, 'y', { duration: 0.12, ease: 'power3' });
-    const xr = gsap.quickTo(ring.current, 'x', { duration: 0.55, ease: 'power3' });
-    const yr = gsap.quickTo(ring.current, 'y', { duration: 0.55, ease: 'power3' });
-    const move = (e: PointerEvent) => {
-      document.documentElement.classList.add('cursor-moved');
-      xd(e.clientX);
-      yd(e.clientY);
-      xr(e.clientX);
-      yr(e.clientY);
-      const hot = (e.target as HTMLElement).closest('a, button, [role="slider"], input, textarea, .svc, .case');
-      ring.current?.classList.toggle('is-hot', !!hot);
-    };
-    const down = () => ring.current?.classList.add('is-down');
-    const up = () => ring.current?.classList.remove('is-down');
-    window.addEventListener('pointermove', move);
-    window.addEventListener('pointerdown', down);
-    window.addEventListener('pointerup', up);
-    return () => {
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerdown', down);
-      window.removeEventListener('pointerup', up);
-      document.documentElement.classList.remove('has-cursor');
-    };
-  }, []);
-  return (
-    <>
-      <div className="cursor-ring" ref={ring} aria-hidden="true" />
-      <div className="cursor-dot" ref={dot} aria-hidden="true" />
-    </>
   );
 }
