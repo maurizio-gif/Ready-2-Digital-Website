@@ -280,7 +280,7 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
       <Header t={t} route={route} menu={menu} setMenu={setMenu} />
       <main key={routeKey}>{page}</main>
       <Footer t={t} lang={lang} />
-      <Chat lang={lang} />
+      <Chat lang={lang} page={route.page} routeKey={routeKey} />
     </>
   );
 }

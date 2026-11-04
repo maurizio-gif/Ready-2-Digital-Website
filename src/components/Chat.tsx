@@ -11,6 +11,10 @@
 // Edge, Safari on Mac and iPhone). Words appear in the field while you speak, and you
 // send them yourself. Where the browser has no recognition the button is not shown.
 //
+// Leaving the home page for another page, the chat opens by itself after three seconds,
+// once per visit (on a phone only the launcher's question appears); while closed, the
+// launcher waves every few seconds to draw the eye.
+//
 // The conversation lives in sessionStorage: it survives moving between pages and a
 // reload, and ends with the tab. Nothing is written to localStorage or cookies.
 // Other parts of the site open the chat with openChat(), optionally with a question.
@@ -20,7 +24,7 @@ import type { Lang } from '../content';
 import { chatCopy } from '../assistant';
 import { MARK, R } from '../lib/mark';
 import { Mark } from './Mark';
-import { href, navigate, parse, pathFor } from '../router';
+import { href, navigate, parse, pathFor, type Page } from '../router';
 
 type Link = { url: string; titolo: string };
 type Msg = { ruolo: 'utente' | 'agente'; testo: string; link?: Link[]; azione?: 'contatti' | null; riassunto?: string | null; domande?: string[]; errore?: boolean };
@@ -29,6 +33,25 @@ type Saved = { sessione: string; messaggi: Msg[] };
 const KEY = 'r2d:chat';
 const DRAFT = 'r2d:progetto';
 const TEASED = 'r2d:chat-teaser';
+const AUTO = 'r2d:chat-auto'; // set once the chat has opened by itself, or the visitor has opened or closed it: no automatic opening after that
+// Pages where the chat never opens by itself: the contact form and the privacy notice need the whole screen.
+const NO_AUTO: Page[] = ['home', 'contatti', 'privacy'];
+const AUTO_DELAY = 3000;
+
+const flag = (k: string) => {
+  try {
+    return !!sessionStorage.getItem(k);
+  } catch {
+    return true; // no storage: behave as if it had already happened, never nag
+  }
+};
+const setFlag = (k: string) => {
+  try {
+    sessionStorage.setItem(k, '1');
+  } catch {
+    /* nothing to remember */
+  }
+};
 const ENDPOINT = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/chat`;
 const OPEN_EVENT = 'r2d:chat';
 
@@ -155,7 +178,7 @@ function go(url: string) {
 /* The chat                                                            */
 /* ------------------------------------------------------------------ */
 
-export function Chat({ lang }: { lang: Lang }) {
+export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKey: string }) {
   const t = chatCopy[lang];
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<Saved>({ sessione: '', messaggi: [] });
@@ -173,6 +196,10 @@ export function Chat({ lang }: { lang: Lang }) {
   const stateRef = useRef(state);
   stateRef.current = state;
   const busyRef = useRef(false);
+  const openRef = useRef(open);
+  openRef.current = open;
+  const auto = useRef(false); // the panel was opened by the site, not by the visitor: don't take the focus
+  const lastPage = useRef<Page | null>(null);
 
   useEffect(() => {
     setState(load());
@@ -275,6 +302,7 @@ export function Chat({ lang }: { lang: Lang }) {
   // Opened from elsewhere on the page (openChat), or with ?chat=1 in the address.
   useEffect(() => {
     const onOpen = (e: Event) => {
+      setFlag(AUTO);
       setOpen(true);
       const q = (e as CustomEvent<{ domanda?: string }>).detail?.domanda;
       if (q) setTimeout(() => send(q), 80);
@@ -286,20 +314,10 @@ export function Chat({ lang }: { lang: Lang }) {
 
   // Once per visit, a few seconds in, the launcher asks its question.
   useEffect(() => {
-    let seen = false;
-    try {
-      seen = !!sessionStorage.getItem(TEASED);
-    } catch {
-      seen = true;
-    }
-    if (seen) return;
+    if (flag(TEASED)) return;
     const show = setTimeout(() => {
       setTeaser(true);
-      try {
-        sessionStorage.setItem(TEASED, '1');
-      } catch {
-        /* shown once on this page anyway */
-      }
+      setFlag(TEASED);
     }, 6000);
     const hide = setTimeout(() => setTeaser(false), 16000);
     return () => {
@@ -307,6 +325,27 @@ export function Chat({ lang }: { lang: Lang }) {
       clearTimeout(hide);
     };
   }, []);
+
+  // From the home page to another page: after three seconds there, the chat opens by itself, once per visit.
+  // Not if the visitor has already opened or closed it, not over the contact form, and on a phone (where the
+  // panel would take the whole screen) only the launcher's question appears.
+  useEffect(() => {
+    const from = lastPage.current;
+    lastPage.current = page;
+    if (from !== 'home' || NO_AUTO.includes(page) || flag(AUTO)) return;
+    const tm = setTimeout(() => {
+      if (openRef.current || flag(AUTO) || stateRef.current.messaggi.length) return;
+      setFlag(AUTO);
+      if (window.matchMedia('(max-width: 640px)').matches) {
+        setTeaser(true);
+        setTimeout(() => setTeaser(false), 12000);
+        return;
+      }
+      auto.current = true;
+      setOpen(true);
+    }, AUTO_DELAY);
+    return () => clearTimeout(tm);
+  }, [routeKey, page]);
 
   // Focus the field when the panel opens, give it back to the launcher when it closes; Escape closes.
   useEffect(() => {
@@ -317,10 +356,12 @@ export function Chat({ lang }: { lang: Lang }) {
     }
     setTeaser(false);
     const tm = setTimeout(() => {
-      if (window.matchMedia('(pointer: fine)').matches) input.current?.focus({ preventScroll: true });
+      if (!auto.current && window.matchMedia('(pointer: fine)').matches) input.current?.focus({ preventScroll: true });
+      auto.current = false;
     }, 260);
     const esc = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
+      setFlag(AUTO);
       setOpen(false);
       launcher.current?.focus();
     };
@@ -371,11 +412,29 @@ export function Chat({ lang }: { lang: Lang }) {
     <>
       <div className={`chat-dock${open ? ' is-hidden' : ''}`}>
         {teaser && (
-          <button type="button" className="chat-teaser" onClick={() => setOpen(true)}>
+          <button
+            type="button"
+            className="chat-teaser"
+            onClick={() => {
+              setFlag(AUTO);
+              setOpen(true);
+            }}
+          >
             {t.teaser}
           </button>
         )}
-        <button type="button" ref={launcher} className="chat-launch" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open} aria-controls="chat-panel">
+        <button
+          type="button"
+          ref={launcher}
+          className="chat-launch"
+          onClick={() => {
+            setFlag(AUTO);
+            setOpen(true);
+          }}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          aria-controls="chat-panel"
+        >
           <span className="chat-launch__orb" aria-hidden="true">
             <Face size={20} />
           </span>
@@ -408,6 +467,7 @@ export function Chat({ lang }: { lang: Lang }) {
             type="button"
             className="chat__icon"
             onClick={() => {
+              setFlag(AUTO);
               setOpen(false);
               launcher.current?.focus();
             }}
