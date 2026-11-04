@@ -12,6 +12,7 @@ import { copy, type Lang } from './content';
 import { pages } from './pages';
 import { cases } from './cases';
 import { agents } from './agents';
+import { access } from './tech';
 import { COMPANY, SOCIAL } from './legal';
 import { pathFor, type Page } from './router';
 import { SITE_URL, abs } from './site';
@@ -168,6 +169,9 @@ function fullFor(lang: Lang): string[] {
 
   h2(l.tech);
   p.compliance.items.forEach((c) => out.push(`- **${c.t}**: ${c.d}`));
+  const ac = access[lang];
+  out.push('', `### ${ac.kicker}: ${ac.title}`, '', ac.lead, '', `${ac.how}:`);
+  ac.steps.forEach((s, i) => out.push(`${i + 1}. **${s.t}** (${s.role}): ${s.d}`));
   out.push('', `${l.stack}: ${t.stack.join(', ')}.`);
 
   h2(l.work);

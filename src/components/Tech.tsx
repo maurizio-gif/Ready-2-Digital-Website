@@ -1,5 +1,5 @@
 import type { Lang } from '../content';
-import { stack, tech, techUi } from '../tech';
+import { access, stack, tech, techUi } from '../tech';
 
 /** Layers stacked top to bottom, with data dots flowing between them. */
 function LayerStack({ layers, rich }: { layers: { name: string; d?: string; items: (string | { t: string; d: string })[] }[]; rich?: boolean }) {
@@ -61,6 +61,57 @@ export function TechStack({ lang, head = true }: { lang: Lang; head?: boolean })
           </div>
         )}
         <LayerStack layers={s.layers} rich />
+      </div>
+    </section>
+  );
+}
+
+/** Technology page: access control with a pass in the phone's Wallet, and how that pass works. */
+export function AccessControl({ lang }: { lang: Lang }) {
+  const a = access[lang];
+  return (
+    <section className="section tech access" id="controllo-accessi">
+      <div className="container">
+        <div className="section__head">
+          <p className="kicker" data-reveal>
+            {a.kicker}
+          </p>
+          <h2 className="h-xl" data-split>
+            {a.title}
+          </h2>
+          <p className="lead" data-reveal>
+            {a.lead}
+          </p>
+        </div>
+        <ol className="access__chain" data-reveal>
+          {a.chain.map((c, i) => (
+            <li key={c.t} className="access__node">
+              <strong>{c.t}</strong>
+              <span>{c.d}</span>
+              {i < a.chain.length - 1 && (
+                <i className="access__arrow" aria-hidden="true">
+                  →
+                </i>
+              )}
+            </li>
+          ))}
+        </ol>
+        <p className="tech__sub" data-reveal>
+          {a.how}
+        </p>
+        <div className="parts">
+          {a.steps.map((s, i) => (
+            <article key={s.t} className="part card-3d" data-card data-tilt="6">
+              <span className="part__n">{String(i + 1).padStart(2, '0')}</span>
+              <h3 className="part__t">{s.t}</h3>
+              <p className="part__role">{s.role}</p>
+              <p className="part__d">{s.d}</p>
+            </article>
+          ))}
+        </div>
+        <p className="access__note" data-reveal>
+          {a.note}
+        </p>
       </div>
     </section>
   );
