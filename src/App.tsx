@@ -227,9 +227,13 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
     return () => window.removeEventListener('pointermove', move);
   }, []);
 
+  // With the phone menu open the page behind must not move: Lenis stops, and the
+  // page itself stops scrolling (the menu scrolls on its own when it is taller than the screen).
   useEffect(() => {
     if (menu) lenis?.stop();
     else lenis?.start();
+    document.documentElement.classList.toggle('menu-open', menu);
+    return () => document.documentElement.classList.remove('menu-open');
   }, [menu]);
 
   let page: React.ReactNode;
@@ -330,6 +334,9 @@ function Header({ t, route, menu, setMenu }: { t: Copy; route: Route; menu: bool
   const p = pages[lang];
   const [open, setOpen] = useState<Page | null>(null);
   const closeTimer = useRef<number>(0);
+  const burger = useRef<HTMLButtonElement>(null);
+  const menuOpen = useRef(menu);
+  menuOpen.current = menu;
 
   useEffect(() => {
     let last = 0;
@@ -357,15 +364,32 @@ function Header({ t, route, menu, setMenu }: { t: Copy; route: Route; menu: bool
     if (open !== 'progetti') return;
     document.querySelectorAll('.mega__case').forEach((el) => el.dispatchEvent(new Event('logo:play')));
   }, [open]);
+  // Escape closes the mega panels and the phone menu (and hands the focus back to the burger).
   useEffect(() => {
-    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(null);
+    const esc = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      setOpen(null);
+      if (menuOpen.current) {
+        setMenu(false);
+        burger.current?.focus();
+      }
+    };
     window.addEventListener('keydown', esc);
     return () => window.removeEventListener('keydown', esc);
-  }, []);
+  }, [setMenu]);
+  // Turning the phone or tablet sideways can cross the breakpoint where the burger
+  // disappears: the full-screen menu must not stay behind with no button to close it.
+  useEffect(() => {
+    const wide = window.matchMedia('(min-width: 1101px)');
+    const close = () => wide.matches && setMenu(false);
+    wide.addEventListener('change', close);
+    return () => wide.removeEventListener('change', close);
+  }, [setMenu]);
 
   const other: Lang = lang === 'it' ? 'en' : 'it';
   const active = route.page === 'caso' ? 'progetti' : route.page;
-  const hover = (pg: Page | null) => {
+  const menuItems = [{ page: 'home' as Page, label: 'Home' }, ...p.menu.items, { page: 'contatti' as Page, label: p.menu.contact }];
+  const hover =(pg: Page | null) => {
     window.clearTimeout(closeTimer.current);
     if (pg) setOpen(pg);
     else closeTimer.current = window.setTimeout(() => setOpen(null), 160);
@@ -407,7 +431,7 @@ function Header({ t, route, menu, setMenu }: { t: Copy; route: Route; menu: bool
             <Link page="contatti" lang={lang} className="btn btn--sm magnetic header__cta">
               {t.nav.cta}
             </Link>
-            <button type="button" className="burger" aria-expanded={menu} aria-label={menu ? t.nav.close : t.nav.menu} onClick={() => setMenu(!menu)}>
+            <button type="button" className="burger" ref={burger} aria-expanded={menu} aria-controls="menu" aria-label={menu ? t.nav.close : t.nav.menu} onClick={() => setMenu(!menu)}>
               <span />
               <span />
             </button>
@@ -460,17 +484,34 @@ function Header({ t, route, menu, setMenu }: { t: Copy; route: Route; menu: bool
         </div>
       </header>
 
-      <div className={`menu${menu ? ' is-open' : ''}`} aria-hidden={!menu} data-lenis-prevent>
-        <nav className="container menu__nav">
-          {[{ page: 'home' as Page, label: 'Home' }, ...p.menu.items, { page: 'contatti' as Page, label: p.menu.contact }].map((n, i) => (
+      {/* `inert` while closed: hidden from screen readers and out of the tab order, no tabIndex juggling. */}
+      <div id="menu" className={`menu${menu ? ' is-open' : ''}`} inert={!menu} data-lenis-prevent>
+        <nav className="container menu__nav" aria-label="Menu">
+          {menuItems.map((n, i) => (
             <div key={n.page}>
-              <Link page={n.page} lang={lang} tabIndex={menu ? 0 : -1} style={{ transitionDelay: menu ? `${0.08 + i * 0.05}s` : '0s' }} className={active === n.page ? 'is-active' : undefined}>
+              {/* onClick: tapping the page you are already on does not change the route, so the menu would stay open. */}
+              <Link
+                page={n.page}
+                lang={lang}
+                onClick={() => setMenu(false)}
+                aria-current={active === n.page ? 'page' : undefined}
+                style={{ transitionDelay: menu ? `${0.08 + i * 0.05}s` : '0s' }}
+                className={active === n.page ? 'is-active' : undefined}
+              >
                 <small>{String(i + 1).padStart(2, '0')}</small>
                 {n.label}
               </Link>
             </div>
           ))}
         </nav>
+        {/* The header's "Parliamone" button is hidden on phones: it lives here instead, with the LinkedIn links. */}
+        <div className="container menu__foot" style={{ transitionDelay: menu ? `${0.08 + menuItems.length * 0.05}s` : '0s' }}>
+          <Link page="contatti" lang={lang} onClick={() => setMenu(false)} className="btn btn--big menu__cta">
+            {t.nav.cta}
+            <span className="btn__arrow">→</span>
+          </Link>
+          <SocialLinks lang={lang} names />
+        </div>
       </div>
     </>
   );
