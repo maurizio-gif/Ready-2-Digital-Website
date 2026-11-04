@@ -1924,6 +1924,40 @@ button {
   margin: 0 0 28px;
   max-width: 18ch;
 }
+.case-site {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin: 24px 0 28px;
+  padding: 8px 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(13, 13, 13, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  font-size: 14px;
+  transition: border-color 0.3s, color 0.3s;
+}
+.case-site span:first-child {
+  color: var(--muted);
+}
+.case-site strong {
+  font-weight: 600;
+}
+.case-site i {
+  font-style: normal;
+  color: var(--orange);
+  transition: transform 0.3s var(--ease);
+}
+.case-site:hover,
+.case-site:focus-visible {
+  border-color: var(--orange);
+}
+.case-site:hover i,
+.case-site:focus-visible i {
+  transform: translate(2px, -2px);
+}
 .case-hero__intro {
   max-width: 60ch;
   color: var(--muted);
@@ -5381,7 +5415,8 @@ img[src*='passion-mark'] {
 }
 @media (max-width: 700px) {
   .real__grid {
-    grid-template-columns: 1fr;
+    /* minmax(0, …): a plain 1fr never shrinks below the widest card inside, and one of them widened the whole page. */
+    grid-template-columns: minmax(0, 1fr);
     gap: 36px;
   }
   .rs,

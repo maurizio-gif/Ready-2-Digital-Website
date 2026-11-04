@@ -68,6 +68,14 @@ export function CasePage({ c, lang }: { c: Case; lang: Lang }) {
           <p className="case-hero__intro" data-fade>
             {c.intro}
           </p>
+          {c.site && (
+            <a className="case-site" href={c.site} target="_blank" rel="noopener noreferrer" data-fade>
+              <span>{ui.visit}</span>{' '}
+              <strong>{c.site.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</strong>
+              <i aria-hidden="true">↗</i>{' '}
+              <span className="sr-only"> ({ui.newTab})</span>
+            </a>
+          )}
           <div className="case-metrics" data-fade>
             {c.metrics.map((m) => (
               <div key={m.l}>

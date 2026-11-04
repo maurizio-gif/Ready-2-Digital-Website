@@ -27,6 +27,8 @@ export type Extract =
 export type Case = {
   slug: string;
   client: string;
+  /** The client's website, when we built or rebuilt it: shown as a link on the case page. */
+  site?: string;
   sector: string;
   logo: string;
   img: string;
@@ -48,6 +50,7 @@ const MONTHS_EN = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'
 const it: Case[] = [
   {
     slug: 'athlon',
+    site: 'https://www.athlonroma.it',
     client: 'Athlon Club 4.0',
     sector: 'Club sportivo multi-attività · Roma',
     logo: 'images/work/logos/athlon-mark.svg',
@@ -226,6 +229,7 @@ const it: Case[] = [
   },
   {
     slug: 'ronchiverdi',
+    site: 'https://www.ronchiverdi.it',
     client: 'Ronchiverdi Sport Club',
     sector: 'Sport club · nuoto, tennis, padel, fitness',
     logo: 'images/work/logos/ronchiverdi-mark.png',
@@ -411,6 +415,7 @@ const it: Case[] = [
   },
   {
     slug: 'passion-fitness',
+    site: 'https://www.passionfitness.it',
     client: 'Passion Fitness',
     sector: 'Palestra',
     logo: 'images/work/logos/passion-mark.svg',
@@ -712,6 +717,8 @@ export const caseUi = {
     cta: 'Hai un processo simile?',
     ctaBtn: 'Parliamone',
     open: 'Guarda il caso',
+    visit: 'Visita il sito',
+    newTab: 'si apre in una nuova scheda',
   },
   en: {
     back: 'All projects',
@@ -727,5 +734,7 @@ export const caseUi = {
     cta: 'Got a similar process?',
     ctaBtn: 'Let’s talk',
     open: 'See the case',
+    visit: 'Visit the site',
+    newTab: 'opens in a new tab',
   },
 };
