@@ -83,6 +83,14 @@ export function AccessControl({ lang }: { lang: Lang }) {
             {a.lead}
           </p>
         </div>
+        <div className="access__partners" data-reveal>
+          <span className="access__logo">
+            <img src={`${import.meta.env.BASE_URL}images/partners/dot-origin-logo.svg`} alt={a.partners.dot} width="593" height="93" loading="lazy" />
+          </span>
+          <span className="access__logo access__logo--vtap">
+            <img src={`${import.meta.env.BASE_URL}images/partners/vtap-reader.png`} alt={a.partners.vtap} width="225" height="400" loading="lazy" />
+          </span>
+        </div>
         <ol className="access__chain" data-reveal>
           {a.chain.map((c, i) => (
             <li key={c.t} className="access__node">

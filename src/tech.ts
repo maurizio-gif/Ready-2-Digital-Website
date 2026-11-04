@@ -319,6 +319,8 @@ export type Access = {
   kicker: string;
   title: string;
   lead: string;
+  /** Alt text of the two partner images (public/images/partners). */
+  partners: { dot: string; vtap: string };
   /** The chain, left to right: pass, reader, system, gate. */
   chain: { t: string; d: string }[];
   how: string;
@@ -331,6 +333,7 @@ export const access: Record<Lang, Access> = {
     kicker: 'Controllo accessi',
     title: 'Il telefono al posto del badge.',
     lead: 'Un pass salvato in Apple Wallet o Google Wallet, un lettore accanto alla porta: avvicini il telefono e il varco si apre. Lavoriamo con Dot Origin, che produce i lettori VTAP compatibili con entrambi i Wallet, e siamo partner per l’emissione dei pass virtuali.',
+    partners: { dot: 'Dot Origin', vtap: 'Lettore VTAP di Dot Origin' },
     chain: [
       { t: 'Il pass', d: 'Nel Wallet dello smartphone' },
       { t: 'Il lettore', d: 'VTAP di Dot Origin' },
@@ -366,6 +369,7 @@ export const access: Record<Lang, Access> = {
     kicker: 'Access control',
     title: 'Your phone instead of a badge.',
     lead: 'A pass saved in Apple Wallet or Google Wallet, a reader next to the door: hold your phone up and the gate opens. We work with Dot Origin, which makes the VTAP readers compatible with both Wallets, and we are a partner for issuing the virtual passes.',
+    partners: { dot: 'Dot Origin', vtap: 'Dot Origin VTAP reader' },
     chain: [
       { t: 'The pass', d: 'In the phone’s Wallet' },
       { t: 'The reader', d: 'Dot Origin VTAP' },

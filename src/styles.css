@@ -3630,7 +3630,47 @@ button {
   color: var(--muted);
   font-size: 14px;
 }
-/* Access control: pass → reader → system → gate */
+/* Access control: the partners' logos, then pass → reader → system → gate */
+.access__partners {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 16px;
+  margin-bottom: clamp(36px, 5vw, 64px);
+}
+/* Both tiles light, the same height: the logos are drawn for a light ground. */
+.access__logo {
+  display: grid;
+  place-items: center;
+  padding: 12px 40px;
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--edge);
+}
+.access__logo img {
+  height: 32px;
+  width: auto;
+}
+.access__logo--vtap {
+  padding: 12px 28px;
+}
+.access__logo--vtap img {
+  height: 88px;
+}
+@media (max-width: 560px) {
+  .access__logo {
+    padding-inline: 24px;
+  }
+  .access__logo img {
+    height: 28px;
+  }
+  .access__logo--vtap {
+    padding-inline: 20px;
+  }
+  .access__logo--vtap img {
+    height: 88px;
+  }
+}
 .access__chain {
   list-style: none;
   margin: 0;
