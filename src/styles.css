@@ -3636,8 +3636,16 @@ button {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 16px;
+}
+.systems__grid > .sys {
+  grid-column: span 2;
+}
+/* Five tiles: three on the first row, the last two wider, so no hole is left. */
+.systems__grid > .sys:nth-child(4):nth-last-child(2),
+.systems__grid > .sys:nth-child(5):nth-last-child(1) {
+  grid-column: span 3;
 }
 .sys {
   position: relative;
@@ -3712,14 +3720,19 @@ button {
   text-transform: uppercase;
   color: var(--orange);
 }
+/* Two columns, then one. The selectors are as specific as the "last two wider" rule above, and come after it. */
 @media (max-width: 900px) {
-  .systems__grid {
-    grid-template-columns: repeat(2, 1fr);
+  .systems__grid > .sys:nth-child(n):nth-last-child(n) {
+    grid-column: span 3;
+  }
+  /* An odd one out takes the whole row. */
+  .systems__grid > .sys:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
 }
 @media (max-width: 560px) {
-  .systems__grid {
-    grid-template-columns: 1fr;
+  .systems__grid > .sys:nth-child(n):nth-last-child(n) {
+    grid-column: 1 / -1;
   }
 }
 

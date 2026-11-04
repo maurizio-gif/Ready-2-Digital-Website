@@ -416,10 +416,9 @@ export type Integration = {
 
 export const integrationList: Integration[] = [
   { id: 'perfectgym', name: 'PerfectGym', by: { it: 'Parte di Sport Alliance', en: 'Part of Sport Alliance' }, via: 'api', logo: { src: 'images/partners/perfectgym.svg', w: 515, h: 472 } },
-  { id: 'glofox', name: 'Glofox', by: { it: 'Oggi ABC Glofox', en: 'Now ABC Glofox' }, via: 'api' },
-  { id: 'abc', name: 'ABC Fitness', via: 'api' },
+  { id: 'abc-glofox', name: 'ABC Glofox', by: { it: 'Gruppo ABC Fitness', en: 'ABC Fitness group' }, via: 'api' },
   { id: 'sportrick', name: 'SportRick', by: { it: 'Prodotto Zucchetti', en: 'A Zucchetti product' }, via: 'api', logo: { src: 'images/partners/sportrick-white.svg', w: 305, h: 61, wordmark: true } },
-  { id: 'in4u', name: 'In4U', by: { it: 'TeamSystem', en: 'TeamSystem' }, via: 'sql', logo: { src: 'images/partners/teamsystem.png', w: 120, h: 120 } },
+  { id: 'gymnasium', name: 'InforYou Gymnasium', by: { it: 'TeamSystem', en: 'TeamSystem' }, via: 'sql', logo: { src: 'images/partners/teamsystem.png', w: 120, h: 120 } },
   { id: 'technogym', name: 'Technogym', by: { it: 'Anche Technogym App', en: 'Technogym App too' }, via: 'api' },
 ];
 
@@ -427,14 +426,14 @@ export const integrations: Record<Lang, { kicker: string; title: string; lead: s
   it: {
     kicker: 'Sistemi che integriamo',
     title: 'Il software che hai già, collegato.',
-    lead: 'Non serve cambiare gestionale: ci colleghiamo a quello che usi e i dati arrivano nello stesso posto. Con la maggior parte di questi sistemi passiamo dalle loro API; con In4U la connessione la facciamo dal server SQL.',
+    lead: 'Non serve cambiare gestionale: ci colleghiamo a quello che usi e i dati arrivano nello stesso posto. Con la maggior parte di questi sistemi passiamo dalle loro API; con InforYou Gymnasium la connessione la facciamo dal server SQL.',
     via: { api: 'Via API', sql: 'Da server SQL' },
     note: 'Marchi e loghi appartengono ai rispettivi proprietari.',
   },
   en: {
     kicker: 'Systems we integrate',
     title: 'The software you already have, connected.',
-    lead: 'No need to change your back office: we connect to what you use and the data lands in the same place. With most of these systems we go through their APIs; with In4U the connection is made from the SQL server.',
+    lead: 'No need to change your back office: we connect to what you use and the data lands in the same place. With most of these systems we go through their APIs; with InforYou Gymnasium the connection is made from the SQL server.',
     via: { api: 'Via API', sql: 'From the SQL server' },
     note: 'Brands and logos belong to their respective owners.',
   },
