@@ -411,14 +411,16 @@ button {
   z-index: 40;
   background: var(--ink);
   clip-path: circle(0% at calc(100% - 40px) 38px);
-  transition: clip-path 0.9s var(--ease);
+  /* `visibility` waits for the circle to close, otherwise the menu vanishes without the closing animation. */
+  transition: clip-path 0.9s var(--ease), visibility 0s linear 0.9s;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   visibility: hidden;
 }
 .menu.is-open {
   clip-path: circle(150% at calc(100% - 40px) 38px);
   visibility: visible;
+  transition: clip-path 0.9s var(--ease), visibility 0s;
 }
 .menu__nav {
   display: flex;
@@ -429,21 +431,31 @@ button {
   font-family: var(--display);
   font-weight: 800;
   text-transform: uppercase;
-  font-size: clamp(44px, 12vw, 96px);
+  /* On a short screen (iPhone SE, a phone held sideways) the height decides, so the whole list still fits. */
+  font-size: clamp(36px, min(12vw, 7.2svh), 96px);
   line-height: 1;
   display: flex;
   align-items: baseline;
   gap: 16px;
+  /* A comfortable target for a thumb: at least 44px tall, the whole row is the link. */
+  min-height: 44px;
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 0.6s var(--ease), transform 0.8s var(--ease), color 0.3s;
+  -webkit-tap-highlight-color: transparent;
 }
 .menu.is-open .menu__nav a {
   opacity: 1;
   transform: none;
 }
-.menu__nav a:hover {
+/* Touch screens have no hover: the colour answers the finger while it presses. */
+.menu__nav a:active {
   color: var(--orange);
+}
+@media (hover: hover) {
+  .menu__nav a:hover {
+    color: var(--orange);
+  }
 }
 .menu__nav small {
   font-family: var(--mono);
@@ -3795,12 +3807,59 @@ button {
 }
 .menu {
   overflow-y: auto;
-  align-items: flex-start;
-  padding-top: 100px;
-  padding-bottom: 40px;
+  overscroll-behavior: contain;
+  padding-top: 92px;
+  padding-bottom: max(28px, calc(env(safe-area-inset-bottom) + 16px));
+}
+.menu > * {
+  flex: none;
 }
 .menu__nav a.is-active {
   color: var(--orange);
+}
+/* The foot of the menu: the call to action and the LinkedIn links, at the bottom of the screen
+   (or right under the list when the screen is short). */
+.menu__foot {
+  margin-top: auto;
+  padding-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--ease), transform 0.8s var(--ease);
+}
+.menu.is-open .menu__foot {
+  opacity: 1;
+  transform: none;
+}
+.menu__cta {
+  justify-content: space-between;
+  padding: 20px 28px;
+  font-size: 17px;
+  -webkit-tap-highlight-color: transparent;
+}
+.menu__foot .social {
+  justify-content: center;
+}
+/* Page behind the open menu stays still. */
+html.menu-open,
+html.menu-open body {
+  overflow: hidden;
+}
+/* The bar over the open menu is part of the menu: same colour, no frosted strip and no line across it.
+   It stays opaque because a short screen scrolls the list, and the entries must pass under the bar, not through the logo. */
+.header.is-menu,
+.header.is-solid.is-menu {
+  background: var(--ink);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom-color: transparent;
+  box-shadow: none;
+}
+.burger {
+  -webkit-tap-highlight-color: transparent;
 }
 .wipe {
   position: fixed;
