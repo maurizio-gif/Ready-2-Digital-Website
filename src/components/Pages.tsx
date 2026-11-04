@@ -3,7 +3,7 @@ import { pages, NEXT, SERVICE_IDS } from '../pages';
 import { Hero } from './Hero';
 import { Antithesis, Contact, Manifesto, Method, Modular, Origin, Sectors, Services, Work } from './Sections';
 import { Dots } from './Dots';
-import { AccessControl, TechStack } from './Tech';
+import { AccessControl, Integrations, TechStack } from './Tech';
 import { Link, NextPage, PageHero } from './Nav';
 import { privacyText } from '../legal';
 import { AgentsTeaser } from './Agents';
@@ -159,6 +159,7 @@ export function TechPage({ lang }: { lang: Lang }) {
     <>
       <PageHero kicker={h.kicker} title={h.title} sub={h.sub} />
       <TechStack lang={lang} head={false} />
+      <Integrations lang={lang} />
       <Dots variant="gooey" lines={lang === 'it' ? ['Ogni strato ha il suo ruolo.', 'Parlano tutti la stessa lingua.'] : ['Every layer has its role.', 'They all speak the same language.']} />
       <AccessControl lang={lang} />
       <section className="section compliance section--light">

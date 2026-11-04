@@ -402,3 +402,40 @@ export const access: Record<Lang, Access> = {
     note: 'Apple Wallet, Google Wallet and VTAP are trademarks of their respective owners.',
   },
 };
+
+/* The systems we connect to, with the way we connect: a section of the Technology page. */
+export type Integration = {
+  id: string;
+  name: string;
+  /** Who it belongs to, one line under the name. */
+  by?: Record<Lang, string>;
+  via: 'api' | 'sql';
+  /** The official logo file in public/images/partners. Without one the tile shows the initial. */
+  logo?: { src: string; w: number; h: number; /** The logo already spells the name. */ wordmark?: boolean };
+};
+
+export const integrationList: Integration[] = [
+  { id: 'perfectgym', name: 'PerfectGym', by: { it: 'Parte di Sport Alliance', en: 'Part of Sport Alliance' }, via: 'api', logo: { src: 'images/partners/perfectgym.svg', w: 515, h: 472 } },
+  { id: 'glofox', name: 'Glofox', by: { it: 'Oggi ABC Glofox', en: 'Now ABC Glofox' }, via: 'api' },
+  { id: 'abc', name: 'ABC Fitness', via: 'api' },
+  { id: 'sportrick', name: 'SportRick', by: { it: 'Prodotto Zucchetti', en: 'A Zucchetti product' }, via: 'api', logo: { src: 'images/partners/sportrick-white.svg', w: 305, h: 61, wordmark: true } },
+  { id: 'in4u', name: 'In4U', by: { it: 'TeamSystem', en: 'TeamSystem' }, via: 'sql', logo: { src: 'images/partners/teamsystem.png', w: 120, h: 120 } },
+  { id: 'technogym', name: 'Technogym', by: { it: 'Anche Technogym App', en: 'Technogym App too' }, via: 'api' },
+];
+
+export const integrations: Record<Lang, { kicker: string; title: string; lead: string; via: { api: string; sql: string }; note: string }> = {
+  it: {
+    kicker: 'Sistemi che integriamo',
+    title: 'Il software che hai già, collegato.',
+    lead: 'Non serve cambiare gestionale: ci colleghiamo a quello che usi e i dati arrivano nello stesso posto. Con la maggior parte di questi sistemi passiamo dalle loro API; con In4U la connessione la facciamo dal server SQL.',
+    via: { api: 'Via API', sql: 'Da server SQL' },
+    note: 'Marchi e loghi appartengono ai rispettivi proprietari.',
+  },
+  en: {
+    kicker: 'Systems we integrate',
+    title: 'The software you already have, connected.',
+    lead: 'No need to change your back office: we connect to what you use and the data lands in the same place. With most of these systems we go through their APIs; with In4U the connection is made from the SQL server.',
+    via: { api: 'Via API', sql: 'From the SQL server' },
+    note: 'Brands and logos belong to their respective owners.',
+  },
+};

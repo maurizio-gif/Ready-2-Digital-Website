@@ -1,5 +1,5 @@
 import type { Lang } from '../content';
-import { access, stack, tech, techUi } from '../tech';
+import { access, integrationList, integrations, stack, tech, techUi } from '../tech';
 
 /** Layers stacked top to bottom, with data dots flowing between them. */
 function LayerStack({ layers, rich }: { layers: { name: string; d?: string; items: (string | { t: string; d: string })[] }[]; rich?: boolean }) {
@@ -61,6 +61,47 @@ export function TechStack({ lang, head = true }: { lang: Lang; head?: boolean })
           </div>
         )}
         <LayerStack layers={s.layers} rich />
+      </div>
+    </section>
+  );
+}
+
+/** Technology page: the systems we connect to, with their logos and the way we connect (API or SQL server). */
+export function Integrations({ lang }: { lang: Lang }) {
+  const c = integrations[lang];
+  return (
+    <section className="section tech systems" id="integrazioni">
+      <div className="container">
+        <div className="section__head">
+          <p className="kicker" data-reveal>
+            {c.kicker}
+          </p>
+          <h2 className="h-xl" data-split>
+            {c.title}
+          </h2>
+          <p className="lead" data-reveal>
+            {c.lead}
+          </p>
+        </div>
+        <ul className="systems__grid">
+          {integrationList.map((s) => (
+            <li key={s.id} className="sys card-3d" data-card data-tilt="6">
+              <span className={`sys__mark${s.logo ? '' : ' sys__mark--initial'}`}>
+                {s.logo ? (
+                  <img src={`${import.meta.env.BASE_URL}${s.logo.src}`} alt={s.logo.wordmark ? s.name : ''} width={s.logo.w} height={s.logo.h} loading="lazy" className={s.logo.wordmark ? 'is-wordmark' : undefined} />
+                ) : (
+                  <span aria-hidden="true">{s.name[0]}</span>
+                )}
+              </span>
+              {!s.logo?.wordmark && <strong className="sys__name">{s.name}</strong>}
+              {s.by && <span className="sys__by">{s.by[lang]}</span>}
+              <span className={`sys__via sys__via--${s.via}`}>{c.via[s.via]}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="access__note" data-reveal>
+          {c.note}
+        </p>
       </div>
     </section>
   );
