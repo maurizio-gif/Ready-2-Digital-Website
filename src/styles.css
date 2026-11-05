@@ -3733,6 +3733,17 @@ button {
   }
 }
 
+/* Payment partners: the same tiles, each wordmark sized so the three read at one weight. */
+.sys__mark img.pay__logo--adyen {
+  height: 32px;
+}
+.sys__mark img.pay__logo--stripe {
+  height: 38px;
+}
+.sys__mark img.pay__logo--gocardless {
+  height: 24px;
+}
+
 /* Access control: the partners' logos, then pass → reader → system → gate */
 .access__partners {
   display: flex;
@@ -3822,7 +3833,8 @@ button {
   transform: translateY(-50%);
 }
 /* Four steps: two by two, never three and one left over. */
-.access .parts {
+.access .parts,
+.pay .parts {
   grid-template-columns: repeat(2, 1fr);
 }
 .access__note {
@@ -3838,7 +3850,8 @@ button {
     grid-template-columns: 1fr 1fr;
   }
   .access__chain,
-  .access .parts {
+  .access .parts,
+  .pay .parts {
     grid-template-columns: 1fr;
   }
   .access__chain {

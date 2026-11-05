@@ -438,3 +438,82 @@ export const integrations: Record<Lang, { kicker: string; title: string; lead: s
     note: 'Brands and logos belong to their respective owners.',
   },
 };
+
+/* Payment providers we are fully integrated with: a section of the Technology page. */
+export type PaymentProvider = {
+  id: string;
+  name: string;
+  /** What it is for, one line under the logo. */
+  what: Record<Lang, string>;
+  /** The official wordmark in public/images/partners, drawn for a dark ground. */
+  logo: { src: string; w: number; h: number };
+};
+
+export const paymentList: PaymentProvider[] = [
+  { id: 'adyen', name: 'Adyen', what: { it: 'Carte e wallet, online e al banco', en: 'Cards and wallets, online and in person' }, logo: { src: 'images/partners/adyen.svg', w: 80, h: 26 } },
+  { id: 'stripe', name: 'Stripe', what: { it: 'Carte, wallet e link per pagare', en: 'Cards, wallets and payment links' }, logo: { src: 'images/partners/stripe.svg', w: 60, h: 25 } },
+  { id: 'gocardless', name: 'GoCardless', what: { it: 'Addebito diretto su conto corrente', en: 'Direct debit from a bank account' }, logo: { src: 'images/partners/gocardless.svg', w: 120, h: 17 } },
+];
+
+export const payments: Record<Lang, { kicker: string; title: string; lead: string; badge: string; how: string; levels: { t: string; role: string; d: string }[]; note: string }> = {
+  it: {
+    kicker: 'Partner per i pagamenti',
+    title: 'Carta e conto corrente, già collegati.',
+    lead: 'Adyen e Stripe sono tra i principali player al mondo per i pagamenti con carta, GoCardless per gli addebiti diretti su conto corrente. Siamo completamente integrati con tutti e tre: nell’interfaccia che usano clienti e staff, nell’automazione di addebiti e bill run, e in ogni tipo di connessione tra i loro sistemi e i tuoi.',
+    badge: 'Integrazione completa',
+    how: 'Dove arriva l’integrazione',
+    levels: [
+      {
+        t: 'Interfaccia utente',
+        role: 'Il pagamento dentro le tue schermate',
+        d: 'Checkout, salvataggio della carta, attivazione del mandato SEPA, pagamento con un link: tutto dentro il sito, l’app o il totem, con la tua grafica. Lo staff vede pagamenti, insoluti e rimborsi nel CRM, accanto al cliente.',
+      },
+      {
+        t: 'Addebiti automatici',
+        role: 'Ricorrenti, senza toccare nulla',
+        d: 'Quote, rate e rinnovi partono da soli alla scadenza, su carta o su conto. Se un addebito non va a buon fine, il sistema riprova, avvisa il cliente e segnala il caso allo staff.',
+      },
+      {
+        t: 'Bill run',
+        role: 'Il ciclo di fatturazione, in un colpo',
+        d: 'A fine periodo il sistema calcola quanto deve ciascun cliente, prepara gli addebiti e li invia tutti insieme al provider giusto. Poi registra gli esiti e li riconcilia con contratti e fatture.',
+      },
+      {
+        t: 'Ogni connessione',
+        role: 'API, webhook, riconciliazione',
+        d: 'Pagamenti, rimborsi, contestazioni, mandati, accrediti: ogni evento arriva in tempo reale e aggiorna i dati. Ci colleghiamo anche al gestionale e alla contabilità, così i numeri tornano ovunque.',
+      },
+    ],
+    note: 'Adyen, Stripe e GoCardless sono marchi dei rispettivi proprietari.',
+  },
+  en: {
+    kicker: 'Payment partners',
+    title: 'Cards and bank accounts, already connected.',
+    lead: 'Adyen and Stripe are among the world’s leading players for card payments, GoCardless for direct debit from a bank account. We are fully integrated with all three: in the interface customers and staff use, in automating charges and bill runs, and in every kind of connection between their systems and yours.',
+    badge: 'Fully integrated',
+    how: 'How deep the integration goes',
+    levels: [
+      {
+        t: 'User interface',
+        role: 'Payment inside your own screens',
+        d: 'Checkout, saving a card, setting up a SEPA mandate, paying by link: all inside the website, the app or the kiosk, in your own design. Staff see payments, failures and refunds in the CRM, right next to the customer.',
+      },
+      {
+        t: 'Automatic charges',
+        role: 'Recurring, hands off',
+        d: 'Fees, instalments and renewals go out on their own when due, by card or from a bank account. If a charge fails, the system retries, tells the customer and flags it to staff.',
+      },
+      {
+        t: 'Bill run',
+        role: 'The billing cycle, in one go',
+        d: 'At the end of the period the system works out what each customer owes, prepares the charges and sends them together to the right provider. Then it records the outcomes and reconciles them with contracts and invoices.',
+      },
+      {
+        t: 'Every connection',
+        role: 'APIs, webhooks, reconciliation',
+        d: 'Payments, refunds, disputes, mandates, payouts: every event arrives in real time and updates the data. We also connect to the back office and the accounts, so the numbers add up everywhere.',
+      },
+    ],
+    note: 'Adyen, Stripe and GoCardless are trademarks of their respective owners.',
+  },
+};

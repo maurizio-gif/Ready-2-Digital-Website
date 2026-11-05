@@ -12,7 +12,7 @@ import { copy, type Lang } from './content';
 import { pages } from './pages';
 import { cases } from './cases';
 import { agents } from './agents';
-import { access, integrationList, integrations } from './tech';
+import { access, integrationList, integrations, paymentList, payments } from './tech';
 import { COMPANY, SOCIAL } from './legal';
 import { pathFor, type Page } from './router';
 import { SITE_URL, abs } from './site';
@@ -179,6 +179,11 @@ export function fullFor(lang: Lang): string[] {
   const ig = integrations[lang];
   out.push('', `### ${ig.kicker}: ${ig.title}`, '', ig.lead, '');
   integrationList.forEach((s) => out.push(`- **${s.name}**${s.by ? ` (${s.by[lang]})` : ''}: ${ig.via[s.via]}`));
+  const pay = payments[lang];
+  out.push('', `### ${pay.kicker}: ${pay.title}`, '', pay.lead, '');
+  paymentList.forEach((s) => out.push(`- **${s.name}**: ${s.what[lang]}`));
+  out.push('', `${pay.how}:`);
+  pay.levels.forEach((s, i) => out.push(`${i + 1}. **${s.t}** (${s.role}): ${s.d}`));
   out.push('', `${l.stack}: ${t.stack.join(', ')}.`);
 
   h2(l.work);
