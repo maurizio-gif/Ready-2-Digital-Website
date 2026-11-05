@@ -1,5 +1,5 @@
 import type { Lang } from '../content';
-import { access, integrationList, integrations, stack, tech, techUi } from '../tech';
+import { access, integrationList, integrations, paymentList, payments, stack, tech, techUi } from '../tech';
 
 /** Layers stacked top to bottom, with data dots flowing between them. */
 function LayerStack({ layers, rich }: { layers: { name: string; d?: string; items: (string | { t: string; d: string })[] }[]; rich?: boolean }) {
@@ -99,6 +99,55 @@ export function Integrations({ lang }: { lang: Lang }) {
             </li>
           ))}
         </ul>
+        <p className="access__note" data-reveal>
+          {c.note}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/** Technology page: the payment providers we are fully integrated with, and how deep the integration goes. */
+export function Payments({ lang }: { lang: Lang }) {
+  const c = payments[lang];
+  return (
+    <section className="section tech pay" id="pagamenti">
+      <div className="container">
+        <div className="section__head">
+          <p className="kicker" data-reveal>
+            {c.kicker}
+          </p>
+          <h2 className="h-xl" data-split>
+            {c.title}
+          </h2>
+          <p className="lead" data-reveal>
+            {c.lead}
+          </p>
+        </div>
+        <ul className="systems__grid">
+          {paymentList.map((s) => (
+            <li key={s.id} className="sys card-3d" data-card data-tilt="6">
+              <span className="sys__mark">
+                <img src={`${import.meta.env.BASE_URL}${s.logo.src}`} alt={s.name} width={s.logo.w} height={s.logo.h} loading="lazy" className={`is-wordmark pay__logo--${s.id}`} />
+              </span>
+              <span className="sys__by">{s.what[lang]}</span>
+              <span className="sys__via">{c.badge}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="tech__sub" data-reveal>
+          {c.how}
+        </p>
+        <div className="parts">
+          {c.levels.map((s, i) => (
+            <article key={s.t} className="part card-3d" data-card data-tilt="6">
+              <span className="part__n">{String(i + 1).padStart(2, '0')}</span>
+              <h3 className="part__t">{s.t}</h3>
+              <p className="part__role">{s.role}</p>
+              <p className="part__d">{s.d}</p>
+            </article>
+          ))}
+        </div>
         <p className="access__note" data-reveal>
           {c.note}
         </p>
