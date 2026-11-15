@@ -61,7 +61,7 @@ export const demoUi: Record<
     stepsTitle: 'Come funziona',
     steps: [
       'Apri l’app dal browser o scaricala dallo store.',
-      'Nella schermata d’accesso scrivi l’ID, tocca «Continua» e inserisci il codice.',
+      'Nella schermata d’accesso scegli la lingua (italiano o inglese), scrivi l’ID, tocca «Continua» e inserisci il codice.',
       'Lascia nome ed email: ti presentiamo il progetto in due righe.',
       'Scegli uno scenario ed entra. Dalla striscia «Account di prova» in alto lo cambi con «Cambia», o finisci con «Esci».',
     ],
@@ -74,6 +74,7 @@ export const demoUi: Record<
       { t: 'Famiglia con abbonamenti attivi', d: 'Tutta l’app per una famiglia al completo.' },
     ],
     notes: [
+      'L’app è in italiano e in inglese, come questo sito: la lingua si cambia anche dopo, dal Profilo.',
       'Il pagamento si vede ma non parte: nessun addebito, mai.',
       'Quando cambi scenario o esci, tutto quello che hai fatto si cancella.',
       'L’account è uno per tutti: se qualcun altro entra mentre lo usi, la tua prova riparte da capo.',
@@ -100,7 +101,7 @@ export const demoUi: Record<
     stepsTitle: 'How it works',
     steps: [
       'Open the app in your browser or download it from the store.',
-      'On the sign-in screen type the ID, tap “Continue” and enter the code.',
+      'On the sign-in screen pick “English”, type the ID, tap “Continue” and enter the code.',
       'Leave your name and email: we introduce the project in a couple of lines.',
       'Pick a scenario and go in. The “Test account” strip at the top lets you switch with “Change”, or finish with “Leave”.',
     ],
@@ -113,6 +114,7 @@ export const demoUi: Record<
       { t: 'Family with active memberships', d: 'The whole app for a full family.' },
     ],
     notes: [
+      'The app is in Italian and English, like this site: you can switch language later too, from the Profile.',
       'Payment is shown but never goes through: nothing is ever charged.',
       'When you change scenario or exit, everything you did is erased.',
       'One account for everyone: if someone else signs in while you use it, your session starts over.',
