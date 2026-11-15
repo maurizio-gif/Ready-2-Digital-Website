@@ -11,6 +11,8 @@ import { Link } from './Nav';
 import { ClientLogo, hasLogo } from './Logos';
 import { RealScreens } from './RealScreens';
 import { Ecosystem } from './Scenes';
+import { DemoApp } from './DemoApp';
+import { DEMO_ANCHOR, demoUi } from '../demo';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -76,6 +78,19 @@ export function CasePage({ c, lang }: { c: Case; lang: Lang }) {
               <span className="sr-only"> ({ui.newTab})</span>
             </a>
           )}
+          {c.slug === 'athlon' && (
+            <a className="case-site case-site--demo" href={`#${DEMO_ANCHOR}`}
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.replaceState({}, '', `#${DEMO_ANCHOR}`);
+                window.dispatchEvent(new Event('r2d:hash'));
+              }}
+              data-fade
+            >
+              <strong>{demoUi[lang].heroLink}</strong>
+              <i aria-hidden="true">↓</i>
+            </a>
+          )}
           <div className="case-metrics" data-fade>
             {c.metrics.map((m) => (
               <div key={m.l}>
@@ -86,6 +101,8 @@ export function CasePage({ c, lang }: { c: Case; lang: Lang }) {
           </div>
         </div>
       </header>
+
+      {c.slug === 'athlon' && <DemoApp lang={lang} />}
 
       <section className="section case-story">
         <div className="container case-story__grid">
