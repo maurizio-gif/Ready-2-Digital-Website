@@ -57,15 +57,31 @@ export function DemoApp({ lang }: { lang: Lang }) {
     <section className="section section--light demo-app" id={DEMO_ANCHOR}>
       <div className="container">
         <div className="demo-app__head">
-          <p className="kicker" data-reveal>
-            {ui.kicker}
-          </p>
-          <h2 className="h-lg" data-split>
-            {ui.title}
-          </h2>
-          <p className="lead" data-reveal>
-            {ui.lead}
-          </p>
+          <div>
+            <p className="kicker" data-reveal>
+              {ui.kicker}
+            </p>
+            <h2 className="h-lg" data-split>
+              {ui.title}
+            </h2>
+            <p className="lead" data-reveal>
+              {ui.lead}
+            </p>
+          </div>
+          <figure className="demo-shot" data-reveal>
+            <span className="rs-browser">
+              <span className="rs-browser__bar">
+                <span className="mk-dots">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className="rs-browser__url">app.athlonroma.it</span>
+              </span>
+              <img src={`${import.meta.env.BASE_URL}images/real/athlon/app-portale-d-home.webp`} alt={ui.shotAlt} loading="lazy" width="1600" height="1000" />
+            </span>
+            <figcaption>{ui.shotCaption}</figcaption>
+          </figure>
         </div>
 
         <div className="demo-app__grid">

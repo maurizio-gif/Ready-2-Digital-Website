@@ -39,6 +39,8 @@ export const demoUi: Record<
     scenarios: { t: string; d: string }[];
     notes: string[];
     heroLink: string;
+    shotAlt: string;
+    shotCaption: string;
   }
 > = {
   it: {
@@ -77,6 +79,8 @@ export const demoUi: Record<
       'L’account è uno per tutti: se qualcun altro entra mentre lo usi, la tua prova riparte da capo.',
     ],
     heroLink: 'Prova l’app',
+    shotAlt: 'La Home dell’app Athlon Club: il saluto, gli avvisi del club, l’orario di oggi e le notifiche.',
+    shotCaption: 'La Home dell’app. Dati di esempio: nella demo vedi quelli dello scenario che scegli.',
   },
   en: {
     kicker: 'Try the app',
@@ -114,5 +118,7 @@ export const demoUi: Record<
       'One account for everyone: if someone else signs in while you use it, your session starts over.',
     ],
     heroLink: 'Try the app',
+    shotAlt: 'The Athlon Club app home: the greeting, club notices, today’s opening hours and notifications.',
+    shotCaption: 'The app home. Sample data: in the demo you see the scenario you pick.',
   },
 };

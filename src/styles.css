@@ -7697,7 +7697,22 @@ img[src*='passion-mark'] {
   transform: translateY(2px);
 }
 .demo-app__head {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(32px, 4vw, 56px);
+  align-items: center;
   margin-bottom: clamp(40px, 6vw, 72px);
+}
+.demo-shot {
+  margin: 0;
+}
+.demo-shot .rs-browser {
+  box-shadow: var(--shadow-light-hover), 0 40px 80px -40px rgba(13, 13, 13, 0.55);
+}
+.demo-shot figcaption {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--muted);
 }
 .demo-app__grid {
   display: grid;
@@ -7881,6 +7896,7 @@ img[src*='passion-mark'] {
   background: var(--orange);
 }
 @media (max-width: 900px) {
+  .demo-app__head,
   .demo-app__grid {
     grid-template-columns: minmax(0, 1fr);
   }
