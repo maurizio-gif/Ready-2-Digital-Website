@@ -182,6 +182,7 @@ const it = {
   footer: {
     tagline: 'Soluzioni digitali only one. Orchestratori di processi.',
     privacy: 'Privacy',
+    cookies: 'Preferenze cookie',
     rights: 'Tutti i diritti riservati.',
     top: 'Torna su',
   },
@@ -356,6 +357,7 @@ const en: Copy = {
   footer: {
     tagline: 'Only-one digital solutions. Process orchestrators.',
     privacy: 'Privacy',
+    cookies: 'Cookie preferences',
     rights: 'All rights reserved.',
     top: 'Back to top',
   },

@@ -7915,3 +7915,115 @@ img[src*='passion-mark'] {
     margin-left: 0;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Cookie banner (components/CookieBanner.tsx)                         */
+/* ------------------------------------------------------------------ */
+.cookiebar {
+  position: fixed;
+  left: max(18px, env(safe-area-inset-left));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  z-index: 70;
+  width: min(440px, calc(100vw - 36px));
+  padding: 22px 22px 20px;
+  border-radius: var(--r-lg);
+  color: var(--text);
+  background: #151515;
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: var(--edge), 0 0 0 1px var(--line), 0 30px 60px -24px rgba(0, 0, 0, 0.9);
+  animation: cookiebar-in 0.6s var(--ease) both;
+  outline: none;
+}
+@keyframes cookiebar-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+.cookiebar__title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0 0 8px;
+}
+.cookiebar__body {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+.cookiebar__body a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cookiebar__body a:hover {
+  color: var(--orange);
+}
+.cookiebar__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+/* The two choices weigh the same: same size, same place, same contrast. */
+.cookiebar__btn {
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--paper);
+  transition: transform 0.3s var(--ease), background 0.2s;
+}
+.cookiebar__btn:hover {
+  transform: translateY(-2px);
+}
+.cookiebar__btn--yes {
+  background: var(--orange);
+  color: var(--ink);
+}
+.cookiebar__btn:focus-visible,
+.cookiebar__x:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+.cookiebar__x {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--muted);
+}
+.cookiebar__x:hover {
+  color: var(--text);
+}
+@media (max-width: 640px) {
+  .cookiebar {
+    left: 12px;
+    right: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: auto;
+    padding: 20px 18px 16px;
+  }
+  /* On a phone the banner and the chat launcher would overlap: the chat waits for the choice. */
+  .cookiebar-open .chat-dock {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.menu-open .cookiebar {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cookiebar {
+    animation: none;
+  }
+}

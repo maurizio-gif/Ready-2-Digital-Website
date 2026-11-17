@@ -33,6 +33,7 @@ import { chatCopy } from '../assistant';
 import { MARK, R } from '../lib/mark';
 import { Mark } from './Mark';
 import { href, navigate, parse, pathFor, type Page } from '../router';
+import { track } from '../lib/analytics';
 
 type Link = { url: string; titolo: string };
 type Msg = { ruolo: 'utente' | 'agente'; testo: string; link?: Link[]; azione?: 'contatti' | null; riassunto?: string | null; domande?: string[]; errore?: boolean };
@@ -336,6 +337,8 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
       const base = stateRef.current.sessione ? stateRef.current : load();
       const messaggi: Msg[] = [...base.messaggi, { ruolo: 'utente', testo }];
       update(() => ({ sessione: base.sessione, messaggi }));
+      // Statistics (only with consent): the message count and the conversation's id, never the text.
+      track('chat_messaggio', { chat: base.sessione, n: messaggi.filter((m) => m.ruolo === 'utente').length });
       let reply: Msg;
       try {
         const r = await fetch(ENDPOINT, {
@@ -408,6 +411,10 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
       setMicError(true);
     }
   };
+
+  useEffect(() => {
+    if (open) track('chat_aperta', { chat: stateRef.current.sessione || load().sessione });
+  }, [open]);
 
   // Opened from elsewhere on the page (openChat), or with ?chat=1 in the address.
   useEffect(() => {
@@ -515,6 +522,7 @@ export function Chat({ lang, page, routeKey }: { lang: Lang; page: Page; routeKe
     } catch {
       /* the form just starts empty */
     }
+    track('chat_contatti', { chat: stateRef.current.sessione });
     if (phone()) setOpen(false);
     navigate(pathFor('contatti', lang));
   };

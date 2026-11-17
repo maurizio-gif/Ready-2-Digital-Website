@@ -10,6 +10,8 @@ import { CasePage } from './components/CasePage';
 import { AboutPage, ContactPage, HomePage, MethodPage, PrivacyPage, SolutionsPage, TechPage, WorkPage } from './components/Pages';
 import { AgentsPage } from './components/Agents';
 import { Chat } from './components/Chat';
+import { CookieBanner } from './components/CookieBanner';
+import { openConsent, pageview } from './lib/analytics';
 import { COMPANY } from './legal';
 import { applyHead, seoFor, shellSeo } from './seo';
 import { Link } from './components/Nav';
@@ -60,6 +62,12 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
   useEffect(() => {
     applyHead(route.notFound ? shellSeo() : seoFor(route));
   }, [route]);
+
+  // Statistics: one page view per page (src/lib/analytics.ts decides what it may send).
+  // After applyHead, so the title sent is the new page's.
+  useEffect(() => {
+    pageview(window.location.pathname, lang);
+  }, [routeKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Smooth scrolling, driven by GSAP's ticker so everything shares one clock.
   useEffect(() => {
@@ -280,6 +288,7 @@ export default function App({ ssrPath }: { ssrPath?: string }) {
       <main key={routeKey}>{page}</main>
       <Footer t={t} lang={lang} />
       <Chat lang={lang} page={route.page} routeKey={routeKey} />
+      <CookieBanner lang={lang} />
     </>
   );
 }
@@ -311,6 +320,9 @@ function Footer({ t, lang }: { t: Copy; lang: Lang }) {
           <Link page="privacy" lang={lang}>
             {t.footer.privacy}
           </Link>
+          <button type="button" onClick={openConsent}>
+            {t.footer.cookies}
+          </button>
           <button type="button" onClick={() => scrollTo(0)}>
             {t.footer.top} ↑
           </button>
