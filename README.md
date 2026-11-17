@@ -189,8 +189,9 @@ src/lib/analytics.ts (browser) → /api/track (api/track.js) → Supabase rpc tr
 ContactForm → /api/contact (api/contact.js) → Supabase rpc registra_lead() + email SendGrid con l'ID lead
 ```
 
-- **Il banner** (`src/components/CookieBanner.tsx`): «Rifiuta» e «Accetta» con lo stesso peso, la × vale
-  «rifiuta», «Preferenze cookie» nel footer lo riapre. Si vede solo nel browser (non nell'HTML del prerender).
+- **Il banner** (`src/components/CookieBanner.tsx`): una riga e due pulsanti piccoli nell'angolo in basso a
+  sinistra, «Rifiuta» e «Accetta» con lo stesso peso; «Preferenze cookie» nel footer lo riapre; i dettagli
+  stanno nell'informativa. Si vede solo nel browser (non nell'HTML del prerender).
 - **Con consenso**: cookie `r2d_vid` (visitatore, 13 mesi) e `r2d_sid` (sessione, scade dopo 30 minuti senza
   attività, come GA). **Senza consenso, o prima di scegliere**: solo la pagina vista, anonima, senza cookie né
   ID, per avere comunque i totali. Se si accetta su una pagina già contata, quella vista anonima viene

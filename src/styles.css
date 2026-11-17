@@ -7917,103 +7917,86 @@ img[src*='passion-mark'] {
 }
 
 /* ------------------------------------------------------------------ */
-/* Cookie banner (components/CookieBanner.tsx)                         */
+/* Cookie banner (components/CookieBanner.tsx): small, in a corner      */
 /* ------------------------------------------------------------------ */
 .cookiebar {
   position: fixed;
-  left: max(18px, env(safe-area-inset-left));
-  bottom: max(18px, env(safe-area-inset-bottom));
+  left: max(16px, env(safe-area-inset-left));
+  bottom: max(16px, env(safe-area-inset-bottom));
   z-index: 70;
-  width: min(440px, calc(100vw - 36px));
-  padding: 22px 22px 20px;
-  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 10px 10px 10px 16px;
+  border-radius: 999px;
   color: var(--text);
-  background: #151515;
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  box-shadow: var(--edge), 0 0 0 1px var(--line), 0 30px 60px -24px rgba(0, 0, 0, 0.9);
-  animation: cookiebar-in 0.6s var(--ease) both;
+  background: rgba(21, 21, 21, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 0 0 1px var(--line), 0 16px 36px -20px rgba(0, 0, 0, 0.8);
+  animation: cookiebar-in 0.5s var(--ease) 1.2s both;
   outline: none;
 }
 @keyframes cookiebar-in {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(10px);
   }
 }
-.cookiebar__title {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 22px;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  margin: 0 0 8px;
-}
 .cookiebar__body {
-  font-size: 14px;
-  line-height: 1.55;
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.4;
   color: var(--muted);
-  margin: 0 0 18px;
 }
 .cookiebar__body a {
   color: var(--text);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: 2px;
+  white-space: nowrap;
 }
 .cookiebar__body a:hover {
   color: var(--orange);
 }
 .cookiebar__actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  display: flex;
+  gap: 6px;
+  flex: none;
 }
-/* The two choices weigh the same: same size, same place, same contrast. */
+/* The two choices weigh the same: same size, same shape. */
 .cookiebar__btn {
-  min-height: 46px;
-  padding: 0 18px;
+  min-height: 32px;
+  padding: 0 14px;
   border-radius: 999px;
+  font-size: 12.5px;
   font-weight: 600;
-  font-size: 15px;
-  color: var(--ink);
-  background: var(--paper);
-  transition: transform 0.3s var(--ease), background 0.2s;
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px rgba(244, 241, 234, 0.28);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 .cookiebar__btn:hover {
-  transform: translateY(-2px);
-}
-.cookiebar__btn--yes {
-  background: var(--orange);
   color: var(--ink);
+  background: var(--paper);
+  box-shadow: none;
 }
-.cookiebar__btn:focus-visible,
-.cookiebar__x:focus-visible {
+.cookiebar__btn:focus-visible {
   outline: 2px solid var(--orange);
-  outline-offset: 3px;
-}
-.cookiebar__x {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 22px;
-  line-height: 1;
-  color: var(--muted);
-}
-.cookiebar__x:hover {
-  color: var(--text);
+  outline-offset: 2px;
 }
 @media (max-width: 640px) {
   .cookiebar {
-    left: 12px;
-    right: 12px;
-    bottom: max(12px, env(safe-area-inset-bottom));
-    width: auto;
-    padding: 20px 18px 16px;
+    left: 10px;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    max-width: none;
+    border-radius: var(--r-sm);
+    padding: 10px 10px 10px 14px;
   }
-  /* On a phone the banner and the chat launcher would overlap: the chat waits for the choice. */
+  .cookiebar__body {
+    font-size: 12px;
+  }
+  /* The chat launcher waits for the choice instead of sitting on top of the bar. */
   .cookiebar-open .chat-dock {
     opacity: 0;
     visibility: hidden;
