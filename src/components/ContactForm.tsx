@@ -9,6 +9,17 @@ import { CONTACT_ENDPOINT, form } from '../legal';
 import { metaball } from '../lib/metaball';
 import { MARK, NECKS, NECK_OPTS, R } from '../lib/mark';
 import { href, pathFor } from '../router';
+import { currentIds, track } from '../lib/analytics';
+
+/** The conversation with the site's AI agent in this tab, if any (components/Chat.tsx keeps it in sessionStorage). */
+function chatSession(): string | undefined {
+  try {
+    const s = JSON.parse(sessionStorage.getItem('r2d:chat') || 'null');
+    return s && typeof s.sessione === 'string' && Array.isArray(s.messaggi) && s.messaggi.length ? s.sessione : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 type Data = { nome: string; cognome: string; email: string; cellulare: string; azienda: string; needs: string[]; progetto: string; privacy: boolean; marketing: boolean };
 
@@ -125,11 +136,16 @@ export function ContactForm({ lang }: { lang: Lang }) {
       inviato_il: new Date().toISOString(),
       // A field no person sees: if a bot fills it in, the server drops the request.
       ufficio_riferimento: trap.current,
+      // With consent to statistics cookies: the visitor and session ids, so the request is
+      // linked to the visits that led to it (api/contact.js → lead in Supabase). Without, nothing.
+      ...(currentIds() ?? {}),
+      chat_sessione: chatSession(),
     };
     setState('sending');
     try {
       const r = await fetch(CONTACT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!r.ok) throw new Error(String(r.status));
+      track('contatto_inviato', { interessi: d.needs.length });
       setState('done');
     } catch {
       setState('form');

@@ -7,7 +7,7 @@
 //   - the webhook's key stays on the server (the page would publish it);
 //   - only requests from this site's pages get through, cut to a known size;
 //   - n8n receives the visitor's IP to apply its rate limits, and nothing else
-//     about the visitor (no cookies: the site has none of its own).
+//     about the visitor (no cookies: the chat sends none).
 //
 // Environment variables (Vercel → Settings → Environment Variables):
 //   CHAT_WEBHOOK_URL   the production URL of the workflow's webhook.

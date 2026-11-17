@@ -21,7 +21,7 @@ stanno in `src/pages.ts`.
 
 - **Stack:** Vite + React 19 + TypeScript, GSAP (ScrollTrigger) per le animazioni,
   Lenis per lo scroll fluido. Font serviti dal sito stesso (`@fontsource`): nessuna
-  chiamata esterna e nessun cookie.
+  chiamata esterna. Gli unici cookie sono quelli delle statistiche nostre (vedi «Statistiche e cookie»).
 - **Il marchio è codice, non un'immagine:** `src/lib/mark.ts` contiene la geometria
   (sei cerchi su una griglia di 64, misurati dal PNG ufficiale) e `src/lib/metaball.ts`
   disegna i «colli» gommosi tra i cerchi. Quando i cerchi si allontanano il collo si
@@ -175,8 +175,42 @@ components/Chat.tsx → /api/chat (api/chat.js, Vercel) → n8n «R2D CHAT SITO�
 - **Dati societari** in `COMPANY` (`src/legal.ts`; P.IVA e REA dalla visura del 14/01/2025, la sede legale è
   quella attuale, cambiata dopo la visura): li usano
   l'informativa e il footer.
-- **Cookie:** il sito non installa cookie propri; il banner sarà CookieYes, da aggiungere con il suo
-  script in `index.html` una volta attivo sul dominio.
+- **Cookie:** solo cookie propri, con il banner del sito (vedi «Statistiche e cookie»). Niente CookieYes.
+
+## Statistiche e cookie
+
+Le visite si misurano con un sistema nostro, al posto di Google Analytics: pagine viste, sessioni, sorgenti
+(UTM, referrer, gclid/fbclid), tempo sulla pagina, dispositivo, paese, eventi della chat e del modulo. Quando
+qualcuno compila il modulo contatti, la richiesta diventa un **lead** collegato a tutte le visite di quel
+browser, prima e dopo.
+
+```
+src/lib/analytics.ts (browser) → /api/track (api/track.js) → Supabase rpc traccia()
+ContactForm → /api/contact (api/contact.js) → Supabase rpc registra_lead() + email SendGrid con l'ID lead
+```
+
+- **Il banner** (`src/components/CookieBanner.tsx`): una riga e due pulsanti piccoli nell'angolo in basso a
+  sinistra, «Rifiuta» e «Accetta» con lo stesso peso; «Preferenze cookie» nel footer lo riapre; i dettagli
+  stanno nell'informativa. Si vede solo nel browser (non nell'HTML del prerender).
+- **Con consenso**: cookie `r2d_vid` (visitatore, 13 mesi) e `r2d_sid` (sessione, scade dopo 30 minuti senza
+  attività, come GA). **Senza consenso, o prima di scegliere**: solo la pagina vista, anonima, senza cookie né
+  ID, per avere comunque i totali. Se si accetta su una pagina già contata, quella vista anonima viene
+  sostituita (non conta due volte). La scelta sta in `r2d_consenso` (6 mesi, poi il banner richiede).
+- **Mai salvati**: indirizzo IP (il paese arriva già calcolato da Vercel, `x-vercel-ip-*`), user agent completo,
+  testo dei messaggi della chat. I bot noti sono scartati.
+- **Database**: progetto Supabase dedicato `ready2digital-sito` (UE). Lo schema è in
+  `supabase/migrations/…_statistiche_sito.sql`: tabelle `visitatori`, `sessioni`, `eventi`, `lead`, con RLS
+  attiva e nessuna policy (scrivono solo le funzioni Vercel con la chiave `service_role`). Ogni notte
+  `pulisci_statistiche()` (pg_cron) cancella le statistiche oltre i 13 mesi, come dice l'informativa.
+- **Dove si leggono i numeri** (Supabase → Table editor, o SQL editor):
+  - `report_giornaliero` — pagine viste (di cui anonime), sessioni, visitatori, nuovi, durata media,
+    pagine per sessione, rimbalzo, lead, per giorno;
+  - `report_pagine` — le pagine degli ultimi 30 giorni con viste e tempo medio;
+  - `report_sorgenti` — sorgente / mezzo / campagna degli ultimi 30 giorni, con i lead portati;
+  - `report_lead` — per ogni lead: prima sorgente, prima pagina, visite prima del contatto, pagine lette,
+    e `chat_sessione` per ritrovare la conversazione con l'agente (`r2d_chat_diagnosi` in n8n).
+- **Variabili d'ambiente su Vercel** (produzione e anteprime): `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY`
+  (segreta). Senza, `/api/track` risponde 204 e non salva niente, e il modulo manda comunque l'email.
 
 ## Contact form → email (SendGrid)
 

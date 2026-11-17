@@ -7915,3 +7915,98 @@ img[src*='passion-mark'] {
     margin-left: 0;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Cookie banner (components/CookieBanner.tsx): small, in a corner      */
+/* ------------------------------------------------------------------ */
+.cookiebar {
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 10px 10px 10px 16px;
+  border-radius: 999px;
+  color: var(--text);
+  background: rgba(21, 21, 21, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 0 0 1px var(--line), 0 16px 36px -20px rgba(0, 0, 0, 0.8);
+  animation: cookiebar-in 0.5s var(--ease) 1.2s both;
+  outline: none;
+}
+@keyframes cookiebar-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.cookiebar__body {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.cookiebar__body a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+.cookiebar__body a:hover {
+  color: var(--orange);
+}
+.cookiebar__actions {
+  display: flex;
+  gap: 6px;
+  flex: none;
+}
+/* The two choices weigh the same: same size, same shape. */
+.cookiebar__btn {
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px rgba(244, 241, 234, 0.28);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.cookiebar__btn:hover {
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: none;
+}
+.cookiebar__btn:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+@media (max-width: 640px) {
+  .cookiebar {
+    left: 10px;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    max-width: none;
+    border-radius: var(--r-sm);
+    padding: 10px 10px 10px 14px;
+  }
+  .cookiebar__body {
+    font-size: 12px;
+  }
+  /* The chat launcher waits for the choice instead of sitting on top of the bar. */
+  .cookiebar-open .chat-dock {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.menu-open .cookiebar {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cookiebar {
+    animation: none;
+  }
+}

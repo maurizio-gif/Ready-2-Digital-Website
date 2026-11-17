@@ -2,16 +2,23 @@
 // (src/components/ContactForm.tsx) POSTs its JSON here and the request lands in
 // the owner's inbox.
 //
+// The request is also saved as a lead in Supabase (public.registra_lead): when the
+// visitor had accepted the statistics cookies, the form sends their visitor and
+// session ids and the lead is linked to every visit of that browser, before and after.
+// The lead's id is in the email. If Supabase is not configured or does not answer,
+// the email still goes: the request is never lost because of the statistics.
+//
 // Environment variables (Vercel → Settings → Environment Variables):
 //   SENDGRID_API_KEY     the SendGrid API key (needs the «Mail Send» permission). Secret.
 //   CONTACT_TO_EMAIL     where the requests arrive.
 //   CONTACT_FROM_EMAIL   the sender shown on the email. It must be a sender verified
 //                        in SendGrid (a Single Sender or an authenticated domain).
 //                        Optional: when missing, CONTACT_TO_EMAIL is used.
-//
-// Nothing is stored here: the message goes to SendGrid and that is all.
+//   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY   the same as api/track.js. Optional.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const uuid = (v) => (typeof v === 'string' && UUID.test(v) ? v.toLowerCase() : null);
 
 const clean = (v, max) => (typeof v === 'string' ? v.replace(/\r/g, '').trim().slice(0, max) : '');
 const oneLine = (v) => v.replace(/\s+/g, ' ').trim();
@@ -63,6 +70,22 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'not_configured' });
   }
 
+  const leadId = await saveLead({
+    nome,
+    cognome,
+    email,
+    cellulare,
+    azienda,
+    interessi,
+    progetto,
+    lingua,
+    consenso_marketing: marketing,
+    visitatore: uuid(body.visitatore),
+    sessione: uuid(body.sessione),
+    chat_sessione: clean(body.chat_sessione, 64).replace(/[^a-zA-Z0-9-]/g, '') || null,
+  });
+  const linked = !!(leadId && uuid(body.visitatore));
+
   const quando = new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome', dateStyle: 'long', timeStyle: 'short' });
   const rows = [
     ['Nome', `${nome} ${cognome}`],
@@ -74,6 +97,7 @@ export default async function handler(req, res) {
     ['Consenso privacy', 'dato'],
     ['Consenso marketing', marketing ? 'sì' : 'no'],
     ['Ricevuto il', quando],
+    ['ID lead', leadId ? `${leadId}${linked ? ' (collegato alle visite)' : ' (statistiche non accettate)'}` : '— (non salvato)'],
   ];
   const text = [...rows.map(([k, v]) => `${k}: ${v}`), '', 'Progetto:', progetto].join('\n');
   const html =
@@ -110,6 +134,31 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: 'send_failed' });
   }
   return res.status(200).json({ ok: true });
+}
+
+async function saveLead(p) {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  const headers = { apikey: key, 'Content-Type': 'application/json' };
+  if (key.startsWith('eyJ')) headers.Authorization = `Bearer ${key}`;
+  try {
+    const r = await fetch(`${url.replace(/\/$/, '')}/rest/v1/rpc/registra_lead`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ p }),
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!r.ok) {
+      console.error('contact: Supabase answered', r.status, (await r.text()).slice(0, 300));
+      return null;
+    }
+    const id = await r.json();
+    return typeof id === 'string' ? id : null;
+  } catch (e) {
+    console.error('contact: Supabase unreachable', e && e.message);
+    return null;
+  }
 }
 
 function safeParse(s) {
