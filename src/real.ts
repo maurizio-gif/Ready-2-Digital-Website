@@ -16,7 +16,7 @@ export type RealShot = {
 const it: Record<string, RealShot[]> = {
   athlon: [
     { src: 'athlon/d-site-home.webp', kind: 'browser', url: 'athlonroma.it', t: 'Il sito pubblico', d: 'La home di athlonroma.it: prova, iscrizione e l’assistente in un tocco.' },
-    { src: 'athlon/d-planning.webp', kind: 'browser', url: 'athlonroma.it/planning', t: 'Il planning della settimana', d: '165 lezioni, lette dal gestionale: le stesse che si prenotano dall’app.' },
+    { src: 'athlon/d-planning.webp', kind: 'browser', url: 'athlonroma.it/planning', t: 'Il planning della settimana', d: '165 lezioni, lette dal database del club: le stesse che si prenotano dall’app.' },
     { src: 'athlon/m-app-guest-pass.webp', kind: 'phone', t: 'Il Guest Pass dall’app', d: 'Sette giorni di prova: email, consensi, e il link arriva da solo.' },
     { src: 'athlon/d-assistente.webp', kind: 'browser', url: 'athlonroma.it', t: 'L’assistente virtuale', d: 'Chiede l’email per riconoscere chi scrive e risponde con le voci del sito.' },
     { src: 'athlon/d-prova.webp', kind: 'browser', url: 'athlonroma.it/prova', t: 'La prova di 7 giorni', d: 'Il modulo del Guest Pass Premium: compilato dal sito, arriva nel CRM già deduplicato.' },
@@ -44,7 +44,7 @@ const it: Record<string, RealShot[]> = {
 const en: Record<string, RealShot[]> = {
   athlon: [
     { src: 'athlon/d-site-home.webp', kind: 'browser', url: 'athlonroma.it', t: 'The public website', d: 'The athlonroma.it home: trial, sign-up and the assistant one tap away.' },
-    { src: 'athlon/d-planning.webp', kind: 'browser', url: 'athlonroma.it/planning', t: 'The weekly timetable', d: '165 classes, read from the back office: the same ones you book from the app.' },
+    { src: 'athlon/d-planning.webp', kind: 'browser', url: 'athlonroma.it/planning', t: 'The weekly timetable', d: '165 classes, read from the club’s database: the same ones you book from the app.' },
     { src: 'athlon/m-app-guest-pass.webp', kind: 'phone', t: 'The Guest Pass from the app', d: 'Seven days to try: email, consents, and the link arrives on its own.' },
     { src: 'athlon/d-assistente.webp', kind: 'browser', url: 'athlonroma.it', t: 'The virtual assistant', d: 'Asks for an email to recognise who’s writing, and answers with the website’s own content.' },
     { src: 'athlon/d-prova.webp', kind: 'browser', url: 'athlonroma.it/prova', t: 'The 7-day trial', d: 'The Premium Guest Pass form: filled in on the site, it lands in the CRM already de-duplicated.' },
