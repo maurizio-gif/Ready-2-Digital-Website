@@ -462,7 +462,7 @@ export function AgentCall({ x, on, sample }: { x: Extract & { kind: 'agentCall' 
 /* ------------------------------------------------------------------ */
 /* The Athlon ecosystem: site, CRM and app around one database        */
 /* ------------------------------------------------------------------ */
-export type EcosystemData = { kicker: string; title: string; text: string; nodes: { site: string; crm: string; app: string; db: string; gest: string }; flows: { t: string; path: 'site-db' | 'db-crm' | 'app-db' | 'db-gest' | 'crm-app' | 'gest-db' }[] };
+export type EcosystemData = { kicker: string; title: string; text: string; nodes: { site: string; crm: string; app: string; db: string; gest: string }; gestSub?: string; flows: { t: string; path: 'site-db' | 'db-crm' | 'app-db' | 'db-gest' | 'crm-app' | 'gest-db' }[] };
 
 const NODE: Record<string, [number, number]> = { site: [120, 120], crm: [640, 120], app: [380, 430], db: [380, 250], gest: [660, 350] };
 const PATHS: Record<string, string> = {
@@ -484,7 +484,7 @@ export function Ecosystem({ e, lang }: { e: EcosystemData; lang: string }) {
     crm: 'Next.js',
     app: 'Expo · iOS · Android',
     db: 'Supabase · Postgres',
-    gest: 'PerfectGym',
+    gest: e.gestSub ?? '',
   };
   return (
     <div className="eco" ref={ref}>

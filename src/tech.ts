@@ -16,26 +16,26 @@ type Ui = { kicker: string; title: string; layers: string; parts: string; number
 const it: Record<string, Tech> = {
   athlon: {
     intro:
-      'Tre applicazioni, un database solo. Il sito, il CRM dello staff e l’app dei soci sono progetti separati, ognuno con la tecnologia giusta per chi lo usa, ma leggono e scrivono sullo stesso Postgres su Supabase. Il gestionale PerfectGym viene copiato lì dentro e tenuto aggiornato: le pagine leggono dalla copia, al gestionale si scrive solo per prenotare, pagare, iscrivere.',
+      'Tre applicazioni, un database solo. Il sito, il CRM dello staff e l’app dei soci sono progetti separati, ognuno con la tecnologia giusta per chi lo usa, ma leggono e scrivono sullo stesso Postgres su Supabase. Quel database è anche il gestionale: contratti, quote, lezioni, prenotazioni, anagrafiche e accessi sono tabelle nostre, e PerfectGym, che c’era prima, resta solo come archivio.',
     layers: [
       { name: 'Interfacce', items: ['Sito · Astro', 'CRM staff · Next.js + React', 'App soci · Expo + React Native', 'Totem · modalità kiosk dell’app', 'WhatsApp'] },
-      { name: 'Logica', items: ['77 Edge Functions · TypeScript', 'Funzioni SQL condivise', 'API routes Next.js', 'Job programmati · pg_cron + Vercel Cron'] },
-      { name: 'Dati', items: ['Postgres su Supabase', 'Auth', 'Storage privato', 'Row Level Security', 'Copia del gestionale'] },
-      { name: 'Sistemi esterni', items: ['PerfectGym API', 'Adyen', 'GoCardless (SEPA)', 'WhatsApp Cloud API', 'Claude · Anthropic', 'Apple Salute · Health Connect', 'Web Push'] },
+      { name: 'Logica', items: ['95 Edge Functions · TypeScript', 'Funzioni SQL condivise', 'API routes Next.js', 'Job programmati · pg_cron + Vercel Cron'] },
+      { name: 'Dati', items: ['Postgres su Supabase', 'Auth', 'Storage privato', 'Row Level Security', 'Motore del club: contratti, lezioni, accessi'] },
+      { name: 'Sistemi esterni', items: ['Adyen', 'GoCardless (SEPA)', 'WhatsApp Cloud API', 'Claude · Anthropic', 'Apple Salute · Health Connect', 'Lettori Dot Origin VTAP', 'Google Wallet', 'Web Push · SMS'] },
     ],
     parts: [
       { t: 'Astro', role: 'Il sito pubblico', d: 'Pagine HTML generate in anticipo e CSS per componente: arrivano già pronte, si indicizzano bene e si aprono subito. Il JavaScript c’è solo dove serve davvero, come i moduli e l’assistente.' },
       { t: 'Next.js + React', role: 'Il CRM dello staff', d: 'Le pagine si compongono sul server con i dati già dentro; React gestisce le parti interattive. Un middleware controlla sessione e permessi a ogni richiesta, i ruoli decidono quali sezioni si vedono. Ospitato su Vercel.' },
       { t: 'Expo + React Native', role: 'L’app dei soci', d: 'Un solo codice TypeScript per iOS, Android e web. Con Expo Router ogni file è una schermata e anche un deep link. Moduli nativi per HealthKit, Health Connect, notifiche, fotocamera e file; build e aggiornamenti con EAS.' },
-      { t: 'Supabase · Postgres', role: 'Il cuore', d: 'Database, autenticazione, file e regole di accesso riga per riga. Lo schema vive in 483 migrazioni versionate: ogni modifica è codice, si rivede e si ripete. Le letture importanti sono funzioni SQL: CRM e app chiamano la stessa, quindi dicono la stessa cosa.' },
-      { t: 'Edge Functions', role: 'La logica e i collegamenti', d: '77 funzioni TypeScript vicine al database. L’app parla con loro, mai direttamente con il gestionale: prenotare, pagare, sincronizzare, ricevere i webhook di pagamenti e WhatsApp.' },
-      { t: 'La copia del gestionale', role: 'Veloce e indipendente', d: 'Webhook di PerfectGym e sincronizzazioni programmate copiano contratti, pagamenti, prenotazioni e accessi. Una lettura costa millisecondi e funziona anche quando il gestionale è lento o fermo.' },
+      { t: 'Supabase · Postgres', role: 'Il cuore', d: 'Database, autenticazione, file e regole di accesso riga per riga. Lo schema vive in 740 migrazioni versionate: ogni modifica è codice, si rivede e si ripete. Le letture importanti sono funzioni SQL: CRM e app chiamano la stessa, quindi dicono la stessa cosa.' },
+      { t: 'Edge Functions', role: 'La logica e i collegamenti', d: '95 funzioni TypeScript vicine al database. L’app parla con loro, mai direttamente con le tabelle: prenotare, pagare, firmare, aprire un lettore, ricevere i webhook di Adyen, GoCardless e WhatsApp.' },
+      { t: 'Il motore del club', role: 'Fuori da PerfectGym', d: 'Prima una copia sincronizzata di PerfectGym, poi la sostituzione un pezzo alla volta, dietro interruttori e con prove a rollback: corsi bambini, contratti adulti, lezioni, anagrafiche, tessere e accessi, personal training. Da novembre 2026 il club gira tutto qui.' },
       { t: 'Automazioni', role: 'Quello che succede da solo', d: '23 job nel database e 11 su Vercel: promemoria delle prenotazioni ogni 5 minuti, avvisi del certificato in scadenza, email dopo le prime visite, stato dei soci, cruscotti aggiornati, pagamenti falliti.' },
       { t: 'AI', role: 'Assistente e WhatsApp', d: 'L’assistente dell’app e l’agente WhatsApp usano un modello Claude, con le informazioni del club come contesto. Non inventano: rimandano al modulo giusto o passano a una persona.' },
     ],
     numbers: [
-      { v: '77', l: 'Edge Functions' },
-      { v: '483', l: 'Migrazioni del database' },
+      { v: '95', l: 'Edge Functions' },
+      { v: '740', l: 'Migrazioni del database' },
       { v: '34', l: 'Job programmati' },
       { v: '3', l: 'Piattaforme da un codice: iOS, Android, web' },
     ],
@@ -114,26 +114,26 @@ const it: Record<string, Tech> = {
 const en: Record<string, Tech> = {
   athlon: {
     intro:
-      'Three applications, one database. The website, the staff CRM and the member app are separate projects, each with the right technology for its users, but they all read and write the same Postgres on Supabase. The PerfectGym back office is copied in there and kept up to date: pages read from the copy, and the back office is written to only to book, pay or sign up.',
+      'Three applications, one database. The website, the staff CRM and the member app are separate projects, each with the right technology for its users, but they all read and write the same Postgres on Supabase. That database is also the management system: contracts, fees, classes, bookings, customer records and check-ins are our own tables, and PerfectGym, which came before, stays only as an archive.',
     layers: [
       { name: 'Interfaces', items: ['Website · Astro', 'Staff CRM · Next.js + React', 'Member app · Expo + React Native', 'Kiosk · the app’s kiosk mode', 'WhatsApp'] },
-      { name: 'Logic', items: ['77 Edge Functions · TypeScript', 'Shared SQL functions', 'Next.js API routes', 'Scheduled jobs · pg_cron + Vercel Cron'] },
-      { name: 'Data', items: ['Postgres on Supabase', 'Auth', 'Private storage', 'Row Level Security', 'Back-office copy'] },
-      { name: 'External systems', items: ['PerfectGym API', 'Adyen', 'GoCardless (SEPA)', 'WhatsApp Cloud API', 'Claude · Anthropic', 'Apple Health · Health Connect', 'Web Push'] },
+      { name: 'Logic', items: ['95 Edge Functions · TypeScript', 'Shared SQL functions', 'Next.js API routes', 'Scheduled jobs · pg_cron + Vercel Cron'] },
+      { name: 'Data', items: ['Postgres on Supabase', 'Auth', 'Private storage', 'Row Level Security', 'Club engine: contracts, classes, access'] },
+      { name: 'External systems', items: ['Adyen', 'GoCardless (SEPA)', 'WhatsApp Cloud API', 'Claude · Anthropic', 'Apple Health · Health Connect', 'Dot Origin VTAP readers', 'Google Wallet', 'Web Push · SMS'] },
     ],
     parts: [
       { t: 'Astro', role: 'The public website', d: 'HTML pages generated ahead of time and per-component CSS: they arrive ready, index well and open instantly. JavaScript only where it’s really needed, like forms and the assistant.' },
       { t: 'Next.js + React', role: 'The staff CRM', d: 'Pages are assembled on the server with the data already in; React handles the interactive parts. A middleware checks session and permissions on every request, and roles decide which sections show. Hosted on Vercel.' },
       { t: 'Expo + React Native', role: 'The member app', d: 'One TypeScript codebase for iOS, Android and web. With Expo Router every file is a screen and a deep link. Native modules for HealthKit, Health Connect, notifications, camera and files; builds and updates with EAS.' },
-      { t: 'Supabase · Postgres', role: 'The core', d: 'Database, authentication, files and row-level access rules. The schema lives in 483 versioned migrations: every change is code, reviewable and repeatable. Key reads are SQL functions: CRM and app call the same one, so they say the same thing.' },
-      { t: 'Edge Functions', role: 'Logic and connections', d: '77 TypeScript functions running next to the database. The app talks to them, never straight to the back office: booking, paying, syncing, receiving payment and WhatsApp webhooks.' },
-      { t: 'The back-office copy', role: 'Fast and independent', d: 'PerfectGym webhooks and scheduled syncs copy contracts, payments, bookings and check-ins. A read takes milliseconds and works even when the back office is slow or down.' },
+      { t: 'Supabase · Postgres', role: 'The core', d: 'Database, authentication, files and row-level access rules. The schema lives in 740 versioned migrations: every change is code, reviewable and repeatable. Key reads are SQL functions: CRM and app call the same one, so they say the same thing.' },
+      { t: 'Edge Functions', role: 'Logic and connections', d: '95 TypeScript functions running next to the database. The app talks to them, never straight to the tables: booking, paying, signing, opening a reader, receiving Adyen, GoCardless and WhatsApp webhooks.' },
+      { t: 'The club engine', role: 'Off PerfectGym', d: 'First a synced copy of PerfectGym, then its replacement one piece at a time, behind switches and with rollback tests: kids’ courses, adult contracts, classes, customer records, cards and access, personal training. Since November 2026 the whole club runs here.' },
       { t: 'Automation', role: 'What happens on its own', d: '23 jobs in the database and 11 on Vercel: booking reminders every 5 minutes, expiring medical-certificate alerts, emails after the first visits, member status, refreshed dashboards, failed payments.' },
       { t: 'AI', role: 'Assistant and WhatsApp', d: 'The app assistant and the WhatsApp agent use a Claude model with the club’s information as context. They don’t make things up: they point to the right form or hand over to a person.' },
     ],
     numbers: [
-      { v: '77', l: 'Edge Functions' },
-      { v: '483', l: 'Database migrations' },
+      { v: '95', l: 'Edge Functions' },
+      { v: '740', l: 'Database migrations' },
       { v: '34', l: 'Scheduled jobs' },
       { v: '3', l: 'Platforms from one codebase: iOS, Android, web' },
     ],

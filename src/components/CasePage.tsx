@@ -185,6 +185,33 @@ export function CasePage({ c, lang }: { c: Case; lang: Lang }) {
         ))}
       </section>
 
+      {c.features && (
+        <section className="section case-features">
+          <div className="container">
+            <div className="case-features__grid">
+              {c.features.map((f) => (
+                <div key={f.title} className="case-features__col">
+                  <h2 className="case-features__title" data-reveal>
+                    {f.title}
+                  </h2>
+                  <p className="case-features__sub" data-reveal>
+                    {f.sub}
+                  </p>
+                  <ul className="case-features__list">
+                    {f.items.map((it) => (
+                      <li key={it.t} data-reveal>
+                        <strong>{it.t}</strong>
+                        <span>{it.d}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="section case-built section--light">
         <div className="container case-built__grid">
           <div>
